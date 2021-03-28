@@ -3,6 +3,7 @@ import React from 'react'
 import { Container, Content, Header, Inputs } from './styles'
 
 import TextField from '../../components/TextField'
+import Button from '../../components/Button'
 
 const SignIn: React.FC = () => {
   return (
@@ -45,7 +46,9 @@ const SignIn: React.FC = () => {
         
         </Inputs>
 
-        <button>Entrar</button>
+        <Button>
+          Entrar
+        </Button>
 
       </Content>
 
