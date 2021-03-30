@@ -1,11 +1,27 @@
-import React from 'react'
+import React, { useCallback, useState } from 'react'
+import { Link, useHistory } from 'react-router-dom'
 
-import { Container, Content, Header, Inputs } from './styles'
+import { Checkbox } from '@material-ui/core'
 
 import TextField from '../../components/TextField'
 import Button from '../../components/Button'
 
+import { Container, Content, Header, Inputs } from './styles'
+
 const SignIn: React.FC = () => {
+
+  const history = useHistory()
+
+  const [isRemeberInputsActive, setIsRememberInputsActive] = useState(false)
+
+  const handleRememberInputs = useCallback(() => {
+    setIsRememberInputsActive(state => !state)
+  }, [])
+
+  const handleSignIn = useCallback(() => {
+    history.push('/dashboard')
+  }, [history])  
+
   return (
     <Container>
       
@@ -37,16 +53,24 @@ const SignIn: React.FC = () => {
 
           <div className='options-line' >
             <div className='remember-me' >
-              <input type="checkbox"/>
+             
+              <Checkbox
+                checked={isRemeberInputsActive}
+                onChange={handleRememberInputs}
+                style={{  
+                  color: '#529A67'
+                }}
+              />
+
               <p>Lembrar-me</p>
             </div>
 
-            <a href="/"> Esqueci minha Senha </a>
+            <Link to="/forgot"> Esqueci minha Senha </Link>
           </div>
         
         </Inputs>
 
-        <Button>
+        <Button onClick={handleSignIn} >
           Entrar
         </Button>
 

@@ -48,11 +48,13 @@ export const Inputs = styled.main`
     .remember-me {
       display: flex;
       align-items: center;
+      font-size: 13px;
     }
 
     a {
-      font-size: 12px;
+      font-size: 13px;
+      text-decoration: none;
+      color: '#5C5C5C';
     }
   }
-  
 `
