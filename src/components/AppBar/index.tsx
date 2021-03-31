@@ -6,7 +6,7 @@ import {
   Theme,
   createStyles
 } from "@material-ui/core/styles"
-import { AppBar as Bar } from "@material-ui/core"
+import Bar from "@material-ui/core/AppBar"
 import Toolbar from "@material-ui/core/Toolbar"
 import IconButton from "@material-ui/core/IconButton"
 import Typography from "@material-ui/core/Typography"
