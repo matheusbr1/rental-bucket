@@ -19,7 +19,7 @@ const SignIn: React.FC = () => {
   }, [])
 
   const handleSignIn = useCallback(() => {
-    history.push('/dashboard')
+    history.push('/works')
   }, [history])  
 
   return (

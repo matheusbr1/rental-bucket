@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import clsx from 'clsx';
 import { createStyles, lighten, makeStyles, Theme } from '@material-ui/core/styles';
 import MaterialTable from '@material-ui/core/Table';
@@ -18,16 +18,18 @@ import Tooltip from '@material-ui/core/Tooltip';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import DeleteIcon from '@material-ui/icons/Delete';
-import FilterListIcon from '@material-ui/icons/FilterList';
+import EditIcon from '@material-ui/icons/Edit';
+import OpenIcon from '@material-ui/icons/Launch';
 
 import { Container } from './styles'
+import { useHistory } from 'react-router';
 
 interface Data {
-  calories: number;
-  carbs: number;
-  fat: number;
-  name: string;
-  protein: number;
+  calories: number
+  carbs: number
+  fat: number
+  name: string
+  protein: number
 }
 
 function createData(
@@ -178,12 +180,22 @@ const useToolbarStyles = makeStyles((theme: Theme) =>
 );
 
 interface EnhancedTableToolbarProps {
-  numSelected: number;
+  numSelected: number
 }
 
 const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
-  const classes = useToolbarStyles();
+  const classes = useToolbarStyles()
   const { numSelected } = props;
+
+  const history = useHistory()
+
+  const handleEdit = useCallback(() => {
+    history.push('/works/1')
+  }, [history])
+
+  const handleOpen = useCallback(() => {
+    history.push('/works/1')
+  }, [history])
 
   return (
     <Toolbar
@@ -200,16 +212,24 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
           Nutrition
         </Typography>
       )}
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton aria-label="delete">
-            <DeleteIcon />
+      {numSelected === 1 && (
+        <Tooltip title="Abrir">
+          <IconButton onClick={handleOpen} >
+            <OpenIcon />
           </IconButton>
         </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton aria-label="filter list">
-            <FilterListIcon />
+      )}
+      {numSelected === 1 && (
+        <Tooltip title="Editar">
+          <IconButton onClick={handleEdit} >
+            <EditIcon />
+          </IconButton>
+        </Tooltip>
+      )}
+      {numSelected > 0 && (
+        <Tooltip title="Deletar">
+          <IconButton>
+            <DeleteIcon />
           </IconButton>
         </Tooltip>
       )}
