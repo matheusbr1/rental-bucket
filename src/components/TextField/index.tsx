@@ -11,8 +11,6 @@ interface Props extends OutlinedTextFieldProps {
 const TextField: React.FC<Props> = ({ style, ...rest }) => {
   return (
     <Container
-      error
-      helperText="Incorrect entry."
       style={{
         margin:'10px 0',
         ...style

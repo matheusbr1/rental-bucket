@@ -1,26 +1,76 @@
 import React from 'react'
 import AppBar  from '../../../components/AppBar'
-import EditButton from '../../../components/FloattingButton/Edit'
-import DeleteButton from '../../../components/FloattingButton/Delete'
-import ReturnButton from '../../../components/FloattingButton/Return'
+import FloatingButton from '../../../components/FloatingButton'
 
-import { Container } from './styles'
+import { Container, Content } from './styles'
+import TextField from '../../../components/TextField'
+import { useHistory } from 'react-router'
 
 const Detail: React.FC = () => {
+
+  const { goBack } = useHistory()
+
   return (
     <Container>
-      <AppBar />
+      <AppBar search={false} />
 
-      <h1>Detail</h1>
+      <Content>
 
+        <h1>Serviço #1</h1>
 
-      <div className='floatting-buttons left'>
-        <ReturnButton />
-      </div>
+        <form>
+          <TextField 
+            name='client' 
+            label='Cliente'
+            variant="outlined" 
+          />
 
-      <div className='floatting-buttons'>
-        <EditButton onClick={() => {}} />
-        <DeleteButton onClick={() => {}} />
+          <TextField 
+            name='adress' 
+            label='Endereço'
+            variant="outlined" 
+          />
+
+          <TextField 
+            name='driver' 
+            label='Motorista'
+            variant="outlined" 
+          />
+
+          <TextField 
+            name='truck' 
+            label='Caminhão'
+            variant="outlined" 
+          />
+
+          <TextField 
+            name='service' 
+            label='Serviço'
+            variant="outlined" 
+          />
+
+          <TextField 
+            size='medium'
+            name='quantity' 
+            label='Quantidade'
+            variant="outlined" 
+          />
+
+          <TextField 
+            name='expiration' 
+            label='Data da retirada'
+            variant="outlined" 
+          />
+
+          <div className='floating-buttons'>
+            <FloatingButton variant='edit' onClick={() => {}} />
+            <FloatingButton variant='delete' onClick={() => {}} />
+          </div>
+        </form>
+      </Content>
+
+      <div className='floating-buttons left'>
+        <FloatingButton variant='return' onClick={goBack} />
       </div>
     </Container>
   )

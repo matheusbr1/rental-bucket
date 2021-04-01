@@ -1,11 +1,5 @@
 import React, { useCallback } from 'react'
 
-import {
-  fade,
-  makeStyles,
-  Theme,
-  createStyles
-} from "@material-ui/core/styles"
 import Bar from "@material-ui/core/AppBar"
 import Toolbar from "@material-ui/core/Toolbar"
 import IconButton from "@material-ui/core/IconButton"
@@ -14,17 +8,21 @@ import InputBase from "@material-ui/core/InputBase"
 import Badge from "@material-ui/core/Badge"
 import MenuItem from "@material-ui/core/MenuItem"
 import Menu from "@material-ui/core/Menu"
-// import MenuIcon from "@material-ui/icons/Menu"
 import ReportIcon from "@material-ui/icons/Assessment"
 import SearchIcon from "@material-ui/icons/Search"
 import NotificationsIcon from "@material-ui/icons/Notifications"
 import MoreIcon from "@material-ui/icons/MoreVert"
 import LogoutIcon from "@material-ui/icons/ExitToApp"
+import { fade, makeStyles, Theme, createStyles } from "@material-ui/core/styles"
 
 import { Container } from './styles'
 import { useHistory } from 'react-router'
 
-const AppBar: React.FC = () => {
+interface AppBarProps {
+  search?: boolean
+}
+
+const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
 
   const history = useHistory()
 
@@ -198,20 +196,22 @@ const AppBar: React.FC = () => {
           <Typography className={classes.title} variant="h6" noWrap>
             Rental Bucket
           </Typography>
-          
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
+
+          {search && (
+            <div className={classes.search}>
+              <div className={classes.searchIcon}>
+                <SearchIcon />
+              </div>
+              <InputBase
+                placeholder="Search…"
+                classes={{
+                  root: classes.inputRoot,
+                  input: classes.inputInput
+                }}
+                inputProps={{ "aria-label": "search" }}
+              />
             </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput
-              }}
-              inputProps={{ "aria-label": "search" }}
-            />
-          </div>
+          )}
 
           <div className={classes.grow} />
 

@@ -1,19 +1,77 @@
 import React from 'react'
+import { useHistory } from 'react-router'
 import AppBar  from '../../../components/AppBar'
-import ConfirmButton  from '../../../components/FloattingButton/Confirm'
+import FloatingButton from '../../../components/FloatingButton'
 
-import { Container } from './styles'
+import TextField from '../../../components/TextField'
+
+import { Container, Content } from './styles'
 
 const Create: React.FC = () => {
+
+  const { goBack } = useHistory()
+
   return (
     <Container>
-      <AppBar />
+      <AppBar search={false} />
+      
+      <Content>
 
-      <h1>Create</h1>
+        <h1>Novo Serviço</h1>
 
-      <div className='floatting-buttons'>
-        <ConfirmButton />
-      </div>
+        <form>
+          <TextField 
+            name='client' 
+            label='Cliente'
+            variant="outlined" 
+            
+            helperText="Incorrect entry."
+            error
+          />
+
+          <TextField 
+            name='adress' 
+            label='Endereço'
+            variant="outlined" 
+          />
+
+          <TextField 
+            name='driver' 
+            label='Motorista'
+            variant="outlined" 
+          />
+
+          <TextField 
+            name='truck' 
+            label='Caminhão'
+            variant="outlined" 
+          />
+
+          <TextField 
+            name='service' 
+            label='Serviço'
+            variant="outlined" 
+          />
+
+          <TextField 
+            size='medium'
+            name='quantity' 
+            label='Quantidade'
+            variant="outlined" 
+          />
+
+          <TextField 
+            name='expiration' 
+            label='Data da retirada'
+            variant="outlined" 
+          />
+
+           <div className='floating-buttons'>
+            <FloatingButton variant='confirm' onClick={goBack} />
+          </div>
+        </form>
+      </Content>
+      
     </Container>
   )
 }

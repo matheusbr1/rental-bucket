@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import AppBar  from '../../../components/AppBar'
 import Table from '../../../components/Table'
-import AddButton from '../../../components/FloattingButton/Add'
+import FloatingButton from '../../../components/FloatingButton'
 
 import { Container } from './styles'
 import { useHistory } from 'react-router'
@@ -20,8 +20,8 @@ const List: React.FC = () => {
 
       <Table />
       
-      <div className='floatting-buttons' >
-        <AddButton onClick={handleCreate} />
+      <div className='floating-buttons' >
+        <FloatingButton onClick={handleCreate} />
       </div>
     </Container>
   )
