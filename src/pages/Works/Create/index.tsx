@@ -66,6 +66,52 @@ const Create: React.FC = () => {
             variant="outlined" 
           />
 
+          <TextField 
+            name='client' 
+            label='Cliente'
+            variant="outlined" 
+            
+            helperText="Incorrect entry."
+            error
+          />
+
+          <TextField 
+            name='adress' 
+            label='Endereço'
+            variant="outlined" 
+          />
+
+          <TextField 
+            name='driver' 
+            label='Motorista'
+            variant="outlined" 
+          />
+
+          <TextField 
+            name='truck' 
+            label='Caminhão'
+            variant="outlined" 
+          />
+
+          <TextField 
+            name='service' 
+            label='Serviço'
+            variant="outlined" 
+          />
+
+          <TextField 
+            size='medium'
+            name='quantity' 
+            label='Quantidade'
+            variant="outlined" 
+          />
+
+          <TextField 
+            name='expiration' 
+            label='Data da retirada'
+            variant="outlined" 
+          />
+
            <div className='floating-buttons'>
             <FloatingButton variant='confirm' onClick={goBack} />
           </div>

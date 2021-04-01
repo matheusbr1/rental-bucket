@@ -1,8 +1,8 @@
 import styled from 'styled-components'
 
 export const Container = styled.div`
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  margin-top: 64px;
 
   display: flex;
   flex-direction: column;
@@ -17,16 +17,14 @@ export const Container = styled.div`
 `
 
 export const Content = styled.main`
-  position: absolute;
+  position: relative;
+
+  margin: 20px 0;
 
   width: 768px;
   box-shadow: 0px 1px 20px rgba(0, 0, 0, 0.14);
   border-radius: 10px;
   padding: 25px;
-  
-  @media (max-height: 768px) {
-    margin-top: 64px;
-  }
 
   h1 {
     margin: 10px;

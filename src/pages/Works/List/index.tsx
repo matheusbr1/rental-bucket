@@ -3,7 +3,7 @@ import AppBar  from '../../../components/AppBar'
 import Table from '../../../components/Table'
 import FloatingButton from '../../../components/FloatingButton'
 
-import { Container } from './styles'
+import { Container, Content } from './styles'
 import { useHistory } from 'react-router'
 
 const List: React.FC = () => {
@@ -17,12 +17,14 @@ const List: React.FC = () => {
   return (
     <Container>
       <AppBar />
+      <Content>
+        <Table />
+        
+        <div className='floating-buttons' >
+          <FloatingButton onClick={handleCreate} />
+        </div>
 
-      <Table />
-      
-      <div className='floating-buttons' >
-        <FloatingButton onClick={handleCreate} />
-      </div>
+      </Content>
     </Container>
   )
 }
