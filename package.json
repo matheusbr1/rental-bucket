@@ -1,24 +1,40 @@
 {
-  "name": "rental-bucket",
+  "name": "mat-budget",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@date-io/date-fns": "1.x",
+    "@material-ui/core": "^4.11.3",
+    "@material-ui/icons": "^4.11.2",
+    "@material-ui/pickers": "^3.3.10",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
     "@types/jest": "^26.0.15",
     "@types/node": "^12.0.0",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "material-ui": "^0.20.2",
+    "notistack": "^1.0.5",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "react-icons": "^4.2.0",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
-    "typescript": "^4.1.2"
+    "react-spring": "^8.0.27",
+    "styled-components": "^5.2.1",
+    "typescript": "^4.1.2",
+    "uuidv4": "^6.2.7"
+  },
+  "devDependencies": {
+    "@types/date-fns": "^2.6.0",
+    "@types/react-router-dom": "^5.1.7",
+    "@types/styled-components": "^5.1.9"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test"
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [

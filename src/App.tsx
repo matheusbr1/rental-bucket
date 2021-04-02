@@ -1,9 +1,17 @@
-import React from 'react';
+import React from 'react'
+import Routes from './routes'
+import GlobalStyle from './styles/global'
+import { SnackbarProvider } from 'notistack';
 
 function App() {
   return (
-   <h1>Hello new rental bucket</h1>
-  );
+    <React.Fragment>
+      <SnackbarProvider>
+        <Routes />
+      </SnackbarProvider>
+      <GlobalStyle />
+    </React.Fragment>
+  )
 }
 
-export default App;
+export default App
