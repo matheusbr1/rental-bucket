@@ -37,4 +37,8 @@ export const Container = styled.div<FloatingButtonProps>`
     color: #000000;
     opacity: 0.5;
   }
+
+  .MuiCircularProgress-colorPrimary {
+    color: #FFF;
+  }
 `

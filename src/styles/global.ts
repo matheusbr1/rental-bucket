@@ -20,4 +20,12 @@ export default createGlobalStyle`
   button.MuiPickersDay-daySelected:hover {
     background-color: #529A67;
   }
+
+  div[class*='SnackbarItem-variantSuccess'] {
+    background-color: #529A67 !important;
+  }
+
+  div[class*='SnackbarItem-variantError'] {
+    background-color: #F50057 !important;
+  }
 `

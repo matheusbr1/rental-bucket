@@ -1,9 +1,13 @@
 import React from 'react'
-import { ButtonProps } from '@material-ui/core'
+import { ButtonProps, CircularProgress } from '@material-ui/core'
 
 import { Container } from './styles'
 
-const Button: React.FC<ButtonProps> = ({ ...rest }) => {
+interface Props extends ButtonProps {
+  loading?: boolean
+}
+
+const Button: React.FC<Props> = ({ loading, children, ...rest }) => {
   return (
     <Container 
       variant="contained" 
@@ -14,8 +18,10 @@ const Button: React.FC<ButtonProps> = ({ ...rest }) => {
         background: '#529A67',
         color: '#FFFFFF'
       }}
-      {...rest} 
-    />
+      {...rest}
+    >
+      { loading ? <CircularProgress variant='indeterminate' size={30}/> : children }
+    </Container>
   )
 }
 

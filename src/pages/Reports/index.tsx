@@ -38,8 +38,8 @@ const Reports: React.FC = () => {
 
         select
       >
-        {clients.map(client => (
-          <MenuItem value={client.name} >{client.name}</MenuItem>
+        {clients.map((client, index) => (
+          <MenuItem key={index} value={client.name} >{client.name}</MenuItem>
         ))}
       </TextField>
     ),
@@ -50,8 +50,8 @@ const Reports: React.FC = () => {
         variant="outlined" 
         select
       >
-        {drivers.map(driver => (
-          <MenuItem value={driver.name}> {driver.name} </MenuItem>
+        {drivers.map((driver, index) => (
+          <MenuItem key={index} value={driver.name}> {driver.name} </MenuItem>
         ))}
       </TextField>
     ),
@@ -62,8 +62,8 @@ const Reports: React.FC = () => {
         variant="outlined"
         select 
       >
-        {equipments.map(equipment => (
-          <MenuItem value={equipment}> {equipment} </MenuItem>
+        {equipments.map((equipment, index) => (
+          <MenuItem key={index} value={equipment}> {equipment} </MenuItem>
         ))}
       </TextField>
     ),
@@ -74,8 +74,8 @@ const Reports: React.FC = () => {
         variant="outlined"
         select
       >
-        {trucks.map(truck => (
-          <MenuItem value={truck.plate}> {truck.plate} </MenuItem>
+        {trucks.map((truck, index) => (
+          <MenuItem key={index} value={truck.plate}> {truck.plate} </MenuItem>
         ))}
       </TextField>
     ),
@@ -86,8 +86,8 @@ const Reports: React.FC = () => {
         variant="outlined"
         select 
       >
-        {services.map(service => (
-          <MenuItem value={service}> {service} </MenuItem>
+        {services.map((service, index) => (
+          <MenuItem  key={index} value={service}> {service} </MenuItem>
         ))}
       </TextField>
     )

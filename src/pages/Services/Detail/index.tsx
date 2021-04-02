@@ -1,19 +1,24 @@
 import React, { useCallback, useState } from 'react'
-import AppBar  from '../../../components/AppBar'
-import FloatingButton from '../../../components/FloatingButton'
-
-import { Container, Content } from './styles'
-import TextField from '../../../components/TextField'
 import { useHistory } from 'react-router'
+import { useSnackbar } from 'notistack'
 import { MenuItem } from '@material-ui/core'
+
+import FloatingButton from '../../../components/FloatingButton'
+import AppBar  from '../../../components/AppBar'
+import TextField from '../../../components/TextField'
 import { adresses, clients, drivers, equipments, services, trucks } from '../../../mocks'
 import DateInput from '../../../components/DateInput'
+import { Container, Content } from './styles'
 
 const Detail: React.FC = () => {
 
   const { goBack } = useHistory()
 
+  const { enqueueSnackbar } = useSnackbar()
+
   const [isChanging, setIsChanging] = useState(false)
+
+  const [loading, setLoading] = useState(false)
 
   const [selectedDate, setSelectedDate] = React.useState<Date | null>(
     new Date('2014-08-18T21:11:54')
@@ -24,8 +29,19 @@ const Detail: React.FC = () => {
   }
 
   const handleDelete = useCallback(() => {
-    goBack()
-  }, [goBack])
+
+    setLoading(true)
+
+    setTimeout(() => {
+      // goBack()
+
+      enqueueSnackbar('Erro ao deletar serviço, tente novamente!', {
+        variant: 'error'
+      })
+
+      setLoading(false)
+    }, 2000)
+  }, [enqueueSnackbar])
 
   const handleChange = useCallback(() => {
     setIsChanging(state => !state)
@@ -48,8 +64,8 @@ const Detail: React.FC = () => {
             select
             defaultValue={clients[0].name}
           >
-            {clients.map(client => (
-              <MenuItem value={client.name} >{client.name}</MenuItem>
+            {clients.map((client, index) => (
+              <MenuItem key={index} value={client.name} >{client.name}</MenuItem>
             ))}
           </TextField>
 
@@ -61,8 +77,8 @@ const Detail: React.FC = () => {
             select
             defaultValue={adresses[0].cep}
           >
-            {adresses.map(adress => (
-              <MenuItem value={adress.cep}>
+            {adresses.map((adress, index) => (
+              <MenuItem key={index} value={adress.cep}>
                 {adress.street} - {adress.number} - {adress.neighborhood}
               </MenuItem>
             ))}
@@ -76,8 +92,8 @@ const Detail: React.FC = () => {
             select
             defaultValue={trucks[0].plate}
           >
-           {trucks.map(truck => (
-              <MenuItem value={truck.plate}> {truck.plate} </MenuItem>
+           {trucks.map((truck, index) => (
+              <MenuItem key={index} value={truck.plate}> {truck.plate} </MenuItem>
             ))}
           </TextField>
 
@@ -89,8 +105,8 @@ const Detail: React.FC = () => {
             select
             defaultValue={drivers[0].name}
           >
-            {drivers.map(driver => (
-              <MenuItem value={driver.name}> {driver.name} </MenuItem>
+            {drivers.map((driver, index) => (
+              <MenuItem  key={index} value={driver.name}> {driver.name} </MenuItem>
             ))}
           </TextField>
 
@@ -102,8 +118,8 @@ const Detail: React.FC = () => {
             select 
             defaultValue={equipments[0]}
           >
-            {equipments.map(equipment => (
-              <MenuItem value={equipment}> {equipment} </MenuItem>
+            {equipments.map((equipment, index) => (
+              <MenuItem key={index} value={equipment}> {equipment} </MenuItem>
             ))}
           </TextField>
 
@@ -114,8 +130,8 @@ const Detail: React.FC = () => {
             variant="outlined"
             select 
           >
-            {services.map(service => (
-              <MenuItem value={service}> {service} </MenuItem>
+            {services.map((service, index) => (
+              <MenuItem key={index} value={service}> {service} </MenuItem>
             ))}
           </TextField>
 
@@ -142,7 +158,7 @@ const Detail: React.FC = () => {
             ) : (
               <React.Fragment>
                 <FloatingButton variant='edit' onClick={handleChange} />
-                <FloatingButton variant='delete' onClick={handleDelete} />
+                <FloatingButton variant='delete' onClick={handleDelete} loading={loading} />
               </React.Fragment>
             )}
           </div>

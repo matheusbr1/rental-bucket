@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useHistory } from 'react-router'
 import AppBar  from '../../../components/AppBar'
 import FloatingButton from '../../../components/FloatingButton'
@@ -26,12 +26,21 @@ const Create: React.FC = () => {
     setSelectedDate(date)
   }
 
+  const [loading, setLoading] = useState(false)
+
   const handleCreate = useCallback(() => {
-    goBack()
-    enqueueSnackbar('Serviço criado com sucesso!', {
-      variant: 'success',
-      // persist: true
-    })
+
+    setLoading(true)
+
+    setTimeout(() => {
+      goBack()
+
+      enqueueSnackbar('Serviço criado com sucesso!', {
+        variant: 'success'
+      })
+
+      setLoading(false)
+    }, 2000)
   }, [goBack, enqueueSnackbar])
 
   return (
@@ -53,8 +62,8 @@ const Create: React.FC = () => {
 
             select
           >
-            {clients.map(client => (
-              <MenuItem value={client.name} >{client.name}</MenuItem>
+            {clients.map((client, index) => (
+              <MenuItem key={index} value={client.name} >{client.name}</MenuItem>
             ))}
           </TextField>
 
@@ -64,8 +73,8 @@ const Create: React.FC = () => {
             variant="outlined" 
             select
           >
-            {adresses.map(adress => (
-              <MenuItem value={adress.cep}>
+            {adresses.map((adress, index) => (
+              <MenuItem key={index} value={adress.cep}>
                 {adress.street} - {adress.number} - {adress.neighborhood}
               </MenuItem>
             ))}
@@ -77,8 +86,8 @@ const Create: React.FC = () => {
             variant="outlined" 
             select
           >
-            {drivers.map(driver => (
-              <MenuItem value={driver.name}> {driver.name} </MenuItem>
+            {drivers.map((driver, index) => (
+              <MenuItem key={index} value={driver.name}> {driver.name} </MenuItem>
             ))}
           </TextField>
 
@@ -88,8 +97,8 @@ const Create: React.FC = () => {
             variant="outlined"
             select 
           >
-            {equipments.map(equipment => (
-              <MenuItem value={equipment}> {equipment} </MenuItem>
+            {equipments.map((equipment, index) => (
+              <MenuItem key={index} value={equipment}> {equipment} </MenuItem>
             ))}
           </TextField>
 
@@ -99,8 +108,8 @@ const Create: React.FC = () => {
             variant="outlined"
             select
           >
-           {trucks.map(truck => (
-              <MenuItem value={truck.plate}> {truck.plate} </MenuItem>
+           {trucks.map((truck, index) => (
+              <MenuItem key={index} value={truck.plate}> {truck.plate} </MenuItem>
             ))}
           </TextField>
 
@@ -110,8 +119,8 @@ const Create: React.FC = () => {
             variant="outlined"
             select 
           >
-            {services.map(service => (
-              <MenuItem value={service}> {service} </MenuItem>
+            {services.map((service, index) => (
+              <MenuItem key={index} value={service}> {service} </MenuItem>
             ))}
           </TextField>
 
@@ -130,7 +139,7 @@ const Create: React.FC = () => {
           />
 
            <div className='floating-buttons'>
-            <FloatingButton variant='confirm' onClick={handleCreate} />
+            <FloatingButton variant='confirm' onClick={handleCreate} loading={loading} />
           </div>
         </form>
       </Content>

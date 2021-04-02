@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { Link, useHistory } from 'react-router-dom'
-
+import { useSnackbar } from 'notistack'
 import { Checkbox } from '@material-ui/core'
 
 import TextField from '../../components/TextField'
@@ -12,15 +12,34 @@ const SignIn: React.FC = () => {
 
   const history = useHistory()
 
+  const { enqueueSnackbar } = useSnackbar()
+
   const [isRemeberInputsActive, setIsRememberInputsActive] = useState(false)
 
   const handleRememberInputs = useCallback(() => {
     setIsRememberInputsActive(state => !state)
   }, [])
 
+  const [loading, setLoading] = useState(false)
+
   const handleSignIn = useCallback(() => {
-    history.push('/services')
+
+    setLoading(true)
+
+    setTimeout(() => {
+      history.push('/services')
+
+      setLoading(false)
+    }, 2000)
   }, [history])  
+
+  const handleForgotPassword = useCallback(() => {
+    
+    enqueueSnackbar('Entre em contato com o administrador!', {
+      variant: 'info'
+    })
+
+  }, [enqueueSnackbar])
 
   return (
     <Container>
@@ -65,12 +84,12 @@ const SignIn: React.FC = () => {
               <p>Lembrar-me</p>
             </div>
 
-            <Link to="/forgot"> Esqueci minha Senha </Link>
+            <Link to="/" onClick={handleForgotPassword} > Esqueci minha Senha </Link>
           </div>
         
         </Inputs>
 
-        <Button onClick={handleSignIn} >
+        <Button onClick={handleSignIn} loading={loading} >
           Entrar
         </Button>
 
