@@ -3,6 +3,7 @@ import { useHistory } from 'react-router'
 import AppBar  from '../../../components/AppBar'
 import FloatingButton from '../../../components/FloatingButton'
 import { MenuItem } from '@material-ui/core'
+import { useSnackbar } from 'notistack'
 
 import TextField from '../../../components/TextField'
 import DateInput from '../../../components/DateInput'
@@ -15,6 +16,8 @@ const Create: React.FC = () => {
 
   const { goBack } = useHistory()
 
+  const { enqueueSnackbar } = useSnackbar()
+
   const [selectedDate, setSelectedDate] = React.useState<Date | null>(
     new Date('2014-08-18T21:11:54')
   )
@@ -25,7 +28,11 @@ const Create: React.FC = () => {
 
   const handleCreate = useCallback(() => {
     goBack()
-  }, [goBack])
+    enqueueSnackbar('Serviço criado com sucesso!', {
+      variant: 'success',
+      // persist: true
+    })
+  }, [goBack, enqueueSnackbar])
 
   return (
     <Container>
