@@ -96,7 +96,7 @@ const headCells: HeadCell[] = [
   { id: 'equipment', numeric: false, disablePadding: false, label: 'Equipamento' },
   { id: 'deadline', numeric: false, disablePadding: false, label: 'Retirada' },
   { id: 'status', numeric: false, disablePadding: false, label: 'Situação' },
-];
+]
 
 interface EnhancedTableProps {
   classes: ReturnType<typeof useStyles>
@@ -109,9 +109,9 @@ interface EnhancedTableProps {
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
-  const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
+  const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props
   const createSortHandler = (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
-    onRequestSort(event, property);
+    onRequestSort(event, property)
   };
 
   return (
@@ -381,6 +381,7 @@ const Table: React.FC = () => {
           component="div"
           count={rows.length}
           rowsPerPage={rowsPerPage}
+          labelRowsPerPage='Quantidade por Página'
           page={page}
           onChangePage={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}
