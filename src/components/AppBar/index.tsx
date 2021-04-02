@@ -94,7 +94,7 @@ const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
         }
       }
     })
-  );
+  )
 
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -134,10 +134,10 @@ const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Clientes</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Motoristas</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Caminhões</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Serviços</MenuItem>
+      <MenuItem onClick={() => history.push('/clients')}>Clientes</MenuItem>
+      <MenuItem onClick={() => history.push('/drivers')}>Motoristas</MenuItem>
+      <MenuItem onClick={() => history.push('/trucks')}>Caminhões</MenuItem>
+      <MenuItem onClick={() => history.push('/services')}>Serviços</MenuItem>
     </Menu>
   )
 
@@ -153,23 +153,23 @@ const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
       onClose={handleMobileMenuClose}
     >
 
-      <MenuItem  onClick={() => {}}>
+      <MenuItem  onClick={() => history.push('/services')}>
         <p>Serviços</p>
       </MenuItem>
 
-      <MenuItem  onClick={() => {}}>
+      <MenuItem  onClick={() => history.push('/clients')}>
         <p>Clientes</p>
       </MenuItem>
 
-      <MenuItem  onClick={() => {}}>
+      <MenuItem  onClick={() => history.push('/drivers')}>
         <p>Motoristas</p>
       </MenuItem>
 
-      <MenuItem  onClick={() => {}}>
+      <MenuItem  onClick={() => history.push('/trucks')}>
         <p>Caminhões</p>
       </MenuItem>
 
-      <MenuItem  onClick={() => {}}>
+      <MenuItem  onClick={() => history.push('/reports')}>
         <p>Relatórios</p>
       </MenuItem>
 
@@ -183,15 +183,6 @@ const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
     <Container className={classes.grow}>
       <Bar position="static">
         <Toolbar>
-          
-          {/* <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="open drawer"
-          >
-            <MenuIcon />
-          </IconButton> */}
           
           <Typography className={classes.title} variant="h6" noWrap>
             Rental Bucket
@@ -223,7 +214,7 @@ const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
               </Badge>
             </IconButton>
 
-            <IconButton aria-label="show 17 new notifications" color="inherit">
+            <IconButton color="inherit" onClick={() => history.push('/reports')} >
               <ReportIcon />
             </IconButton>
 

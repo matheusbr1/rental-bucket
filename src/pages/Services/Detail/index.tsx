@@ -68,19 +68,6 @@ const Detail: React.FC = () => {
             ))}
           </TextField>
 
-          <TextField
-            disabled={!isChanging}
-            name='driver' 
-            label='Motorista'
-            variant="outlined" 
-            select
-            defaultValue={drivers[0].name}
-          >
-            {drivers.map(driver => (
-              <MenuItem value={driver.name}> {driver.name} </MenuItem>
-            ))}
-          </TextField>
-
           <TextField 
             disabled={!isChanging}
             name='truck' 
@@ -91,6 +78,19 @@ const Detail: React.FC = () => {
           >
            {trucks.map(truck => (
               <MenuItem value={truck.plate}> {truck.plate} </MenuItem>
+            ))}
+          </TextField>
+
+          <TextField
+            disabled={!isChanging}
+            name='driver' 
+            label='Motorista'
+            variant="outlined" 
+            select
+            defaultValue={drivers[0].name}
+          >
+            {drivers.map(driver => (
+              <MenuItem value={driver.name}> {driver.name} </MenuItem>
             ))}
           </TextField>
 

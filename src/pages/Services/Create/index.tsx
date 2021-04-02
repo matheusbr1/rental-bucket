@@ -76,17 +76,6 @@ const Create: React.FC = () => {
           </TextField>
 
           <TextField 
-            name='truck' 
-            label='Caminhão'
-            variant="outlined"
-            select
-          >
-           {trucks.map(truck => (
-              <MenuItem value={truck.plate}> {truck.plate} </MenuItem>
-            ))}
-          </TextField>
-
-          <TextField 
             name='equipment' 
             label='Equipamento'
             variant="outlined"
@@ -94,6 +83,17 @@ const Create: React.FC = () => {
           >
             {equipments.map(equipment => (
               <MenuItem value={equipment}> {equipment} </MenuItem>
+            ))}
+          </TextField>
+
+          <TextField 
+            name='truck' 
+            label='Caminhão'
+            variant="outlined"
+            select
+          >
+           {trucks.map(truck => (
+              <MenuItem value={truck.plate}> {truck.plate} </MenuItem>
             ))}
           </TextField>
 

@@ -1,62 +1,64 @@
-import React, { useCallback } from 'react';
-import clsx from 'clsx';
-import { createStyles, lighten, makeStyles, Theme } from '@material-ui/core/styles';
-import MaterialTable from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import Checkbox from '@material-ui/core/Checkbox';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
-import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
-import OpenIcon from '@material-ui/icons/Launch';
+import React, { useCallback } from 'react'
+import clsx from 'clsx'
+import { createStyles, lighten, makeStyles, Theme } from '@material-ui/core/styles'
+import MaterialTable from '@material-ui/core/Table'
+import TableBody from '@material-ui/core/TableBody'
+import TableCell from '@material-ui/core/TableCell'
+import TableContainer from '@material-ui/core/TableContainer'
+import TableHead from '@material-ui/core/TableHead'
+import TablePagination from '@material-ui/core/TablePagination'
+import TableRow from '@material-ui/core/TableRow'
+import TableSortLabel from '@material-ui/core/TableSortLabel'
+import Toolbar from '@material-ui/core/Toolbar'
+import Typography from '@material-ui/core/Typography'
+import Paper from '@material-ui/core/Paper'
+import Checkbox from '@material-ui/core/Checkbox'
+import IconButton from '@material-ui/core/IconButton'
+import Tooltip from '@material-ui/core/Tooltip'
+import DeleteIcon from '@material-ui/icons/Delete'
+import EditIcon from '@material-ui/icons/Edit'
+import OpenIcon from '@material-ui/icons/Launch'
 
 import { Container } from './styles'
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router'
 
 interface Data {
   type: string
-  carbs: number
-  fat: number
+  equipment: string
+  quantity: number
   client: string
-  protein: number
+  deadline: string
+  status: string
 }
 
 function createData(
   client: string,
   type: string,
-  fat: number,
-  carbs: number,
-  protein: number,
+  quantity: number,
+  equipment: string,
+  deadline: string,
+  status: string,
 ): Data {
-  return { client, type, fat, carbs, protein };
+  return { client, type, quantity, equipment, deadline, status }
 }
 
 const rows = [
-  createData('Construtora A', 'Troca', 3.7, 67, 4.3),
-  createData('Construtora B', 'Coloca', 25.0, 51, 4.9),
-  createData('Construtora C', 'Retirada', 16.0, 24, 6.0),
-  createData('Particular A', 'Coloca', 6.0, 24, 4.0),
-  createData('Particular B', 'Retirada', 16.0, 49, 3.9),
-  createData('Particular C', 'Troca', 3.2, 87, 6.5),
+  createData('Construtora A', 'Troca', 3.7, 'Caçamba 5m³', '10/10/2021', 'Pendente'),
+  createData('Construtora B', 'Coloca', 25.0, 'Caçamba 5m³', '12/10/2021', 'Concluído'),
+  createData('Construtora C', 'Retirada', 16.0, 'Caçamba 5m³',  '13/10/2021', 'Pendente'),
+  createData('Particular A', 'Coloca', 6.0, 'Caçamba 5m³', '14/10/2021', 'Pendente'),
+  createData('Particular B', 'Retirada', 16.0, 'Caçamba 5m³',  '15/10/2021', 'Pendente'),
+  createData('Particular C', 'Troca', 3.2, 'Caçamba 5m³',  '16/10/2021',  'Concluído'),
 ]
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
-    return -1;
+    return -1
   }
   if (b[orderBy] > a[orderBy]) {
-    return 1;
+    return 1
   }
-  return 0;
+  return 0
 }
 
 type Order = 'asc' | 'desc';
@@ -67,42 +69,43 @@ function getComparator<Key extends keyof any>(
 ): (a: { [key in Key]: number | string }, b: { [key in Key]: number | string }) => number {
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
+    : (a, b) => -descendingComparator(a, b, orderBy)
 }
 
 function stableSort<T>(array: T[], comparator: (a: T, b: T) => number) {
-  const stabilizedThis = array.map((el, index) => [el, index] as [T, number]);
+  const stabilizedThis = array.map((el, index) => [el, index] as [T, number])
   stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map((el) => el[0]);
+    const order = comparator(a[0], b[0])
+    if (order !== 0) return order
+    return a[1] - b[1]
+  })
+  return stabilizedThis.map((el) => el[0])
 }
 
 interface HeadCell {
-  disablePadding: boolean;
-  id: keyof Data;
-  label: string;
-  numeric: boolean;
+  disablePadding: boolean
+  id: keyof Data
+  label: string
+  numeric: boolean
 }
 
 const headCells: HeadCell[] = [
   { id: 'client', numeric: false, disablePadding: true, label: 'Cliente' },
   { id: 'type', numeric: false, disablePadding: false, label: 'Tipo' },
-  { id: 'fat', numeric: true, disablePadding: false, label: 'Fat (g)' },
-  { id: 'carbs', numeric: true, disablePadding: false, label: 'Carbs (g)' },
-  { id: 'protein', numeric: true, disablePadding: false, label: 'Protein (g)' },
+  { id: 'quantity', numeric: false, disablePadding: false, label: 'Quantidade' },
+  { id: 'equipment', numeric: false, disablePadding: false, label: 'Equipamento' },
+  { id: 'deadline', numeric: false, disablePadding: false, label: 'Retirada' },
+  { id: 'status', numeric: false, disablePadding: false, label: 'Situação' },
 ];
 
 interface EnhancedTableProps {
-  classes: ReturnType<typeof useStyles>;
-  numSelected: number;
-  onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Data) => void;
-  onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  order: Order;
-  orderBy: string;
-  rowCount: number;
+  classes: ReturnType<typeof useStyles>
+  numSelected: number
+  onRequestSort: (event: React.MouseEvent<unknown>, property: keyof Data) => void
+  onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void
+  order: Order
+  orderBy: string
+  rowCount: number
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
@@ -181,11 +184,11 @@ const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
   const history = useHistory()
 
   const handleEdit = useCallback(() => {
-    history.push('/works/1')
+    history.push('/services/1')
   }, [history])
 
   const handleOpen = useCallback(() => {
-    history.push('/works/1')
+    history.push('/services/1')
   }, [history])
 
   return (
@@ -256,38 +259,38 @@ const useStyles = makeStyles((theme: Theme) =>
 
 
 const Table: React.FC = () => {
-  const classes = useStyles();
-  const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<keyof Data>('type');
-  const [selected, setSelected] = React.useState<string[]>([]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const classes = useStyles()
+  const [order, setOrder] = React.useState<Order>('asc')
+  const [orderBy, setOrderBy] = React.useState<keyof Data>('type')
+  const [selected, setSelected] = React.useState<string[]>([])
+  const [page, setPage] = React.useState(0)
+  const [rowsPerPage, setRowsPerPage] = React.useState(5)
 
   const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof Data) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
+    const isAsc = orderBy === property && order === 'asc'
+    setOrder(isAsc ? 'desc' : 'asc')
+    setOrderBy(property)
+  }
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.client);
-      setSelected(newSelecteds);
-      return;
+      const newSelecteds = rows.map((n) => n.client)
+      setSelected(newSelecteds)
+      return
     }
-    setSelected([]);
-  };
+    setSelected([])
+  }
 
   const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected: string[] = [];
+    const selectedIndex = selected.indexOf(name)
+    let newSelected: string[] = []
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, name)
     } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
+      newSelected = newSelected.concat(selected.slice(1))
     } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
+      newSelected = newSelected.concat(selected.slice(0, -1))
     } else if (selectedIndex > 0) {
       newSelected = newSelected.concat(
         selected.slice(0, selectedIndex),
@@ -295,21 +298,21 @@ const Table: React.FC = () => {
       );
     }
 
-    setSelected(newSelected);
-  };
+    setSelected(newSelected)
+  }
 
   const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
+    setPage(newPage)
+  }
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
+    setRowsPerPage(parseInt(event.target.value, 10))
+    setPage(0)
+  }
 
-  const isSelected = (name: string) => selected.indexOf(name) !== -1;
+  const isSelected = (name: string) => selected.indexOf(name) !== -1
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage)
 
   return (
     <Container className={classes.root}>
@@ -358,9 +361,10 @@ const Table: React.FC = () => {
                         {row.client}
                       </TableCell>
                       <TableCell align="left">{row.type}</TableCell>
-                      <TableCell align="right">{row.fat}</TableCell>
-                      <TableCell align="right">{row.carbs}</TableCell>
-                      <TableCell align="right">{row.protein}</TableCell>
+                      <TableCell align="left">{row.quantity}</TableCell>
+                      <TableCell align="left">{row.equipment}</TableCell>
+                      <TableCell align="left">{row.deadline}</TableCell>
+                      <TableCell align="left">{row.status}</TableCell>
                     </TableRow>
                   );
                 })}

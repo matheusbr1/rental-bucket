@@ -11,7 +11,7 @@ const List: React.FC = () => {
   const history = useHistory()
 
   const handleCreate = useCallback(() => {
-      history.push('create-work')
+      history.push('new-service')
   }, [history])
 
   return (
