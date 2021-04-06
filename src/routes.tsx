@@ -8,6 +8,10 @@ import Services from './pages/Services/List'
 import CreateService from './pages/Services/Create'
 import ServiceDetail from './pages/Services/Detail'
 
+import Clients from './pages/Clients/List'
+import CreateClient from './pages/Clients/Create'
+import ClientDetail from './pages/Clients/Detail'
+
 const Routes: React.FC = () => {
   return (
     <BrowserRouter>
@@ -17,6 +21,10 @@ const Routes: React.FC = () => {
       <Route path='/services' component={Services} exact />
       <Route path='/services/:id' component={ServiceDetail} />
       <Route path='/new-service' component={CreateService}  />
+
+      <Route path='/clients' component={Clients} exact />
+      <Route path='/clients/:id' component={ClientDetail} />
+      <Route path='/new-client' component={CreateClient}  />
     </BrowserRouter>
   )
 }

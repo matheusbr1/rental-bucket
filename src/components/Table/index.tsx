@@ -22,6 +22,10 @@ import OpenIcon from '@material-ui/icons/Launch'
 import { Container } from './styles'
 import { useHistory } from 'react-router'
 
+interface TableProps {
+  title: string
+}
+
 interface Data {
   type: string
   equipment: string
@@ -112,7 +116,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props
   const createSortHandler = (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
     onRequestSort(event, property)
-  };
+  }
 
   return (
     <TableHead>
@@ -122,7 +126,6 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
-            inputProps={{ 'aria-label': 'select all desserts' }}
           />
         </TableCell>
         {headCells.map((headCell) => (
@@ -177,60 +180,6 @@ interface EnhancedTableToolbarProps {
   numSelected: number
 }
 
-const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
-  const classes = useToolbarStyles()
-  const { numSelected } = props;
-
-  const history = useHistory()
-
-  const handleEdit = useCallback(() => {
-    history.push('/services/1')
-  }, [history])
-
-  const handleOpen = useCallback(() => {
-    history.push('/services/1')
-  }, [history])
-
-  return (
-    <Toolbar
-      className={clsx(classes.root, {
-        [classes.highlight]: numSelected > 0,
-      })}
-    >
-      {numSelected > 0 ? (
-        <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-          Serviços
-        </Typography>
-      )}
-      {numSelected === 1 && (
-        <Tooltip title="Abrir">
-          <IconButton onClick={handleOpen} >
-            <OpenIcon />
-          </IconButton>
-        </Tooltip>
-      )}
-      {numSelected === 1 && (
-        <Tooltip title="Editar">
-          <IconButton onClick={handleEdit} >
-            <EditIcon />
-          </IconButton>
-        </Tooltip>
-      )}
-      {numSelected > 0 && (
-        <Tooltip title="Deletar">
-          <IconButton>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      )}
-    </Toolbar>
-  );
-};
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -255,16 +204,69 @@ const useStyles = makeStyles((theme: Theme) =>
       width: 1,
     },
   }),
-);
+)
 
-
-const Table: React.FC = () => {
+const Table: React.FC<TableProps> = ({ title }) => {
   const classes = useStyles()
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<keyof Data>('type')
   const [selected, setSelected] = React.useState<string[]>([])
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
+
+  const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
+    const classes = useToolbarStyles()
+    const { numSelected } = props;
+  
+    const history = useHistory()
+  
+    const handleEdit = useCallback(() => {
+      history.push('/services/1')
+    }, [history])
+  
+    const handleOpen = useCallback(() => {
+      history.push('/services/1')
+    }, [history])
+  
+    return (
+      <Toolbar
+        className={clsx(classes.root, {
+          [classes.highlight]: numSelected > 0,
+        })}
+      >
+        {numSelected > 0 ? (
+          <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
+            {numSelected} selected
+          </Typography>
+        ) : (
+          <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
+            {title}
+          </Typography>
+        )}
+        {numSelected === 1 && (
+          <Tooltip title="Abrir">
+            <IconButton onClick={handleOpen} >
+              <OpenIcon />
+            </IconButton>
+          </Tooltip>
+        )}
+        {numSelected === 1 && (
+          <Tooltip title="Editar">
+            <IconButton onClick={handleEdit} >
+              <EditIcon />
+            </IconButton>
+          </Tooltip>
+        )}
+        {numSelected > 0 && (
+          <Tooltip title="Deletar">
+            <IconButton>
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+        )}
+      </Toolbar>
+    )
+  }
 
   const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof Data) => {
     const isAsc = orderBy === property && order === 'asc'
