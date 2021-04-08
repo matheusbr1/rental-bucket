@@ -8,6 +8,10 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  .MuiRadio-colorSecondary.Mui-checked {
+    color: #529A67
+  }
 `
 
 export const Content = styled.main`
@@ -22,9 +26,15 @@ export const Content = styled.main`
   padding: 25px;
 
   h1 {
-    margin: 10px;
+    margin: 10px 0;
     font-weight: 400;
     font-size: 1.5rem
+  }
+
+  h2 {
+    margin: 30px 0;
+    font-weight: 400;
+    font-size: 1.2rem
   }
 
   form {
@@ -42,4 +52,9 @@ export const Content = styled.main`
     bottom: 25px;
     right: 25px;
   }
+`
+
+export const Divider = styled.div`
+  margin: 30px 0;
+  border-bottom: solid 1px #c2c2c2;
 `

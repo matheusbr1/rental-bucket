@@ -11,7 +11,51 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 
 import TextField from '../../../components/TextField'
 
-import { Container, Content } from './styles'
+import { Container, Content, Divider } from './styles'
+import Table from './Table'
+
+interface PersonFields {
+  [key: string]: React.ReactNode
+}
+
+const personFields: PersonFields = {
+  fisic: (
+    <React.Fragment>
+      <TextField 
+        name='' 
+        label='CPF'
+        variant="outlined" 
+      />
+
+      <TextField
+        name='' 
+        label='Nome'
+        variant="outlined" 
+      />
+    </React.Fragment>
+  ),
+  legal: (
+    <React.Fragment>
+      <TextField 
+        name='' 
+        label='CNPJ'
+        variant="outlined" 
+      />
+
+      <TextField
+        name='' 
+        label='Razão Social'
+        variant="outlined" 
+      />
+
+      <TextField
+        name='' 
+        label='Nome Fantasia'
+        variant="outlined" 
+      />
+    </React.Fragment>
+  )
+}
 
 const Create: React.FC = () => {
 
@@ -36,11 +80,11 @@ const Create: React.FC = () => {
     }, 2000)
   }, [goBack, enqueueSnackbar])
 
-  const [value, setValue] = useState('')
+  const [person, setPerson] = useState('fisic')
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue((event.target as HTMLInputElement).value);
-  };
+  const handlePerson = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPerson((event.target as HTMLInputElement).value)
+  }
 
   return (
     <Container>
@@ -53,48 +97,20 @@ const Create: React.FC = () => {
         <form>
 
           <div className="grid">
-            <RadioGroup value={value} onChange={handleChange}>
+            
+            <RadioGroup value={person} onChange={handlePerson}>
               <FormControlLabel value="fisic" control={<Radio />} label="Pessoa Física" />
               <FormControlLabel value="legal" control={<Radio />} label="Pessoa Jurídica" />
             </RadioGroup>
             
-            <TextField 
-              name='' 
-              label='CPF'
-              variant="outlined" 
-            />
-            
-            <TextField 
-              name='' 
-              label='CNPJ'
-              variant="outlined" 
-            />
-
-            <TextField
-              name='' 
-              label='Nome'
-              variant="outlined" 
-            />
-
-            <TextField
-              name='' 
-              label='Razão Social'
-              variant="outlined" 
-            />
-
-            <TextField
-              name='' 
-              label='Nome Fantasia'
-              variant="outlined" 
-            />
+            {personFields[person]}
           </div>
 
-          <div className="grid">
-            <RadioGroup value={value} onChange={handleChange}>
-              <FormControlLabel value="fisic" control={<Radio />} label="Endereço via CEP" />
-              <FormControlLabel value="legal" control={<Radio />} label="Endereço digitado" />
-            </RadioGroup>
+          <Divider />
 
+          <h2>Endereço</h2>
+
+          <div className="grid">
             <TextField 
               name=''
               label='CEP'
@@ -103,13 +119,13 @@ const Create: React.FC = () => {
 
             <TextField 
               name=''
-              label='Número'
+              label='Logradouro'
               variant="outlined" 
             />
 
             <TextField 
               name=''
-              label='Complemento'
+              label='Número'
               variant="outlined" 
             />
 
@@ -143,16 +159,16 @@ const Create: React.FC = () => {
 
             <TextField 
               name=''
-              label='Número'
-              variant="outlined" 
-            />
-
-            <TextField 
-              name=''
               label='Complemento'
               variant="outlined" 
             />
           </div>
+
+          <Table title='Endereços cadastrados' />
+
+          <Divider />
+
+          <h2>Contato</h2>
           
           <div className="grid">
             <TextField
