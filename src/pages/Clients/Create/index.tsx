@@ -12,13 +12,16 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import TextField from '../../../components/TextField'
 
 import { Container, Content, Divider } from './styles'
-import Table from './Table'
 
-interface PersonFields {
+import AdressTable from './Table/Adress'
+import ContactTable from './Table/Contact'
+
+
+interface FieldVariations {
   [key: string]: React.ReactNode
 }
 
-const personFields: PersonFields = {
+const personFields: FieldVariations = {
   fisic: (
     <React.Fragment>
       <TextField 
@@ -57,6 +60,31 @@ const personFields: PersonFields = {
   )
 }
 
+const contactFields: FieldVariations = {
+  email: (
+    <TextField
+      name=''
+      label='Email'
+      variant="outlined" 
+    />
+  ),
+  telephone: (
+    <TextField 
+      name=''
+      label='Telefone'
+      variant="outlined" 
+    />
+  ),
+  cellphone: (
+    <TextField 
+      name=''
+      label='Celular'
+      variant="outlined" 
+    />
+  )
+}
+
+
 const Create: React.FC = () => {
 
   const { goBack } = useHistory()
@@ -84,6 +112,12 @@ const Create: React.FC = () => {
 
   const handlePerson = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPerson((event.target as HTMLInputElement).value)
+  }
+
+  const [contactField, setContactField] = useState('email')
+
+  const handleContactField = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setContactField((event.target as HTMLInputElement).value)
   }
 
   return (
@@ -164,31 +198,32 @@ const Create: React.FC = () => {
             />
           </div>
 
-          <Table title='Endereços cadastrados' />
+          <AdressTable title='Endereços cadastrados' />
 
           <Divider />
 
           <h2>Contato</h2>
           
           <div className="grid">
+
             <TextField
-              name=''
-              label='Email'
+              name='' 
+              label='Tipo'
               variant="outlined" 
-            />
+              onChange={handleContactField}
+              value={contactField}
+              select
+            >
+              <MenuItem value='email'> Email </MenuItem>
+              <MenuItem value='telephone'> Telefone </MenuItem>
+              <MenuItem value='cellphone'> Celular </MenuItem>
+            </TextField>
 
-            <TextField 
-              name=''
-              label='Telefone'
-              variant="outlined" 
-            />
-
-            <TextField 
-              name=''
-              label='Celular'
-              variant="outlined" 
-            />
+            {contactFields[contactField]}
+           
           </div>
+
+          <ContactTable title='Contatos  cadastrados' />
 
           <div className='floating-buttons'>
             <FloatingButton variant='confirm' onClick={handleCreate} loading={loading} />
