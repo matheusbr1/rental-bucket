@@ -13,7 +13,7 @@ const List: React.FC = () => {
   const history = useHistory()
 
   const handleCreate = useCallback(() => {
-    history.push('new-client')
+    history.push('new-driver')
   }, [history])
 
   const handleNatigateToServices = useCallback(() => {
@@ -25,7 +25,7 @@ const List: React.FC = () => {
       <AppBar />
       
       <Content>
-        <Table title='Clientes' />
+        <Table title='Motoristas' />
         
         <div className='floating-buttons' >
           <Button 

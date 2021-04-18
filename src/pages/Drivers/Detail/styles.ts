@@ -8,10 +8,15 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  .floating-buttons.left {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+  }
 `
 
 export const Content = styled.main`
-
   position: relative;
 
   margin: 20px 0;
@@ -36,11 +41,8 @@ export const Content = styled.main`
 
   .floating-buttons {
     display: flex;
-    justify-content: space-between;
-
     position: absolute;
     bottom: 25px;
     right: 25px;
-    left: 25px;
   }
 `

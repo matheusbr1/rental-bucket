@@ -5,85 +5,11 @@ import FloatingButton from '../../../components/FloatingButton'
 import { MenuItem } from '@material-ui/core'
 import { useSnackbar } from 'notistack'
 
-import Radio from '@material-ui/core/Radio'
-import RadioGroup from '@material-ui/core/RadioGroup'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
+import DateInput from '../../../components/DateInput'
 
 import TextField from '../../../components/TextField'
 
 import { Container, Content, Divider } from './styles'
-
-import AdressTable from './Table/Adress'
-import ContactTable from './Table/Contact'
-
-
-interface FieldVariations {
-  [key: string]: React.ReactNode
-}
-
-const personFields: FieldVariations = {
-  fisic: (
-    <React.Fragment>
-      <TextField 
-        name='' 
-        label='CPF'
-        variant="outlined" 
-      />
-
-      <TextField
-        name='' 
-        label='Nome'
-        variant="outlined" 
-      />
-    </React.Fragment>
-  ),
-  legal: (
-    <React.Fragment>
-      <TextField 
-        name='' 
-        label='CNPJ'
-        variant="outlined" 
-      />
-
-      <TextField
-        name='' 
-        label='Razão Social'
-        variant="outlined" 
-      />
-
-      <TextField
-        name='' 
-        label='Nome Fantasia'
-        variant="outlined" 
-      />
-    </React.Fragment>
-  )
-}
-
-const contactFields: FieldVariations = {
-  email: (
-    <TextField
-      name=''
-      label='Email'
-      variant="outlined" 
-    />
-  ),
-  telephone: (
-    <TextField 
-      name=''
-      label='Telefone'
-      variant="outlined" 
-    />
-  ),
-  cellphone: (
-    <TextField 
-      name=''
-      label='Celular'
-      variant="outlined" 
-    />
-  )
-}
-
 
 const Create: React.FC = () => {
 
@@ -93,6 +19,12 @@ const Create: React.FC = () => {
 
   const [loading, setLoading] = useState(false)
 
+  const [birthday, setBirthday] = React.useState<Date | null>(null)
+
+  const handleBirhday = (date: Date | null) => {
+    setBirthday(date)
+  }
+
   const handleCreate = useCallback(() => {
 
     setLoading(true)
@@ -100,7 +32,7 @@ const Create: React.FC = () => {
     setTimeout(() => {
       goBack()
 
-      enqueueSnackbar('Cliente criado com sucesso!', {
+      enqueueSnackbar('Motorista criado com sucesso!', {
         variant: 'success'
       })
 
@@ -108,36 +40,46 @@ const Create: React.FC = () => {
     }, 2000)
   }, [goBack, enqueueSnackbar])
 
-  const [person, setPerson] = useState('fisic')
-
-  const handlePerson = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPerson((event.target as HTMLInputElement).value)
-  }
-
-  const [contactField, setContactField] = useState('email')
-
-  const handleContactField = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setContactField((event.target as HTMLInputElement).value)
-  }
-
   return (
     <Container>
       <AppBar search={false} />
       
       <Content>
 
-        <h1>Novo Cliente</h1>
+        <h1>Novo Motorista</h1>
 
         <form>
 
           <div className="grid">
-            
-            <RadioGroup value={person} onChange={handlePerson}>
-              <FormControlLabel value="fisic" control={<Radio />} label="Pessoa Física" />
-              <FormControlLabel value="legal" control={<Radio />} label="Pessoa Jurídica" />
-            </RadioGroup>
-            
-            {personFields[person]}
+            <TextField
+              name='' 
+              label='Nome'
+              variant="outlined" 
+            />
+
+             <TextField 
+              name='' 
+              label='CPF'
+              variant="outlined" 
+            />
+
+            <TextField 
+              name='' 
+              label='RG'
+              variant="outlined" 
+            />
+
+            <TextField 
+              name='' 
+              label='CNH'
+              variant="outlined" 
+            />
+
+            <DateInput 
+              label='Data de nascimento'
+              onChange={handleBirhday}
+              value={birthday}
+            />
           </div>
 
           <Divider />
@@ -198,8 +140,6 @@ const Create: React.FC = () => {
             />
           </div>
 
-          <AdressTable title='Endereços cadastrados' />
-
           <Divider />
 
           <h2>Contato</h2>
@@ -207,23 +147,23 @@ const Create: React.FC = () => {
           <div className="grid">
 
             <TextField
-              name='' 
-              label='Tipo'
+              name=''
+              label='Email'
               variant="outlined" 
-              onChange={handleContactField}
-              value={contactField}
-              select
-            >
-              <MenuItem value='email'> Email </MenuItem>
-              <MenuItem value='telephone'> Telefone </MenuItem>
-              <MenuItem value='cellphone'> Celular </MenuItem>
-            </TextField>
+            />
 
-            {contactFields[contactField]}
-           
+            <TextField 
+              name=''
+              label='Telefone'
+              variant="outlined" 
+            />
+
+            <TextField 
+              name=''
+              label='Celular'
+              variant="outlined" 
+            />
           </div>
-
-          <ContactTable title='Contatos  cadastrados' />
 
           <div className='floating-buttons'>
             <FloatingButton variant='return' onClick={goBack} />

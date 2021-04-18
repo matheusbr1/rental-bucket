@@ -12,6 +12,10 @@ import Clients from './pages/Clients/List'
 import CreateClient from './pages/Clients/Create'
 import ClientDetail from './pages/Clients/Detail'
 
+import Drivers from './pages/Drivers/List'
+import CreateDriver from './pages/Drivers/Create'
+import DriverDetail from './pages/Drivers/Detail'
+
 const Routes: React.FC = () => {
   return (
     <BrowserRouter>
@@ -25,6 +29,10 @@ const Routes: React.FC = () => {
       <Route path='/clients' component={Clients} exact />
       <Route path='/clients/:id' component={ClientDetail} />
       <Route path='/new-client' component={CreateClient}  />
+
+      <Route path='/drivers' component={Drivers} exact />
+      <Route path='/drivers/:id' component={DriverDetail} />
+      <Route path='/new-driver' component={CreateDriver}  />
     </BrowserRouter>
   )
 }
