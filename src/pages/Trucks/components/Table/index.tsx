@@ -6,6 +6,7 @@ import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
+import TablePagination from '@material-ui/core/TablePagination'
 import TableRow from '@material-ui/core/TableRow'
 import TableSortLabel from '@material-ui/core/TableSortLabel'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -16,29 +17,33 @@ import IconButton from '@material-ui/core/IconButton'
 import Tooltip from '@material-ui/core/Tooltip'
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
+import OpenIcon from '@material-ui/icons/Launch'
 
 import { Container } from './styles'
+import { useHistory } from 'react-router'
 
 interface TableProps {
   title: string
 }
 
 interface Data {
-  type: string
-  contact: string
+  plate: string
+  brand: string
+  model: string
+  equipment: string
 }
 
 function createData(
-  type: string,
-  contact: string,
+  plate: string,
+  brand: string,
+  model: string,
+  equipment: string
 ): Data {
-  return { type, contact }
+  return { plate, brand, model, equipment }
 }
 
 const rows = [
-  createData('Email', 'matheusbaron10@gmail.com'),
-  createData('Telefone fixo', '(11) 3691-3428'),
-  createData('Celular', '(11) 97803-5721'),
+  createData('FKF-7151', 'Ford', 'F-1000 XLT 4x4 Diesel Turbo', 'Poliguindaste'),
 ]
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -80,8 +85,10 @@ interface HeadCell {
 }
 
 const headCells: HeadCell[] = [
-  { id: 'type', numeric: false, disablePadding: true, label: 'Tipo' },
-  { id: 'contact', numeric: false, disablePadding: false, label: 'Contato' },
+  { id: 'plate', numeric: false, disablePadding: true, label: 'Placa' },
+  { id: 'brand', numeric: false, disablePadding: false, label: 'Marca' },
+  { id: 'model', numeric: false, disablePadding: false, label: 'Modelo' },
+  { id: 'equipment', numeric: false, disablePadding: false, label: 'Equipamento' },
 ]
 
 interface EnhancedTableProps {
@@ -154,9 +161,6 @@ const useToolbarStyles = makeStyles((theme: Theme) =>
           },
     title: {
       flex: '1 1 100%',
-      fontSize: '1rem',
-      fontWeight: 400,
-      fontFamily: 'Roboto'
     },
   }),
 );
@@ -194,16 +198,24 @@ const useStyles = makeStyles((theme: Theme) =>
 const Table: React.FC<TableProps> = ({ title }) => {
   const classes = useStyles()
   const [order, setOrder] = React.useState<Order>('asc')
-  const [orderBy, setOrderBy] = React.useState<keyof Data>('type')
+  const [orderBy, setOrderBy] = React.useState<keyof Data>('plate')
   const [selected, setSelected] = React.useState<string[]>([])
+  const [page, setPage] = React.useState(0)
+  const [rowsPerPage, setRowsPerPage] = React.useState(5)
 
   const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
     const classes = useToolbarStyles()
     const { numSelected } = props;
   
+    const history = useHistory()
+  
     const handleEdit = useCallback(() => {
-      // Editar
-    }, [])
+      history.push('/trucks/1')
+    }, [history])
+  
+    const handleOpen = useCallback(() => {
+      history.push('/trucks/1')
+    }, [history])
   
     return (
       <Toolbar
@@ -215,9 +227,18 @@ const Table: React.FC<TableProps> = ({ title }) => {
           <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
             {numSelected} selected
           </Typography>
-        ) :  <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-          {title}
-        </Typography>}
+        ) : (
+          <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
+            {title}
+          </Typography>
+        )}
+        {numSelected === 1 && (
+          <Tooltip title="Abrir">
+            <IconButton onClick={handleOpen} >
+              <OpenIcon />
+            </IconButton>
+          </Tooltip>
+        )}
         {numSelected === 1 && (
           <Tooltip title="Editar">
             <IconButton onClick={handleEdit} >
@@ -244,7 +265,7 @@ const Table: React.FC<TableProps> = ({ title }) => {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.type)
+      const newSelecteds = rows.map((n) => n.plate)
       setSelected(newSelecteds)
       return
     }
@@ -271,7 +292,18 @@ const Table: React.FC<TableProps> = ({ title }) => {
     setSelected(newSelected)
   }
 
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage)
+  }
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10))
+    setPage(0)
+  }
+
   const isSelected = (name: string) => selected.indexOf(name) !== -1
+
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage)
 
   return (
     <Container className={classes.root}>
@@ -295,18 +327,19 @@ const Table: React.FC<TableProps> = ({ title }) => {
             />
             <TableBody>
               {stableSort(rows, getComparator(order, orderBy))
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.type);
+                  const isItemSelected = isSelected(row.plate);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.type)}
+                      onClick={(event) => handleClick(event, row.plate)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.type}
+                      key={row.plate}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
@@ -315,14 +348,33 @@ const Table: React.FC<TableProps> = ({ title }) => {
                           inputProps={{ 'aria-labelledby': labelId }}
                         />
                       </TableCell>
-                      <TableCell id={labelId} padding="none">{row.type} </TableCell>
-                      <TableCell align="left">{row.contact}</TableCell>
+                      <TableCell component="th" id={labelId} scope="row" padding="none">
+                        {row.plate}
+                      </TableCell>
+                      <TableCell align="left">{row.brand}</TableCell>
+                      <TableCell align="left">{row.model}</TableCell>
+                      <TableCell align="left">{row.equipment}</TableCell>
                     </TableRow>
-                  )
+                  );
                 })}
+              {emptyRows > 0 && (
+                <TableRow style={{ height: 53 * emptyRows }}>
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
             </TableBody>
           </MaterialTable>
         </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={rows.length}
+          rowsPerPage={rowsPerPage}
+          labelRowsPerPage='Quantidade por Página'
+          page={page}
+          onChangePage={handleChangePage}
+          onChangeRowsPerPage={handleChangeRowsPerPage}
+        />
       </Paper>
     </Container>
   )

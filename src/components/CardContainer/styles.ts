@@ -1,24 +1,8 @@
 import styled from 'styled-components'
 
 export const Container = styled.div`
-  width: 100%;
-  margin-top: 64px;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  .MuiRadio-colorSecondary.Mui-checked {
-    color: #529A67
-  }
-`
-
-export const Content = styled.main`
-
   position: relative;
   margin: 20px 0;
-
   width: 768px;
   box-shadow: 0px 1px 20px rgba(0, 0, 0, 0.14);
   border-radius: 10px;
@@ -48,13 +32,15 @@ export const Content = styled.main`
 
   .floating-buttons {
     display: flex;
+    justify-content: space-between;
+
     position: absolute;
     bottom: 25px;
+    left: 25px;
     right: 25px;
-  }
-`
 
-export const Divider = styled.div`
-  margin: 30px 0;
-  border-bottom: solid 1px #c2c2c2;
+    .group {
+      display: flex;
+    }
+  }
 `
