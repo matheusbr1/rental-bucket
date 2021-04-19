@@ -15,7 +15,7 @@ $ yarn start
 ### Built with
 <ul>
   <li><a href="https://reactjs.org/">React</a></li>
-  <li><a href="https://www.typescriptlang.org/"Typescript</a></li>
+  <li><a href="https://www.typescriptlang.org/">Typescript</a></li>
   <li><a href="https://material-ui.com/">Material UI</a></li>
   <li><a href="https://styled-components.com/">Styled Components</a></li>
 <ul>
