@@ -6,7 +6,6 @@ import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
-import TablePagination from '@material-ui/core/TablePagination'
 import TableRow from '@material-ui/core/TableRow'
 import TableSortLabel from '@material-ui/core/TableSortLabel'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -17,32 +16,37 @@ import IconButton from '@material-ui/core/IconButton'
 import Tooltip from '@material-ui/core/Tooltip'
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
-import OpenIcon from '@material-ui/icons/Launch'
 
 import { Container } from './styles'
-import { useHistory } from 'react-router'
 
 interface TableProps {
   title: string
 }
 
 interface Data {
-  name: string
-  contact: string
+  street: string
+  number: number
+  neighborhood: string
+  state: string
+  city: string
+  cep: string
 }
 
 function createData(
-  name: string,
-  contact: string,
+  street: string,
+  number: number,
+  neighborhood: string,
+  state: string,
+  city: string,
+  cep: string,
 ): Data {
-  return { name, contact }
+  return { street, number, neighborhood, cep, state, city }
 }
 
 const rows = [
-  createData('Larissa Caroline de Paula', '(11) 2795-9980'),
-  createData('Antonio Kauê Lucca da Luz', '(11) 2612-6444'),
-  createData('Construtora C', '(11) 3701-4629'),
-  createData('Milena Aurora Márcia Fogaça', '(11) 2657-5882'),
+  createData('Rua João Rodrigues de Moura', 321, 'Jardim Piracuama', 'São Paulo', 'SP', '05763-440'),
+  createData('Rua Guarupu', 987, 'Vila Curuçá', 'São Paulo', 'SP', '08030-170'),
+  createData('Rua Doutor João José', 12, 'Vila Sônia', 'São Paulo', 'SP', '05628-040'),
 ]
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -84,8 +88,12 @@ interface HeadCell {
 }
 
 const headCells: HeadCell[] = [
-  { id: 'name', numeric: false, disablePadding: true, label: 'Cliente' },
-  { id: 'contact', numeric: false, disablePadding: false, label: 'Contato' },
+  { id: 'street', numeric: false, disablePadding: true, label: 'Logradouro' },
+  { id: 'number', numeric: true, disablePadding: false, label: 'Nº' },
+  { id: 'neighborhood', numeric: false, disablePadding: false, label: 'Bairro' },
+  { id: 'state', numeric: false, disablePadding: false, label: 'Cidade' },
+  { id: 'city', numeric: false, disablePadding: false, label: 'UF' },
+  { id: 'cep', numeric: false, disablePadding: false, label: 'CEP' },
 ]
 
 interface EnhancedTableProps {
@@ -158,6 +166,9 @@ const useToolbarStyles = makeStyles((theme: Theme) =>
           },
     title: {
       flex: '1 1 100%',
+      fontSize: '1rem',
+      fontWeight: 400,
+      fontFamily: 'Roboto'
     },
   }),
 );
@@ -195,24 +206,16 @@ const useStyles = makeStyles((theme: Theme) =>
 const Table: React.FC<TableProps> = ({ title }) => {
   const classes = useStyles()
   const [order, setOrder] = React.useState<Order>('asc')
-  const [orderBy, setOrderBy] = React.useState<keyof Data>('name')
+  const [orderBy, setOrderBy] = React.useState<keyof Data>('street')
   const [selected, setSelected] = React.useState<string[]>([])
-  const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(5)
 
   const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
     const classes = useToolbarStyles()
     const { numSelected } = props;
   
-    const history = useHistory()
-  
     const handleEdit = useCallback(() => {
-      history.push('/clients/1')
-    }, [history])
-  
-    const handleOpen = useCallback(() => {
-      history.push('/clients/1')
-    }, [history])
+      // Editar
+    }, [])
   
     return (
       <Toolbar
@@ -224,18 +227,9 @@ const Table: React.FC<TableProps> = ({ title }) => {
           <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
             {numSelected} selected
           </Typography>
-        ) : (
-          <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-            {title}
-          </Typography>
-        )}
-        {numSelected === 1 && (
-          <Tooltip title="Abrir">
-            <IconButton onClick={handleOpen} >
-              <OpenIcon />
-            </IconButton>
-          </Tooltip>
-        )}
+        ) :  <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
+          {title}
+        </Typography>}
         {numSelected === 1 && (
           <Tooltip title="Editar">
             <IconButton onClick={handleEdit} >
@@ -262,7 +256,7 @@ const Table: React.FC<TableProps> = ({ title }) => {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name)
+      const newSelecteds = rows.map((n) => n.street)
       setSelected(newSelecteds)
       return
     }
@@ -289,18 +283,7 @@ const Table: React.FC<TableProps> = ({ title }) => {
     setSelected(newSelected)
   }
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage)
-  }
-
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRowsPerPage(parseInt(event.target.value, 10))
-    setPage(0)
-  }
-
   const isSelected = (name: string) => selected.indexOf(name) !== -1
-
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage)
 
   return (
     <Container className={classes.root}>
@@ -324,19 +307,18 @@ const Table: React.FC<TableProps> = ({ title }) => {
             />
             <TableBody>
               {stableSort(rows, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
+                  const isItemSelected = isSelected(row.street);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.name)}
+                      onClick={(event) => handleClick(event, row.street)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.name}
+                      key={row.street}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
@@ -345,31 +327,18 @@ const Table: React.FC<TableProps> = ({ title }) => {
                           inputProps={{ 'aria-labelledby': labelId }}
                         />
                       </TableCell>
-                      <TableCell component="th" id={labelId} scope="row" padding="none">
-                        {row.name}
-                      </TableCell>
-                      <TableCell align="left">{row.contact}</TableCell>
+                      <TableCell id={labelId} padding="none">{row.street} </TableCell>
+                      <TableCell align="left">{row.number}</TableCell>
+                      <TableCell align="left">{row.neighborhood}</TableCell>
+                      <TableCell align="left">{row.state}</TableCell>
+                      <TableCell align="left">{row.city}</TableCell>
+                      <TableCell align="left">{row.cep}</TableCell>
                     </TableRow>
-                  );
+                  )
                 })}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: 53 * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
             </TableBody>
           </MaterialTable>
         </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          labelRowsPerPage='Quantidade por Página'
-          page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
-        />
       </Paper>
     </Container>
   )

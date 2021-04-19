@@ -16,6 +16,10 @@ import Drivers from './pages/Drivers/List'
 import CreateDriver from './pages/Drivers/Create'
 import DriverDetail from './pages/Drivers/Detail'
 
+import Trucks from './pages/Trucks/List'
+import CreateTruck from './pages/Trucks/Create'
+import TruckDetail from './pages/Trucks/Detail'
+
 const Routes: React.FC = () => {
   return (
     <BrowserRouter>
@@ -33,6 +37,10 @@ const Routes: React.FC = () => {
       <Route path='/drivers' component={Drivers} exact />
       <Route path='/drivers/:id' component={DriverDetail} />
       <Route path='/new-driver' component={CreateDriver}  />
+      
+      <Route path='/trucks' component={Trucks} exact />
+      <Route path='/trucks/:id' component={TruckDetail} />
+      <Route path='/new-truck' component={CreateTruck}  />
     </BrowserRouter>
   )
 }

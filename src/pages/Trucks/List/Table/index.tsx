@@ -207,11 +207,11 @@ const Table: React.FC<TableProps> = ({ title }) => {
     const history = useHistory()
   
     const handleEdit = useCallback(() => {
-      history.push('/clients/1')
+      history.push('/services/1')
     }, [history])
   
     const handleOpen = useCallback(() => {
-      history.push('/clients/1')
+      history.push('/services/1')
     }, [history])
   
     return (
