@@ -21,7 +21,7 @@ const Create: React.FC = () => {
     setTimeout(() => {
       goBack()
 
-      enqueueSnackbar('Serviço criado com sucesso!', {
+      enqueueSnackbar('Caminhão cadastrado com sucesso!', {
         variant: 'success'
       })
 
@@ -33,10 +33,10 @@ const Create: React.FC = () => {
     <Container>
       <AppBar search={false} />
 
-      <Card 
-        onConfirm={handleCreate}
-        loading={loading}
+      <Card
         type='create'
+        loading={loading}
+        onConfirm={handleCreate}
       />
     </Container>
   )

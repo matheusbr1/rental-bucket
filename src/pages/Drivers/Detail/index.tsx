@@ -15,7 +15,7 @@ const Detail: React.FC = () => {
     setLoading(true)
 
     setTimeout(() => {
-      enqueueSnackbar('Serviço editado com sucesso', {
+      enqueueSnackbar('Motorista editado com sucesso', {
         variant: 'success'
       })
 
@@ -30,7 +30,7 @@ const Detail: React.FC = () => {
     setTimeout(() => {
       // goBack()
 
-      enqueueSnackbar('Erro ao deletar serviço, tente novamente!', {
+      enqueueSnackbar('Erro ao deletar motorista, tente novamente!', {
         variant: 'error'
       })
 

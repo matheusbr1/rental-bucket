@@ -4,6 +4,7 @@ import AppBar  from '../../../components/AppBar'
 import { useSnackbar } from 'notistack'
 
 import { Container } from './styles'
+
 import Card from '../components/Card'
 
 const Create: React.FC = () => {
@@ -21,7 +22,7 @@ const Create: React.FC = () => {
     setTimeout(() => {
       goBack()
 
-      enqueueSnackbar('Serviço criado com sucesso!', {
+      enqueueSnackbar('Cliente criado com sucesso!', {
         variant: 'success'
       })
 
@@ -32,12 +33,13 @@ const Create: React.FC = () => {
   return (
     <Container>
       <AppBar search={false} />
-
+      
       <Card 
+        type='create' 
         onConfirm={handleCreate}
         loading={loading}
-        type='create'
       />
+    
     </Container>
   )
 }

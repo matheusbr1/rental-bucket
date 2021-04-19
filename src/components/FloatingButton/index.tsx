@@ -28,9 +28,7 @@ const FloatingButton: React.FC<Props> = ({ onClick, loading, variant = 'add', di
           {
           loading ? (
             <CircularProgress variant='indeterminate' size={30}/>
-          ) : (
-            variationIcons[variant]
-          )}
+          ) : variationIcons[variant]}
         </Fab>
       </div>
     </Container>

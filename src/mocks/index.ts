@@ -57,7 +57,8 @@ export const adresses = [
     number: '321',  
     neighborhood: 'Jardim Piracuama',
     state: 'SP', 
-    city: 'São Paulo'
+    city: 'São Paulo',
+    complement: ''
   },
   { 
     cep: '05628-040',  
@@ -65,7 +66,8 @@ export const adresses = [
     number: '12',  
     neighborhood: 'Vila Sônia',
     state: 'SP', 
-    city: 'São Paulo'
+    city: 'São Paulo',
+    complement: ''
   },
   { 
     cep: '08030-170',  
@@ -73,7 +75,8 @@ export const adresses = [
     number: '987',  
     neighborhood: 'Vila Curuçá',
     state: 'SP', 
-    city: 'São Paulo'
+    city: 'São Paulo',
+    complement: ''
   },
   { 
     cep: '04457-120',  
@@ -81,7 +84,8 @@ export const adresses = [
     number: '12387',  
     neighborhood: 'Jardim Palmares (Zona Sul)',
     state: 'SP', 
-    city: 'São Paulo'
+    city: 'São Paulo',
+    complement: ''
   },
 ]
 
@@ -97,12 +101,13 @@ export const drivers = [
       number: '393',  
       neighborhood: 'Parque dos Príncipes',
       state: 'SP', 
-      city: 'São Paulo'
+      city: 'Osasco',
+      complement: ''
     },
     contact: {
       telephone: ['(11) 2644-3809'],
       cellphone: ['(11) 99141-9747'],
-      email: null
+      email: 'theoThomas@gmail.com'
     }
   },
   {
@@ -116,7 +121,8 @@ export const drivers = [
       number: '423',  
       neighborhood: 'Parque São Matheus',
       state: 'SP', 
-      city: 'São Paulo'
+      city: 'São Paulo',
+      complement: ''
     },
     contact: {
       telephone: ['(18) 2590-3843'],
@@ -135,7 +141,8 @@ export const drivers = [
       number: '938',  
       neighborhood: 'Vila Carvalho',
       state: 'SP', 
-      city: 'Assis'
+      city: 'Assis',
+      complement: ''
     },
     contact: {
       telephone: ['(18) 2590-3843'],

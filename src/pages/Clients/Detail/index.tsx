@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from 'react'
+import AppBar  from '../../../components/AppBar'
 import { useSnackbar } from 'notistack'
 
-import AppBar  from '../../../components/AppBar'
 import { Container } from './styles'
 import Card from '../components/Card'
 
-const Detail: React.FC = () => {
+const Create: React.FC = () => {
 
   const { enqueueSnackbar } = useSnackbar()
 
@@ -15,7 +15,7 @@ const Detail: React.FC = () => {
     setLoading(true)
 
     setTimeout(() => {
-      enqueueSnackbar('Serviço editado com sucesso', {
+      enqueueSnackbar('Cliente editado com sucesso', {
         variant: 'success'
       })
 
@@ -30,7 +30,7 @@ const Detail: React.FC = () => {
     setTimeout(() => {
       // goBack()
 
-      enqueueSnackbar('Erro ao deletar serviço, tente novamente!', {
+      enqueueSnackbar('Erro ao deletar cliente, tente novamente!', {
         variant: 'error'
       })
 
@@ -48,8 +48,9 @@ const Detail: React.FC = () => {
         onDelete={handleDelete}
         loading={loading}
       />
+      
     </Container>
   )
 }
 
-export default Detail
+export default Create
