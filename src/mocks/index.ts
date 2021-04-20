@@ -6,7 +6,27 @@ export const clients = [
       email: 'larissacarolinedepaula_@etec.sp.gov.br',
       telephone: ['(16) 3701-4629'],
       cellphone: ['(16) 99474-4795'],
-    }
+    },
+    adress: [
+      { 
+        cep: '05763-440', 
+        street: 'Rua João Rodrigues de Moura', 
+        number: '321',  
+        neighborhood: 'Jardim Piracuama',
+        state: 'SP', 
+        city: 'São Paulo',
+        complement: ''
+      },
+      { 
+        cep: '05628-040',  
+        street: 'Rua Doutor João José de Carvalho', 
+        number: '12',  
+        neighborhood: 'Vila Sônia',
+        state: 'SP', 
+        city: 'São Paulo',
+        complement: ''
+      }
+    ]
   },
   {
     cpf: '649.560.678-87',
@@ -15,7 +35,18 @@ export const clients = [
       email: 'antoniokaueluccadaluz_@sinelcom.com.br',
       telephone: ['(12) 2612-6444'],
       cellphone: ['(12) 98430-2458', '(12) 98589-1526'],
-    }
+    },
+    adress: [
+      { 
+        cep: '08030-170',  
+        street: 'Rua Guarupu', 
+        number: '987',  
+        neighborhood: 'Vila Curuçá',
+        state: 'SP', 
+        city: 'São Paulo',
+        complement: ''
+      }
+    ]
   },
   {
     cpf: '003.786.338-05',
@@ -24,7 +55,18 @@ export const clients = [
       email: 'milenaauroramarciafogaca-82@graffiti.net',
       telephone: ['(14) 2795-9980'],
       cellphone: ['(14) 98991-7496'],
-    }
+    },
+    adress: [
+      { 
+        cep: '04457-120',  
+        street: 'Rua Luís Bueno de Miranda', 
+        number: '12387',  
+        neighborhood: 'Jardim Palmares (Zona Sul)',
+        state: 'SP', 
+        city: 'São Paulo',
+        complement: ''
+      }
+    ]
   },
   {
     cnpj: '99.732.888/0001-14',
@@ -35,7 +77,18 @@ export const clients = [
       email: 'ouvidoria@alessandraepedrovidrosltda.com.br',
       telephone: ['(19) 2747-8372'],
       cellphone: ['(19) 99623-9418'],
-    }
+    },
+    adress: [
+      { 
+        cep: '04457-120',  
+        street: 'Rua Luís Bueno de Miranda', 
+        number: '12387',  
+        neighborhood: 'Jardim Palmares (Zona Sul)',
+        state: 'SP', 
+        city: 'São Paulo',
+        complement: ''
+      }
+    ]
   },
   {
     cnpj: '36.745.474/0001-00',
@@ -46,47 +99,19 @@ export const clients = [
       email: 'treinamento@lucianaethiagograficame.com.br',
       telephone: ['(11) 2657-5882'],
       cellphone: ['(11) 98299-6434'],
-    }
+    },
+    adress: [
+      { 
+        cep: '04457-120',  
+        street: 'Rua Luís Bueno de Miranda', 
+        number: '12387',  
+        neighborhood: 'Jardim Palmares (Zona Sul)',
+        state: 'SP', 
+        city: 'São Paulo',
+        complement: ''
+      }
+    ]
   }
-]
-
-export const adresses = [
-  { 
-    cep: '05763-440', 
-    street: 'Rua João Rodrigues de Moura', 
-    number: '321',  
-    neighborhood: 'Jardim Piracuama',
-    state: 'SP', 
-    city: 'São Paulo',
-    complement: ''
-  },
-  { 
-    cep: '05628-040',  
-    street: 'Rua Doutor João José de Carvalho', 
-    number: '12',  
-    neighborhood: 'Vila Sônia',
-    state: 'SP', 
-    city: 'São Paulo',
-    complement: ''
-  },
-  { 
-    cep: '08030-170',  
-    street: 'Rua Guarupu', 
-    number: '987',  
-    neighborhood: 'Vila Curuçá',
-    state: 'SP', 
-    city: 'São Paulo',
-    complement: ''
-  },
-  { 
-    cep: '04457-120',  
-    street: 'Rua Luís Bueno de Miranda', 
-    number: '12387',  
-    neighborhood: 'Jardim Palmares (Zona Sul)',
-    state: 'SP', 
-    city: 'São Paulo',
-    complement: ''
-  },
 ]
 
 export const drivers = [

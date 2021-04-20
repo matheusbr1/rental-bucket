@@ -1,21 +1,29 @@
 import { MenuItem } from '@material-ui/core'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import DateInput from '../../../../components/DateInput'
-import FloatingButton from '../../../../components/FloatingButton'
-import TextField from '../../../../components/TextField'
-import { adresses, clients, drivers, equipments, services, trucks } from '../../../../mocks'
+import DateInput from 'components/DateInput'
+import FloatingButton from 'components/FloatingButton'
+import TextField from 'components/TextField'
+import { clients, drivers, equipments, services, trucks } from 'mocks'
+import { Form } from '@unform/web'
 
-import { Container } from './styles'
+import { Container, Footer } from './styles'
+import { FormHandles } from '@unform/core'
+
+interface Fields {
+  [key: string]: string | number | Date
+}
 
 interface CardProps {
   type: 'create' | 'update'
-  onConfirm(): void
+  onFormSubmit(fields: Fields): void
   onDelete?(): void
   loading: boolean
 }
 
-const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => {} }) => {
+const Card: React.FC<CardProps> = ({ type, loading, onFormSubmit, onDelete = () => {} }) => {
+
+  const formRef = useRef<FormHandles>(null)
 
   const { goBack } = useHistory()
 
@@ -49,13 +57,11 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           : <h1>Serviço #1</h1> 
       }
 
-      <form>
+      <Form ref={formRef} onSubmit={onFormSubmit} >
         <TextField 
           name='client' 
           label='Cliente'
           variant="outlined" 
-          helperText="Campo obrigatório"
-          error
           select
           disabled={disabled}
           defaultValue={type === 'update' ? clients[0].name : null}
@@ -71,9 +77,9 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           variant="outlined" 
           select
           disabled={disabled}
-          defaultValue={type === 'update' ? adresses[0].cep : null}
+          defaultValue={type === 'update' ? clients[0].adress[0].cep : null}
         >
-          {adresses.map((adress, index) => (
+          {clients[0].adress.map((adress, index) => (
             <MenuItem key={index} value={adress.cep}>
               {adress.street} - {adress.number} - {adress.neighborhood}
             </MenuItem>
@@ -149,14 +155,14 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           disabled={disabled}
         />
 
-        <div className='floating-buttons'>
+        <Footer>
           <FloatingButton variant='return' onClick={goBack} />
 
           {
             type === 'create' ? (
-              <FloatingButton variant='confirm' onClick={onConfirm} loading={loading} />
+              <FloatingButton variant='confirm' type='submit' loading={loading} />
             ) : isChanging ? (
-                <FloatingButton variant='confirm' onClick={onConfirm} loading={loading} />
+                <FloatingButton variant='confirm' type='submit' loading={loading} />
               ) : (
                 <div className='group' >
                   <FloatingButton variant='edit' onClick={handleChange} />
@@ -164,8 +170,8 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
                 </div>
               )
           }
-        </div>
-      </form>
+        </Footer>
+      </Form>
     </Container>
   )
 }

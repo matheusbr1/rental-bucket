@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { useSnackbar } from 'notistack'
 
-import AppBar  from '../../../components/AppBar'
+import AppBar  from 'components/AppBar'
 import { Container } from './styles'
 import Card from '../components/Card'
 

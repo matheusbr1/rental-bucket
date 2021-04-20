@@ -3,8 +3,8 @@ import { Link, useHistory } from 'react-router-dom'
 import { useSnackbar } from 'notistack'
 import { Checkbox } from '@material-ui/core'
 
-import TextField from '../../components/TextField'
-import Button from '../../components/Button'
+import TextField from 'components/TextField'
+import Button from 'components/Button'
 
 import { Container, Content, Header, Inputs } from './styles'
 

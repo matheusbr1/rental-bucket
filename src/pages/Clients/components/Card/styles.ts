@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import CardContainer from '../../../../components/CardContainer'
+import CardContainer from 'components/CardContainer'
 
 export const Container = styled(CardContainer)``
 

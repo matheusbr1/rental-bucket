@@ -1,9 +1,9 @@
 import { MenuItem } from '@material-ui/core'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useHistory } from 'react-router-dom'
-import FloatingButton from '../../../../components/FloatingButton'
-import TextField from '../../../../components/TextField'
-import { trucks } from '../../../../mocks'
+import FloatingButton from 'components/FloatingButton'
+import TextField from 'components/TextField'
+import { trucks } from 'mocks'
 
 import { Container } from './styles'
 

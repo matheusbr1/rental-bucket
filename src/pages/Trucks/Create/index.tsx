@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { useHistory } from 'react-router'
-import AppBar  from '../../../components/AppBar'
+import AppBar  from 'components/AppBar'
 import { useSnackbar } from 'notistack'
 
 import { Container } from './styles'

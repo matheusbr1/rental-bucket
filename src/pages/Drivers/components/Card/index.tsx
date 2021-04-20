@@ -1,10 +1,10 @@
 import { MenuItem } from '@material-ui/core'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useHistory } from 'react-router'
-import DateInput from '../../../../components/DateInput'
-import FloatingButton from '../../../../components/FloatingButton'
-import TextField from '../../../../components/TextField'
-import { drivers } from '../../../../mocks'
+import DateInput from 'components/DateInput'
+import FloatingButton from 'components/FloatingButton'
+import TextField from 'components/TextField'
+import { drivers } from 'mocks'
 
 import { Container, Divider } from './styles'
 

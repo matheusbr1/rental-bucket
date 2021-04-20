@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
-import AppBar  from '../../../components/AppBar'
+import AppBar  from 'components/AppBar'
 import Table from '../components/Table/List'
-import FloatingButton from '../../../components/FloatingButton'
+import FloatingButton from 'components/FloatingButton'
 
 import { Container, Content } from './styles'
 import { useHistory } from 'react-router'

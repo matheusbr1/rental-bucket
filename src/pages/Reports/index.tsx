@@ -1,11 +1,11 @@
 import { MenuItem } from '@material-ui/core'
 import React, { useCallback, useState } from 'react'
 import { useHistory } from 'react-router'
-import AppBar from '../../components/AppBar'
-import DateInput from '../../components/DateInput'
-import FloatingButton from '../../components/FloatingButton'
-import TextField from '../../components/TextField'
-import { clients, drivers, equipments, services, trucks } from '../../mocks'
+import AppBar from 'components/AppBar'
+import DateInput from 'components/DateInput'
+import FloatingButton from 'components/FloatingButton'
+import TextField from 'components/TextField'
+import { clients, drivers, equipments, services, trucks } from 'mocks'
 
 import { Container, Content } from './styles'
 

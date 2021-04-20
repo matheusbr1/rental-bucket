@@ -21,18 +21,18 @@ export const Container = styled.div`
     gap: 10px;
     margin: 5% 0 15% 0;
   }
+`
 
-  .floating-buttons {
+export const Footer = styled.footer`
+  display: flex;
+  justify-content: space-between;
+
+  position: absolute;
+  bottom: 25px;
+  left: 25px;
+  right: 25px;
+
+  .group {
     display: flex;
-    justify-content: space-between;
-
-    position: absolute;
-    bottom: 25px;
-    left: 25px;
-    right: 25px;
-
-    .group {
-      display: flex;
-    }
   }
 `

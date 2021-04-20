@@ -2,16 +2,16 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useHistory } from 'react-router'
 
 import { Container, Divider } from './styles'
-import { clients } from '../../../../mocks'
+import { clients } from 'mocks'
 
-import FloatingButton from '../../../../components/FloatingButton'
+import FloatingButton from 'components/FloatingButton'
 import { MenuItem } from '@material-ui/core'
 
 import Radio from '@material-ui/core/Radio'
 import RadioGroup from '@material-ui/core/RadioGroup'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 
-import TextField from '../../../../components/TextField'
+import TextField from 'components/TextField'
 
 import AdressTable from '../Table/Adress'
 import ContactTable from '../Table/Contact'
