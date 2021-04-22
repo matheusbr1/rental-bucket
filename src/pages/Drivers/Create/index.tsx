@@ -14,7 +14,9 @@ const Create: React.FC = () => {
 
   const [loading, setLoading] = useState(false)
 
-  const handleCreate = useCallback(() => {
+  const handleCreate = useCallback((fields) => {
+
+    console.log('fields', fields)
 
     setLoading(true)
 
@@ -36,7 +38,7 @@ const Create: React.FC = () => {
      <Card  
       type='create'
       loading={loading}
-      onConfirm={handleCreate}
+      onFormSubmit={handleCreate}
      />
     </Container>
   )

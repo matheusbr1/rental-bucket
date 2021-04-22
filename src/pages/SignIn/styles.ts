@@ -9,6 +9,10 @@ export const Container = styled.div`
   justify-content: center;
 
   background: #529A67;
+
+  form {
+    display: contents;
+  }
 `
 
 export const Content = styled.div`

@@ -11,7 +11,10 @@ const Detail: React.FC = () => {
 
   const [loading, setLoading] = useState(false)
 
-  const handleEdit = useCallback(() => {
+  const handleEdit = useCallback((fields) => {
+    
+    console.log('fields', fields)
+
     setLoading(true)
 
     setTimeout(() => {
@@ -28,8 +31,6 @@ const Detail: React.FC = () => {
     setLoading(true)
 
     setTimeout(() => {
-      // goBack()
-
       enqueueSnackbar('Erro ao deletar serviço, tente novamente!', {
         variant: 'error'
       })

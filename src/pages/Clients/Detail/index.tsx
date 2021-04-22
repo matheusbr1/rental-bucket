@@ -11,7 +11,10 @@ const Create: React.FC = () => {
 
   const [loading, setLoading] = useState(false)
 
-  const handleEdit = useCallback(() => {
+  const handleEdit = useCallback((fields) => {
+
+    console.log('fields', fields)
+
     setLoading(true)
 
     setTimeout(() => {
@@ -28,8 +31,6 @@ const Create: React.FC = () => {
     setLoading(true)
 
     setTimeout(() => {
-      // goBack()
-
       enqueueSnackbar('Erro ao deletar cliente, tente novamente!', {
         variant: 'error'
       })
@@ -44,7 +45,7 @@ const Create: React.FC = () => {
 
       <Card 
         type='update'
-        onConfirm={handleEdit}
+        onFormSubmit={handleEdit}
         onDelete={handleDelete}
         loading={loading}
       />

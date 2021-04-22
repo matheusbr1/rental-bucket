@@ -42,7 +42,7 @@ const Create: React.FC = () => {
           variant: 'success'
         })
 
-        // goBack()
+        goBack()
       }, 2000)
     } catch (error) {
 

@@ -1,5 +1,6 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useHistory } from 'react-router'
+import { Form } from '@unform/web'
 
 import { Container, Divider } from './styles'
 import { clients } from 'mocks'
@@ -15,6 +16,7 @@ import TextField from 'components/TextField'
 
 import AdressTable from '../Table/Adress'
 import ContactTable from '../Table/Contact'
+import { FormHandles } from '@unform/core'
 
 interface FieldVariations {
   [key: string]: React.ReactNode
@@ -22,13 +24,15 @@ interface FieldVariations {
 
 interface CardProps {
   type: 'create' | 'update'
-  onConfirm(): void
+  onFormSubmit(fields: any): void
   onDelete?(): void
   loading: boolean
 }
 
-const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => {} }) => {
+const Card: React.FC<CardProps> = ({ type, loading, onFormSubmit, onDelete = () => {} }) => {
   const { goBack } = useHistory()
+
+  const formRef = useRef<FormHandles>(null)
 
   const [person, setPerson] = useState('fisic')
 
@@ -60,14 +64,14 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
     fisic: (
       <React.Fragment>
         <TextField 
-          name='' 
+          name='CPF' 
           label='CPF'
           variant="outlined" 
           disabled={disabled}
         />
   
         <TextField
-          name='' 
+          name='name' 
           label='Nome'
           variant="outlined" 
           disabled={disabled}
@@ -77,21 +81,21 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
     legal: (
       <React.Fragment>
         <TextField 
-          name='' 
+          name='CNPJ' 
           label='CNPJ'
           variant="outlined" 
           disabled={disabled}
         />
   
         <TextField
-          name='' 
+          name='companyName' 
           label='Razão Social'
           variant="outlined" 
           disabled={disabled}
         />
   
         <TextField
-          name='' 
+          name='fantasyName' 
           label='Nome Fantasia'
           variant="outlined" 
           disabled={disabled}
@@ -103,7 +107,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
   const contactFields: FieldVariations = {
     email: (
       <TextField
-        name=''
+        name='email'
         label='Email'
         variant="outlined" 
         disabled={disabled}
@@ -111,7 +115,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
     ),
     telephone: (
       <TextField 
-        name=''
+        name='telephone'
         label='Telefone'
         variant="outlined" 
         disabled={disabled}
@@ -119,7 +123,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
     ),
     cellphone: (
       <TextField 
-        name=''
+        name='cellphone'
         label='Celular'
         variant="outlined" 
         disabled={disabled}
@@ -136,13 +140,24 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           : <h1>{clients[0].name}</h1> 
       }
 
-      <form>
+      <Form ref={formRef} onSubmit={onFormSubmit} >
 
         <div className="grid">
           
           <RadioGroup value={person} onChange={handlePerson}>
-            <FormControlLabel value="fisic" control={<Radio />} label="Pessoa Física" disabled={disabled} />
-            <FormControlLabel value="legal" control={<Radio />} label="Pessoa Jurídica" disabled={disabled} />
+            <FormControlLabel 
+              value="fisic" 
+              control={<Radio />} 
+              label="Pessoa Física" 
+              disabled={disabled} 
+            />
+            
+            <FormControlLabel 
+              value="legal" 
+              control={<Radio />} 
+              label="Pessoa Jurídica" 
+              disabled={disabled} 
+            />
           </RadioGroup>
           
           {personFields[person]}
@@ -154,25 +169,25 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
         <div className="grid">
           <TextField 
-            name=''
+            name='CEP'
             label='CEP'
             variant="outlined" 
           />
 
           <TextField 
-            name=''
+            name='street'
             label='Logradouro'
             variant="outlined"
           />
 
           <TextField 
-            name=''
+            name='number'
             label='Número'
             variant="outlined" 
           />
 
           <TextField
-            name='' 
+            name='state' 
             label='Estado'
             variant="outlined" 
             select
@@ -183,7 +198,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           </TextField>
 
           <TextField
-            name='' 
+            name='city' 
             label='Cidade'
             variant="outlined" 
             select
@@ -194,13 +209,13 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           </TextField>
           
           <TextField 
-            name=''
+            name='district'
             label='Bairro'
             variant="outlined" 
           />
 
           <TextField 
-            name=''
+            name='complement'
             label='Complemento'
             variant="outlined" 
           />
@@ -215,7 +230,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
         <div className="grid">
 
           <TextField
-            name='' 
+            name='type' 
             label='Tipo'
             variant="outlined" 
             onChange={handleContactField}
@@ -239,9 +254,9 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
           {
             type === 'create' ? (
-              <FloatingButton variant='confirm' onClick={onConfirm} loading={loading} />
+              <FloatingButton variant='confirm' type='submit' loading={loading} />
             ) : isChanging ? (
-                <FloatingButton variant='confirm' onClick={onConfirm} loading={loading} />
+                <FloatingButton variant='confirm' type='submit' loading={loading} />
               ) : (
                 <div className='group' >
                   <FloatingButton variant='edit' onClick={handleChange} />
@@ -250,7 +265,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
               )
           }
         </div>
-      </form>
+      </Form>
     </Container>
   )
 }

@@ -1,20 +1,24 @@
 import { MenuItem } from '@material-ui/core'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import FloatingButton from 'components/FloatingButton'
 import TextField from 'components/TextField'
 import { trucks } from 'mocks'
 
 import { Container } from './styles'
+import { Form } from '@unform/web'
+import { FormHandles } from '@unform/core'
 
 interface CardProps {
   type: 'create' | 'update'
-  onConfirm(): void
+  onFormSubmit(fields: any): void
   onDelete?(): void
   loading: boolean
 }
 
-const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => {} }) => {
+const Card: React.FC<CardProps> = ({ type, loading, onFormSubmit, onDelete = () => {} }) => {
+  const formRef = useRef<FormHandles>(null)
+
   const { goBack } = useHistory()
 
   const [isChanging, setIsChanging] = useState(false)
@@ -39,11 +43,11 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           : <h1>{trucks[0].plate}</h1> 
       }
 
-      <form>
+      <Form ref={formRef} onSubmit={onFormSubmit} >
 
         <div className="grid">
           <TextField
-            name=''
+            name='brand'
             label='Marca'
             variant="outlined" 
             select
@@ -56,19 +60,28 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           </TextField>
 
           <TextField
-            name=''
+            name='model'
             label='Modelo'
             variant="outlined" 
             select
             disabled={disabled}
             defaultValue={type === 'update' ? trucks[0].model : null}
           >
-            <MenuItem value='F-1000 XLT 4x4 Diesel Turbo' > F-1000 XLT 4x4 Diesel Turbo </MenuItem>
-            <MenuItem value='Ranger XLT 3.0 PSE 163cv 4x4 CD TB Dies' > Ranger XLT 3.0 PSE 163cv 4x4 CD TB Dies </MenuItem>
+            <MenuItem 
+              value='F-1000 XLT 4x4 Diesel Turbo' 
+            > 
+              F-1000 XLT 4x4 Diesel Turbo 
+            </MenuItem>
+            
+            <MenuItem 
+              value='Ranger XLT 3.0 PSE 163cv 4x4 CD TB Dies'
+            > 
+              Ranger XLT 3.0 PSE 163cv 4x4 CD TB Dies 
+            </MenuItem>
           </TextField>
 
           <TextField 
-            name='' 
+            name='plate' 
             label='Placa'
             variant="outlined" 
             disabled={disabled}
@@ -76,7 +89,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           />
 
           <TextField
-            name=''
+            name='manufactureYear'
             label='Ano de Fabricação'
             variant="outlined" 
             select
@@ -92,7 +105,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           </TextField>
 
           <TextField
-            name=''
+            name='modelYear'
             label='Ano do Modelo'
             variant="outlined" 
             select
@@ -108,7 +121,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           </TextField>
 
           <TextField
-            name=''
+            name='equipment'
             label='Equipamento'
             variant="outlined" 
             select
@@ -122,7 +135,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           </TextField>
 
           <TextField 
-            name='' 
+            name='renavam' 
             label='Renavan'
             variant="outlined" 
             disabled={disabled}
@@ -135,9 +148,9 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
           {
             type === 'create' ? (
-              <FloatingButton variant='confirm' onClick={onConfirm} loading={loading} />
+              <FloatingButton variant='confirm' type='submit' loading={loading} />
             ) : isChanging ? (
-                <FloatingButton variant='confirm' onClick={onConfirm} loading={loading} />
+                <FloatingButton variant='confirm' type='submit' loading={loading} />
               ) : (
                 <div className='group' >
                   <FloatingButton variant='edit' onClick={handleChange} />
@@ -146,7 +159,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
               )
           }
         </div>
-      </form>
+      </Form>
     </Container>
   )
 }

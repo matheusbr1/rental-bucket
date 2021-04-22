@@ -1,5 +1,6 @@
 import { MenuItem } from '@material-ui/core'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { Form } from '@unform/web'
 import { useHistory } from 'react-router'
 import DateInput from 'components/DateInput'
 import FloatingButton from 'components/FloatingButton'
@@ -7,16 +8,19 @@ import TextField from 'components/TextField'
 import { drivers } from 'mocks'
 
 import { Container, Divider } from './styles'
+import { FormHandles } from '@unform/core'
 
 interface CardProps {
   type: 'create' | 'update'
-  onConfirm(): void
+  onFormSubmit(fields: any): void
   onDelete?(): void
   loading: boolean
 }
 
-const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => {} }) => {
+const Card: React.FC<CardProps> = ({ type, loading, onFormSubmit, onDelete = () => {} }) => {
   
+  const formRef = useRef<FormHandles>(null)
+
   const { goBack } = useHistory()
 
   const [birthday, setBirthday] = React.useState<Date | null>(null)
@@ -48,10 +52,10 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           : <h1>{drivers[0].name}</h1> 
       }
 
-      <form>
+      <Form ref={formRef} onSubmit={onFormSubmit} >
         <div className="grid">
           <TextField
-            name='' 
+            name='name' 
             label='Nome'
             variant="outlined" 
             disabled={disabled}
@@ -59,7 +63,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           />
 
           <TextField 
-            name='' 
+            name='CPF' 
             label='CPF'
             variant="outlined" 
             disabled={disabled}
@@ -67,7 +71,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           />
 
           <TextField 
-            name='' 
+            name='RG' 
             label='RG'
             variant="outlined" 
             disabled={disabled}
@@ -75,7 +79,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           />
 
           <TextField 
-            name='' 
+            name='CNH' 
             label='CNH'
             variant="outlined" 
             disabled={disabled}
@@ -96,7 +100,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
         <div className="grid">
           <TextField 
-            name=''
+            name='CEP'
             label='CEP'
             variant="outlined" 
             disabled={disabled}
@@ -104,7 +108,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           />
 
           <TextField 
-            name=''
+            name='street'
             label='Logradouro'
             variant="outlined" 
             disabled={disabled}
@@ -112,7 +116,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           />
 
           <TextField 
-            name=''
+            name='number'
             label='Número'
             variant="outlined" 
             disabled={disabled}
@@ -120,7 +124,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           />
 
           <TextField
-            name='' 
+            name='state' 
             label='Estado'
             variant="outlined" 
             select
@@ -133,7 +137,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           </TextField>
 
           <TextField
-            name='' 
+            name='city' 
             label='Cidade'
             variant="outlined" 
             select
@@ -146,7 +150,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           </TextField>
           
           <TextField 
-            name=''
+            name='district'
             label='Bairro'
             variant="outlined" 
             disabled={disabled}
@@ -154,7 +158,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           />
 
           <TextField 
-            name=''
+            name='complement'
             label='Complemento'
             variant="outlined" 
             disabled={disabled}
@@ -169,7 +173,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
         <div className="grid">
 
           <TextField
-            name=''
+            name='email'
             label='Email'
             variant="outlined" 
             disabled={disabled}
@@ -177,7 +181,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           />
 
           <TextField 
-            name=''
+            name='telephone'
             label='Telefone'
             variant="outlined" 
             disabled={disabled}
@@ -185,7 +189,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           />
 
           <TextField 
-            name=''
+            name='cellphone'
             label='Celular'
             variant="outlined" 
             disabled={disabled}
@@ -198,9 +202,9 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
           {
             type === 'create' ? (
-              <FloatingButton variant='confirm' onClick={onConfirm} loading={loading} />
+              <FloatingButton variant='confirm' type='submit' loading={loading} />
             ) : isChanging ? (
-                <FloatingButton variant='confirm' onClick={onConfirm} loading={loading} />
+                <FloatingButton variant='confirm' type='submit' loading={loading} />
               ) : (
                 <div className='group' >
                   <FloatingButton variant='edit' onClick={handleChange} />
@@ -209,7 +213,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
               )
           }
         </div>
-      </form>
+      </Form>
 
     </Container>
   )

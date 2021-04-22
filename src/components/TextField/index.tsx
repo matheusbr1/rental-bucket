@@ -8,9 +8,10 @@ import { useField } from '@unform/core'
 
 interface Props extends OutlinedTextFieldProps {
   style?: React.CSSProperties
+  name: string
 }
 
-const TextField: React.FC<Props> = ({ style, name = '', ...rest }) => {
+const TextField: React.FC<Props> = ({ style, name, ...rest }) => {
 
   const inputRef = useRef(null)
 
@@ -19,25 +20,16 @@ const TextField: React.FC<Props> = ({ style, name = '', ...rest }) => {
   useEffect(() => {
     registerField({
       name: fieldName,
-      ref: inputRef,
-      getValue: ref => {
-        return ref.current.value
-      },
-      setValue: (ref, value) => {
-        ref.current.value = value
-      },
-      clearValue: ref => {
-        ref.current.value = ''
-      },
+      ref: inputRef.current,
+      path: 'value'
     })
   }, [fieldName, registerField])
 
   return (
     <Container
-      ref={inputRef}
+      inputRef={inputRef}
       error={Boolean(error)}
       helperText={error}
-      name={name}
       style={{
         margin:'10px 0',
         ...style

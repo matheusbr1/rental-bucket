@@ -1,5 +1,5 @@
 import { MenuItem } from '@material-ui/core'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { useHistory } from 'react-router'
 import AppBar from 'components/AppBar'
 import DateInput from 'components/DateInput'
@@ -8,12 +8,19 @@ import TextField from 'components/TextField'
 import { clients, drivers, equipments, services, trucks } from 'mocks'
 
 import { Container, Content } from './styles'
+import { FormHandles } from '@unform/core'
+import { Form } from '@unform/web'
 
 const Reports: React.FC = () => {
 
+  const formRef = useRef<FormHandles>(null)
+
   const { goBack } = useHistory()
 
-  const handleNewReport = useCallback(() => {
+  const handleNewReport = useCallback((fields) => {
+
+    console.log('fields', fields)
+
     goBack()
   }, [goBack])
 
@@ -107,7 +114,7 @@ const Reports: React.FC = () => {
 
         <h1>Relatórios</h1>
 
-        <form>
+        <Form ref={formRef} onSubmit={handleNewReport} >
           <TextField 
             name='type' 
             label='Filtrar por'
@@ -137,9 +144,9 @@ const Reports: React.FC = () => {
           {fields[type]}
 
            <div className='floating-buttons'>
-            <FloatingButton variant='confirm' onClick={handleNewReport} />
+            <FloatingButton variant='confirm' type='submit' />
           </div>
-        </form>
+        </Form>
       </Content>
       
       <div className='floating-buttons left'>
