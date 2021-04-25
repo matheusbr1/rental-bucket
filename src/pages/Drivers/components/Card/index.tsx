@@ -6,26 +6,19 @@ import { useHistory } from 'react-router'
 import DateInput from 'components/DateInput'
 import FloatingButton from 'components/FloatingButton'
 import TextField from 'components/TextField'
-import { drivers } from 'mocks'
+import { citys, drivers, states } from 'mocks'
 import * as yup from 'yup'
 
 import { Container, Divider } from './styles'
 import { FormHandles } from '@unform/core'
 import getValidationErrors from 'utils/getValidationFormErrors'
 
-interface CardProps {
-  type: 'create' | 'update'
-  onConfirm(fields: any): void
-  onDelete?(): void
-  loading: boolean
-}
-
 interface Driver {
   name: string
   CPF: string
   RG: string
   CNH: string
-  birthday: Date
+  birthday: Date | null
   adress: {
     CEP: string
     street: string
@@ -40,6 +33,13 @@ interface Driver {
     telephone: string
     cellphone: string
   }
+}
+
+interface CardProps {
+  type: 'create' | 'update'
+  onConfirm(fields: Driver): void
+  onDelete?(): void
+  loading: boolean
 }
 
 const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => {} }) => {
@@ -224,9 +224,9 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
               value={state}
               onChange={e => setState(e.target.value)}
             >
-              <MenuItem value='SP'> SP </MenuItem>
-              <MenuItem value='RJ'> RJ </MenuItem>
-              <MenuItem value='MG'> MG </MenuItem>
+              {states.map(state => (
+                <MenuItem  value={state} key={state}>  {state} </MenuItem>
+              ))}
             </TextField>
 
             <TextField
@@ -238,9 +238,9 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
               value={city}
               onChange={e => setCity(e.target.value)}
             >
-              <MenuItem value='Osasco'> Osasco </MenuItem>
-              <MenuItem value='Carapicuíba'> Carapicuíba </MenuItem>
-              <MenuItem value='Vinhedo'> Vinhedo </MenuItem>
+               {citys.map(city => (
+                <MenuItem  value={city} key={city}>  {city} </MenuItem>
+              ))}
             </TextField>
             
             <TextField 

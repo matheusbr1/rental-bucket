@@ -38,7 +38,7 @@ const Create: React.FC = () => {
       <Card
         type='create'
         loading={loading}
-        onFormSubmit={handleCreate}
+        onConfirm={handleCreate}
       />
     </Container>
   )

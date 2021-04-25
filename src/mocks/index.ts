@@ -185,43 +185,34 @@ export const trucks = [
     brand: 'Ford',
     model: 'F-1000 XLT 4x4 Diesel Turbo',
     year: {
-      manufacture: 1996,
-      model: 1996
+      manufacture: '1996',
+      model: '1996'
     },
-    renavam: 36783908793,
+    renavam: '36783908793',
     plate: 'FKF-7151',
-    equipament: {
-      id: 1,
-      name: 'Poliguindaste',
-    } 
+    equipment: 'Poliguindaste'
   },
   {
     brand: 'Ford',
     model: 'Ranger XLT 3.0 PSE 163cv 4x4 CD TB Dies.',
     year: {
-      manufacture: 2005,
-      model: 2005
+      manufacture: '2005',
+      model: '2005'
     },
-    renavam: 70007064510,
+    renavam: '70007064510',
     plate: 'DAD-8320',
-     equipament: {
-      id: 1,
-      name: 'Poliguindaste',
-    } 
+    equipment: 'Poliguindaste'
   },
   {
     brand: 'Ford',
     model: 'F-250 XLT 3.9 4x4 CD TB Diesel',
     year: {
-      manufacture: 2007,
-      model: 2007
+      manufacture: '2007',
+      model: '2007'
     },
-    renavam: 23756275112,
+    renavam: '23756275112',
     plate: 'FWY-0640',
-     equipament: {
-      id: 1,
-      name: 'Poliguindaste',
-    } 
+     equipment: 'Poliguindaste'
   }
 ]
 
@@ -238,4 +229,43 @@ export const services = [
   'Troca',
   'Retirada',
   'Coloca'
+]
+
+export const brands = [
+  'Ford',
+  'Mercedes',
+  'volkswagen'
+]
+
+export const models = [
+  'F-1000 XLT 4x4 Diesel Turbo',
+  'Ranger XLT 3.0 PSE 163cv 4x4 CD TB Dies'
+]
+
+export const years = [
+ '1996',
+ '1997',
+ '1998',
+ '1999',
+ '2000',
+ '2001',
+]
+
+export const truckEquipments = [
+  'Poliguindaste',
+  'Coletor',
+  'Basculante',
+  'Rollon'
+]
+
+export const states =  [
+  'SP',
+  'RJ',
+  'MG',
+]
+
+export const citys = [
+ 'Osasco',
+ 'Carapicuíba',
+ 'Vinhedo',
 ]
