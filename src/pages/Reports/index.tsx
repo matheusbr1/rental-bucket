@@ -133,12 +133,14 @@ const Reports: React.FC = () => {
             onChange={handleDateChange} 
             value={selectedDate} 
             label='Data inicial'
+            name='initialDate'
           />
 
           <DateInput 
             onChange={handleDateChange} 
             value={selectedDate} 
             label='Data final'
+            name='finalDate'
           />
 
           {fields[type]}

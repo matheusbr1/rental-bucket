@@ -4,40 +4,57 @@ import { useSnackbar } from 'notistack'
 import AppBar  from 'components/AppBar'
 import { Container } from './styles'
 import Card from '../components/Card'
+import { useHistory } from 'react-router'
 
 const Detail: React.FC = () => {
+
+  const { goBack } = useHistory()
 
   const { enqueueSnackbar } = useSnackbar()
 
   const [loading, setLoading] = useState(false)
 
-  const handleEdit = useCallback((fields) => {
-    
-    console.log('fields', fields)
+  const handleEdit = useCallback(async (fields) => {
+
+    console.log('Data', fields)
 
     setLoading(true)
 
-    setTimeout(() => {
+    try {
+      // Requisição
+
       enqueueSnackbar('Serviço editado com sucesso', {
         variant: 'success'
       })
-
+    } catch (error) {
+      enqueueSnackbar('Erro ao editar serviço, tente novamente!', {
+        variant: 'error'
+      })
+    } finally {
       setLoading(false)
-    }, 2000)
+    }
   }, [enqueueSnackbar])
 
-  const handleDelete = useCallback(() => {
+  const handleDelete = useCallback(async () => {
 
     setLoading(true)
 
-    setTimeout(() => {
+    try {
+      // requisição
+
+      enqueueSnackbar('Serviço deletado com sucesso!', {
+        variant: 'success'
+      })
+
+      goBack()
+    } catch (error) {
       enqueueSnackbar('Erro ao deletar serviço, tente novamente!', {
         variant: 'error'
       })
-
+    } finally {
       setLoading(false)
-    }, 2000)
-  }, [enqueueSnackbar])
+    }
+  }, [enqueueSnackbar, goBack])
 
   return (
     <Container>
@@ -45,7 +62,7 @@ const Detail: React.FC = () => {
 
       <Card 
         type='update'
-        onFormSubmit={handleEdit}
+        onConfirm={handleEdit}
         onDelete={handleDelete}
         loading={loading}
       />

@@ -1,29 +1,63 @@
 import { MenuItem } from '@material-ui/core'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Form } from '@unform/web'
+import { Scope } from '@unform/core'
 import { useHistory } from 'react-router'
 import DateInput from 'components/DateInput'
 import FloatingButton from 'components/FloatingButton'
 import TextField from 'components/TextField'
 import { drivers } from 'mocks'
+import * as yup from 'yup'
 
 import { Container, Divider } from './styles'
 import { FormHandles } from '@unform/core'
+import getValidationErrors from 'utils/getValidationFormErrors'
 
 interface CardProps {
   type: 'create' | 'update'
-  onFormSubmit(fields: any): void
+  onConfirm(fields: any): void
   onDelete?(): void
   loading: boolean
 }
 
-const Card: React.FC<CardProps> = ({ type, loading, onFormSubmit, onDelete = () => {} }) => {
+interface Driver {
+  name: string
+  CPF: string
+  RG: string
+  CNH: string
+  birthday: Date
+  adress: {
+    CEP: string
+    street: string
+    number: number
+    state: string
+    city: string
+    neighborhood: string
+    complement: string
+  }
+  contact: {
+    email: string
+    telephone: string
+    cellphone: string
+  }
+}
+
+const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => {} }) => {
   
   const formRef = useRef<FormHandles>(null)
 
   const { goBack } = useHistory()
 
-  const [birthday, setBirthday] = React.useState<Date | null>(null)
+  const [birthday, setBirthday] = React.useState<Date | null>(new Date())
+
+  useEffect(() => {
+    if (type === 'update') {
+      formRef?.current?.setData(drivers[0])
+    }
+  }, [type])
+
+  const [state, setState] = useState('')
+  const [city, setCity] = useState('')
 
   const handleBirhday = (date: Date | null) => {
     setBirthday(date)
@@ -31,17 +65,80 @@ const Card: React.FC<CardProps> = ({ type, loading, onFormSubmit, onDelete = () 
 
   const [isChanging, setIsChanging] = useState(false)
 
+  const disabled = useMemo(() => type === 'update' && !isChanging, [type, isChanging])
+
   const handleChange = useCallback(() => {
     setIsChanging(state => !state)
   }, [])
-
-  const disabled = useMemo(() => type === 'update' && !isChanging, [type, isChanging])
 
   useEffect(() => {
     if (!loading) {
       setIsChanging(false)
     }
   }, [loading])
+
+  const handleFormSubmit = useCallback(async (fields: Driver) => {
+
+    const data = {
+      ...fields, 
+      birthday,
+      adress: {
+        ...fields.adress,
+        state, 
+        city
+      }
+    }
+
+    console.log(data)
+
+    try {
+
+      formRef.current?.setErrors({})
+
+      const schema = yup.object().shape({
+
+        name: yup.string().required('Campo obrigatório'),
+        CNH: yup.string().required('Campo obrigatório'),
+        CPF: yup.string().required('Campo obrigatório'),
+        RG: yup.string().required('Campo obrigatório'),
+        
+        birthday: yup.date()
+          .required('Campo obrigatório')
+          .typeError('Campo obrigatório'),
+        
+        adress: yup.object({
+          CEP: yup.string().required('Campo obrigatório'),
+          street: yup.string().required('Campo obrigatório'),
+          number: yup.string().required('Campo obrigatório'),
+          state: yup.string().required('Campo obrigatório'),
+          city: yup.string().required('Campo obrigatório'),
+          neighborhood: yup.string().required('Campo obrigatório'),
+        }),
+        
+        contact: yup.object({
+          telephone: yup.string().required('Campo obrigatório'),
+          cellphone: yup.string().required('Campo obrigatório'),
+
+          email: yup.string()
+          .email('E-mail inválido')
+          .required('Campo obrigatório'),
+        })
+      })
+
+      await schema.validate(data, {
+        abortEarly: false
+      })
+
+      onConfirm(data)
+
+    } catch (error) {
+      if(error instanceof yup.ValidationError) {
+        const errors = getValidationErrors(error)
+        formRef.current?.setErrors(errors)
+        console.log(errors)
+      }
+    }
+  }, [onConfirm, birthday, state, city])
 
   return (
     <Container>
@@ -52,14 +149,13 @@ const Card: React.FC<CardProps> = ({ type, loading, onFormSubmit, onDelete = () 
           : <h1>{drivers[0].name}</h1> 
       }
 
-      <Form ref={formRef} onSubmit={onFormSubmit} >
+      <Form ref={formRef} onSubmit={handleFormSubmit}>
         <div className="grid">
           <TextField
             name='name' 
             label='Nome'
             variant="outlined" 
             disabled={disabled}
-            defaultValue={type === 'update' ? drivers[0].name : null}
           />
 
           <TextField 
@@ -67,7 +163,6 @@ const Card: React.FC<CardProps> = ({ type, loading, onFormSubmit, onDelete = () 
             label='CPF'
             variant="outlined" 
             disabled={disabled}
-            defaultValue={type === 'update' ? drivers[0].cpf : null}
           />
 
           <TextField 
@@ -75,7 +170,6 @@ const Card: React.FC<CardProps> = ({ type, loading, onFormSubmit, onDelete = () 
             label='RG'
             variant="outlined" 
             disabled={disabled}
-            defaultValue={type === 'update' ? drivers[0].rg : null}
           />
 
           <TextField 
@@ -83,10 +177,10 @@ const Card: React.FC<CardProps> = ({ type, loading, onFormSubmit, onDelete = () 
             label='CNH'
             variant="outlined" 
             disabled={disabled}
-            defaultValue={type === 'update' ? '123123123' : null}
           />
 
           <DateInput 
+            name='birthday'
             label='Data de nascimento'
             onChange={handleBirhday}
             value={birthday}
@@ -99,71 +193,70 @@ const Card: React.FC<CardProps> = ({ type, loading, onFormSubmit, onDelete = () 
         <h2>Endereço</h2>
 
         <div className="grid">
-          <TextField 
-            name='CEP'
-            label='CEP'
-            variant="outlined" 
-            disabled={disabled}
-            defaultValue={type === 'update' ? drivers[0].adress.cep : null}
-          />
+          <Scope path='adress'>
+            <TextField 
+              name='CEP'
+              label='CEP'
+              variant="outlined" 
+              disabled={disabled}
+            />
 
-          <TextField 
-            name='street'
-            label='Logradouro'
-            variant="outlined" 
-            disabled={disabled}
-            defaultValue={type === 'update' ? drivers[0].adress.street : null}
-          />
+            <TextField 
+              name='street'
+              label='Logradouro'
+              variant="outlined" 
+              disabled={disabled}
+            />
 
-          <TextField 
-            name='number'
-            label='Número'
-            variant="outlined" 
-            disabled={disabled}
-            defaultValue={type === 'update' ? drivers[0].adress.number : null}
-          />
+            <TextField 
+              name='number'
+              label='Número'
+              variant="outlined" 
+              disabled={disabled}
+            />
 
-          <TextField
-            name='state' 
-            label='Estado'
-            variant="outlined" 
-            select
-            disabled={disabled}
-            defaultValue={type === 'update' ? drivers[0].adress.state : null}
-          >
-            <MenuItem value='SP'> SP </MenuItem>
-            <MenuItem value='RJ'> RJ </MenuItem>
-            <MenuItem value='MG'> MG </MenuItem>
-          </TextField>
+            <TextField
+              select
+              name='state' 
+              label='Estado'
+              variant="outlined" 
+              disabled={disabled}
+              value={state}
+              onChange={e => setState(e.target.value)}
+            >
+              <MenuItem value='SP'> SP </MenuItem>
+              <MenuItem value='RJ'> RJ </MenuItem>
+              <MenuItem value='MG'> MG </MenuItem>
+            </TextField>
 
-          <TextField
-            name='city' 
-            label='Cidade'
-            variant="outlined" 
-            select
-            disabled={disabled}
-            defaultValue={type === 'update' ? drivers[0].adress.city : null}
-          >
-            <MenuItem value='Osasco'> Osasco </MenuItem>
-            <MenuItem value='Carapicuíba'> Carapicuíba </MenuItem>
-            <MenuItem value='Vinhedo'> Vinhedo </MenuItem>
-          </TextField>
-          
-          <TextField 
-            name='district'
-            label='Bairro'
-            variant="outlined" 
-            disabled={disabled}
-            defaultValue={type === 'update' ? drivers[0].adress.neighborhood : null}
-          />
+            <TextField
+              select
+              name='city' 
+              label='Cidade'
+              variant="outlined" 
+              disabled={disabled}
+              value={city}
+              onChange={e => setCity(e.target.value)}
+            >
+              <MenuItem value='Osasco'> Osasco </MenuItem>
+              <MenuItem value='Carapicuíba'> Carapicuíba </MenuItem>
+              <MenuItem value='Vinhedo'> Vinhedo </MenuItem>
+            </TextField>
+            
+            <TextField 
+              name='neighborhood'
+              label='Bairro'
+              variant="outlined" 
+              disabled={disabled}
+            />
 
-          <TextField 
-            name='complement'
-            label='Complemento'
-            variant="outlined" 
-            disabled={disabled}
-            defaultValue={type === 'update' ? drivers[0].adress.complement : null}
-          />
+            <TextField 
+              name='complement'
+              label='Complemento'
+              variant="outlined" 
+              disabled={disabled}
+            />
+          </Scope>
         </div>
 
         <Divider />
@@ -171,30 +264,28 @@ const Card: React.FC<CardProps> = ({ type, loading, onFormSubmit, onDelete = () 
         <h2>Contato</h2>
 
         <div className="grid">
+          <Scope path='contact' >
+            <TextField
+              name='email'
+              label='Email'
+              variant="outlined" 
+              disabled={disabled}
+            />
 
-          <TextField
-            name='email'
-            label='Email'
-            variant="outlined" 
-            disabled={disabled}
-            defaultValue={type === 'update' ? drivers[0].contact.email : null}
-          />
+            <TextField 
+              name='telephone'
+              label='Telefone'
+              variant="outlined" 
+              disabled={disabled}
+            />
 
-          <TextField 
-            name='telephone'
-            label='Telefone'
-            variant="outlined" 
-            disabled={disabled}
-            defaultValue={type === 'update' ? drivers[0].contact.telephone : null}
-          />
-
-          <TextField 
-            name='cellphone'
-            label='Celular'
-            variant="outlined" 
-            disabled={disabled}
-            defaultValue={type === 'update' ? drivers[0].contact.cellphone : null}
-          />
+            <TextField 
+              name='cellphone'
+              label='Celular'
+              variant="outlined" 
+              disabled={disabled}
+            />
+          </Scope>
         </div>
 
         <div className='floating-buttons'>

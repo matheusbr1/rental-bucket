@@ -14,21 +14,25 @@ const Create: React.FC = () => {
 
   const [loading, setLoading] = useState(false)
 
-  const handleCreate = useCallback((fields) => {
+  const handleCreate = useCallback(async (fields) => {
 
-    console.log('fields', fields)
+    console.log('Data', fields)
 
     setLoading(true)
 
-    setTimeout(() => {
-      goBack()
-
+    try {
       enqueueSnackbar('Motorista criado com sucesso!', {
         variant: 'success'
       })
 
+      goBack()
+    } catch (error) {
+      enqueueSnackbar('Erro ao criar motorista, tente novamente!', {
+        variant: 'error'
+      })
+    } finally {
       setLoading(false)
-    }, 2000)
+    }
   }, [goBack, enqueueSnackbar])
 
   return (
@@ -38,7 +42,7 @@ const Create: React.FC = () => {
      <Card  
       type='create'
       loading={loading}
-      onFormSubmit={handleCreate}
+      onConfirm={handleCreate}
      />
     </Container>
   )

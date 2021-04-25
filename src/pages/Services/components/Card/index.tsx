@@ -1,6 +1,7 @@
 import { MenuItem } from '@material-ui/core'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useHistory } from 'react-router-dom'
+import * as yup from 'yup'
 import DateInput from 'components/DateInput'
 import FloatingButton from 'components/FloatingButton'
 import TextField from 'components/TextField'
@@ -9,19 +10,27 @@ import { Form } from '@unform/web'
 
 import { Container, Footer } from './styles'
 import { FormHandles } from '@unform/core'
+import getValidationErrors from 'utils/getValidationFormErrors'
 
-interface Fields {
-  [key: string]: string | number | Date
+interface Service {
+  client: string
+  adress: string
+  driver: string
+  truck: string
+  equipment: string
+  service: string
+  quantity: number
+  endDate: Date | null | string
 }
 
 interface CardProps {
   type: 'create' | 'update'
-  onFormSubmit(fields: Fields): void
+  onConfirm(fields: Service): void
   onDelete?(): void
   loading: boolean
 }
 
-const Card: React.FC<CardProps> = ({ type, loading, onFormSubmit, onDelete = () => {} }) => {
+const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => {} }) => {
 
   const formRef = useRef<FormHandles>(null)
 
@@ -29,17 +38,55 @@ const Card: React.FC<CardProps> = ({ type, loading, onFormSubmit, onDelete = () 
 
   const [isChanging, setIsChanging] = useState(false)
 
+  const disabled = useMemo(() => type === 'update' && !isChanging, [type, isChanging])
+
+  const [service, setService] = useState({
+    client: '',
+    adress: '',
+    driver: '',
+    truck: '',
+    equipment: '',
+    service: '',
+    quantity: 1,
+    endDate: new Date()
+  } as Service)
+
+  useEffect(() => {
+    if (type === 'update') {
+      setService({
+        client: clients[0].name,
+        adress: clients[0].adress[0].cep,
+        driver: drivers[0].name,
+        truck: trucks[0].plate,
+        equipment: equipments[0],
+        service: services[0],
+        quantity: 2,
+        endDate: new Date()
+      })
+    }
+  }, [type])
+
+  const handleChangeService = useCallback((path: string, value) => {
+    setService(oldState => ({
+      ...oldState,
+      [path]: value
+    }))
+  }, [])
+
   const handleChange = useCallback(() => {
     setIsChanging(state => !state)
   }, [])
 
-  const [selectedDate, setSelectedDate] = React.useState<Date | null>(
-    new Date('2014-08-18T21:11:54')
-  )
+  const [endDate, setEndDate] = React.useState<Date | null>(new Date())
 
-  const handleDateChange = (date: Date | null) => {
-    setSelectedDate(date)
-  }
+  const handleEndDate = useCallback((date) => {
+    setService(oldState => ({
+      ...oldState,
+      endDate: date
+    }))
+
+    setEndDate(date)
+  }, []) 
 
   useEffect(() => {
     if (!loading) {
@@ -47,7 +94,44 @@ const Card: React.FC<CardProps> = ({ type, loading, onFormSubmit, onDelete = () 
     }
   }, [loading])
 
-  const disabled = useMemo(() => type === 'update' && !isChanging, [type, isChanging])
+  const handleFormSubmit = useCallback(async () => {
+
+    try {
+      formRef.current?.setErrors({})
+
+      const schema = yup.object().shape({
+        adress: yup.string().required('Campo obrigatório'),
+        client: yup.string().required('Campo obrigatório'),
+        driver: yup.string().required('Campo obrigatório'),
+        equipment: yup.string().required('Campo obrigatório'),
+        service: yup.string().required('Campo obrigatório'),
+        truck: yup.string().required('Campo obrigatório'),
+
+        quantity: yup.number()
+          .required('Campo obrigatório')
+          .typeError('Campo obrigatório')
+          .min(1, 'No mínimo 1 quantidade')
+          .max(300, 'No máximo 300 quantidades'),
+        
+        endDate: yup.date()
+          .required('Campo obrigatório')
+          .typeError('Campo obrigatório')
+      })
+
+      await schema.validate(service, {
+        abortEarly: false
+      })
+
+      onConfirm(service)
+
+    } catch (error) {
+      if(error instanceof yup.ValidationError) {
+        const errors = getValidationErrors(error)
+        formRef.current?.setErrors(errors)
+        console.log(errors)
+      }
+    }
+  }, [service, onConfirm])
 
   return (
     <Container>
@@ -57,14 +141,15 @@ const Card: React.FC<CardProps> = ({ type, loading, onFormSubmit, onDelete = () 
           : <h1>Serviço #1</h1> 
       }
 
-      <Form ref={formRef} onSubmit={onFormSubmit} >
+      <Form ref={formRef} onSubmit={handleFormSubmit} >
         <TextField 
+          select
           name='client' 
           label='Cliente'
           variant="outlined" 
-          select
           disabled={disabled}
-          defaultValue={type === 'update' ? clients[0].name : null}
+          value={service.client}
+          onChange={e => handleChangeService('client', e.target.value)}
         >
           {clients.map((client, index) => (
             <MenuItem key={index} value={client.name} >{client.name}</MenuItem>
@@ -72,12 +157,13 @@ const Card: React.FC<CardProps> = ({ type, loading, onFormSubmit, onDelete = () 
         </TextField>
 
         <TextField 
+          select
           name='adress' 
           label='Endereço'
           variant="outlined" 
-          select
           disabled={disabled}
-          defaultValue={type === 'update' ? clients[0].adress[0].cep : null}
+          value={service.adress}
+          onChange={e => handleChangeService('adress', e.target.value)}
         >
           {clients[0].adress.map((adress, index) => (
             <MenuItem key={index} value={adress.cep}>
@@ -87,12 +173,13 @@ const Card: React.FC<CardProps> = ({ type, loading, onFormSubmit, onDelete = () 
         </TextField>
 
         <TextField
+          select
           name='driver' 
           label='Motorista'
           variant="outlined" 
-          select
           disabled={disabled}
-          defaultValue={type === 'update' ? drivers[0].name : null}
+          value={service.driver}
+          onChange={e => handleChangeService('driver', e.target.value)}
         >
           {drivers.map((driver, index) => (
             <MenuItem key={index} value={driver.name}> {driver.name} </MenuItem>
@@ -100,12 +187,13 @@ const Card: React.FC<CardProps> = ({ type, loading, onFormSubmit, onDelete = () 
         </TextField>
 
         <TextField 
+          select 
           name='equipment' 
           label='Equipamento'
           variant="outlined"
-          select 
           disabled={disabled}
-          defaultValue={type === 'update' ? equipments[0] : null}
+          value={service.equipment}
+          onChange={e => handleChangeService('equipment', e.target.value)}
         >
           {equipments.map((equipment, index) => (
             <MenuItem key={index} value={equipment}> {equipment} </MenuItem>
@@ -113,12 +201,13 @@ const Card: React.FC<CardProps> = ({ type, loading, onFormSubmit, onDelete = () 
         </TextField>
 
         <TextField 
+          select
           name='truck' 
           label='Caminhão'
           variant="outlined"
-          select
           disabled={disabled}
-          defaultValue={type === 'update' ? trucks[0].plate : null}
+          value={service.truck}
+          onChange={e => handleChangeService('truck', e.target.value)}
         >
           {trucks.map((truck, index) => (
             <MenuItem key={index} value={truck.plate}> {truck.plate} </MenuItem>
@@ -126,12 +215,13 @@ const Card: React.FC<CardProps> = ({ type, loading, onFormSubmit, onDelete = () 
         </TextField>
 
         <TextField 
+          select 
           name='service' 
           label='Serviço'
           variant="outlined"
-          select 
           disabled={disabled}
-          defaultValue={type === 'update' ? services[0] : null}
+          value={service.service}
+          onChange={e => handleChangeService('service', e.target.value)}
         >
           {services.map((service, index) => (
             <MenuItem key={index} value={service}> {service} </MenuItem>
@@ -145,13 +235,15 @@ const Card: React.FC<CardProps> = ({ type, loading, onFormSubmit, onDelete = () 
           variant="outlined"
           type='number'
           disabled={disabled}
-          defaultValue={type === 'update' ? 2 : null}
+          value={service.quantity}
+          onChange={e => handleChangeService('quantity', Number(e.target.value))}
         />
 
         <DateInput 
-          onChange={handleDateChange} 
-          value={selectedDate} 
+          onChange={handleEndDate} 
+          value={endDate} 
           label='Data da retirada'
+          name='endDate'
           disabled={disabled}
         />
 

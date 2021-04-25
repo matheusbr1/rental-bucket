@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 
 import DateFnsUtils from '@date-io/date-fns'
+import { useField } from '@unform/core'
 
 import { 
   MuiPickersUtilsProvider, KeyboardDatePicker, KeyboardDatePickerProps 
@@ -8,23 +9,38 @@ import {
 
 import { Container } from './styles'
 
-const DateInput: React.FC<KeyboardDatePickerProps> = ({ ...rest }) => {
+interface DateInputProps extends KeyboardDatePickerProps {
+  name: string
+}
+
+const DateInput: React.FC<DateInputProps> = ({ name, ...rest }) => {
+
+  const inputRef = useRef(null)
+
+  const { fieldName, registerField, error } = useField(name)
+
+  useEffect(() => {
+    registerField({
+      name: fieldName,
+      ref: inputRef.current,
+      path: 'value'
+    })
+  }, [fieldName, registerField])
+
   return (
     <Container>
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <KeyboardDatePicker
           autoOk  
           disableToolbar
+          inputProps={{ ref: inputRef }}
+          error={Boolean(error)}
+          helperText={error}
           variant="inline"
           format="MM/dd/yyyy"
           margin="normal"
           inputVariant="outlined"
-          KeyboardButtonProps={{
-            'aria-label': 'change date',
-          }}
-          style={{ 
-            margin: 0
-          }}
+          style={{ margin: 0 }}
           {...rest}
         />
       </MuiPickersUtilsProvider>

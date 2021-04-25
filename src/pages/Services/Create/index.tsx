@@ -2,11 +2,9 @@ import React, { useCallback, useState } from 'react'
 import { useHistory } from 'react-router'
 import AppBar  from 'components/AppBar'
 import { useSnackbar } from 'notistack'
-import * as yup from 'yup'
 
 import { Container } from './styles'
 import Card from '../components/Card'
-import getValidationErrors from 'utils/getValidationFormErrors'
 
 const Create: React.FC = () => {
 
@@ -23,34 +21,18 @@ const Create: React.FC = () => {
     setLoading(true)
 
     try {
-      const schema = yup.object().shape({
-        adress: yup.string().required('Campo obrigatório'),
-        client: yup.string().required('Campo obrigatório'),
-        driver: yup.string().required('Campo obrigatório'),
-        equipment: yup.string().required('Campo obrigatório'),
-        quantity: yup.string().required('Campo obrigatório'),
-        service: yup.string().required('Campo obrigatório'),
-        truck: yup.string().required('Campo obrigatório')
+
+      // Requisição
+
+      enqueueSnackbar('Serviço criado com sucesso!', {
+        variant: 'success'
       })
 
-      await schema.validate(fields, {
-        abortEarly: false
-      })
-
-      setTimeout(() => {
-        enqueueSnackbar('Serviço criado com sucesso!', {
-          variant: 'success'
-        })
-
-        goBack()
-      }, 2000)
+      goBack()
     } catch (error) {
-
-      if(error instanceof yup.ValidationError) {
-        const errors = getValidationErrors(error)
-        console.log(errors)
-      }
-
+      enqueueSnackbar('Erro ao criar serviço, tente novamente!', {
+        variant: 'error'
+      })
     } finally {
       setLoading(false)
     }
@@ -61,8 +43,8 @@ const Create: React.FC = () => {
       <AppBar search={false} />
 
       <Card 
-        onFormSubmit={handleCreate}
         loading={loading}
+        onConfirm={handleCreate}
         type='create'
       />
     </Container>

@@ -117,11 +117,12 @@ export const clients = [
 export const drivers = [
   {
     name: 'Theo Thomas Leonardo das Neves',
-    cpf: '337.117.348-80',
-    rg: '20.498.441-5',
+    CPF: '337.117.348-80',
+    RG: '20.498.441-5',
+    CNH: '123123',
     birthday: '23/06/1972',
     adress: { 
-      cep: '05396-010', 
+      CEP: '05396-010', 
       street: 'Rua Antenor de Freitas', 
       number: '393',  
       neighborhood: 'Parque dos Príncipes',
@@ -139,6 +140,7 @@ export const drivers = [
     name: 'João Diogo da Rosa',
     cpf: '345.402.988-01',
     rg: '24.495.594-3',
+    cnh: '123123',
     birthday: '25/03/1972',
     adress: { 
       cep: '19025-460', 
@@ -159,6 +161,7 @@ export const drivers = [
     name: 'Thiago Julio Isaac Martins',
     cpf: '842.253.568-84',
     rg: '11.520.885-9',
+    cnh: '123123',
     birthday: '26/02/1972',
     adress: { 
       cep: '19804-320', 
