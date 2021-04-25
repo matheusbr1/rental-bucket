@@ -269,3 +269,11 @@ export const citys = [
  'Carapicuíba',
  'Vinhedo',
 ]
+
+export const reports = [
+  'clients',
+  'trucks',
+  'equipments',
+  'drivers',
+  'services',
+]

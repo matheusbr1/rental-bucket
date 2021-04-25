@@ -4,8 +4,11 @@ import { useSnackbar } from 'notistack'
 
 import { Container } from './styles'
 import Card from '../components/Card'
+import { useHistory } from 'react-router'
 
 const Create: React.FC = () => {
+
+  const { goBack } = useHistory()
 
   const { enqueueSnackbar } = useSnackbar()
 
@@ -13,30 +16,45 @@ const Create: React.FC = () => {
 
   const handleEdit = useCallback((fields) => {
 
-    console.log('fields', fields)
+    console.log('data', fields)
 
     setLoading(true)
 
-    setTimeout(() => {
+    try {
+      // Requisição
+
       enqueueSnackbar('Cliente editado com sucesso', {
         variant: 'success'
       })
 
+      goBack()
+    } catch (error) {
+      enqueueSnackbar('Erro ao editar cliente, tente novamente!', {
+        variant: 'error'
+      })
+    } finally {
       setLoading(false)
-    }, 2000)
-  }, [enqueueSnackbar])
+    }
+  }, [enqueueSnackbar, goBack])
 
   const handleDelete = useCallback(() => {
 
     setLoading(true)
 
-    setTimeout(() => {
+    try {
+      // Requisição
+
+      enqueueSnackbar('Cliente deletado com sucesso!', {
+        variant: 'success'
+      })
+    } catch (error) {
       enqueueSnackbar('Erro ao deletar cliente, tente novamente!', {
         variant: 'error'
       })
-
+    } finally {
       setLoading(false)
-    }, 2000)
+    }
+
   }, [enqueueSnackbar])
 
   return (
@@ -45,7 +63,7 @@ const Create: React.FC = () => {
 
       <Card 
         type='update'
-        onFormSubmit={handleEdit}
+        onConfirm={handleEdit}
         onDelete={handleDelete}
         loading={loading}
       />

@@ -17,19 +17,26 @@ const Create: React.FC = () => {
 
   const handleCreate = useCallback((fields) => {
 
-    console.log('fields', fields)
+    console.log('data', fields)
 
     setLoading(true)
 
-    setTimeout(() => {
-      goBack()
+    try {
+      // Requisição
 
       enqueueSnackbar('Cliente criado com sucesso!', {
         variant: 'success'
       })
 
+      goBack()
+    } catch (error) {
+      enqueueSnackbar('Erro ao criar cliente, tente novamente!', {
+        variant: 'error'
+      })
+    } finally {
       setLoading(false)
-    }, 2000)
+    }
+
   }, [goBack, enqueueSnackbar])
 
   return (
@@ -38,7 +45,7 @@ const Create: React.FC = () => {
       
       <Card 
         type='create' 
-        onFormSubmit={handleCreate}
+        onConfirm={handleCreate}
         loading={loading}
       />
     

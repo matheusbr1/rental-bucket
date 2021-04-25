@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useHistory } from 'react-router'
 import { Form } from '@unform/web'
+import * as yup from 'yup'
 
 import { Container, Divider } from './styles'
 import { clients } from 'mocks'
@@ -17,19 +18,45 @@ import TextField from 'components/TextField'
 import AdressTable from '../Table/Adress'
 import ContactTable from '../Table/Contact'
 import { FormHandles } from '@unform/core'
+import getValidationErrors from 'utils/getValidationFormErrors'
 
 interface FieldVariations {
   [key: string]: React.ReactNode
 }
 
+interface Adress {
+  cep: string
+  street: string
+  number: string
+  neighborhood: string
+  state: string
+  city: string
+  complement?: string
+}
+
+interface Contact {
+  email: string
+  telephone: string[]
+  cellphone: string[]
+}
+
+interface Client {
+  cpf?: string
+  cnpj?: string
+  name: string
+  stateRegistration?: string
+  adress: Adress[]
+  contact: Contact
+}
+
 interface CardProps {
   type: 'create' | 'update'
-  onFormSubmit(fields: any): void
+  onConfirm(fields: Client): void
   onDelete?(): void
   loading: boolean
 }
 
-const Card: React.FC<CardProps> = ({ type, loading, onFormSubmit, onDelete = () => {} }) => {
+const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => {} }) => {
   const { goBack } = useHistory()
 
   const formRef = useRef<FormHandles>(null)
@@ -59,6 +86,48 @@ const Card: React.FC<CardProps> = ({ type, loading, onFormSubmit, onDelete = () 
       setIsChanging(false)
     }
   }, [loading])
+
+  const handleFormSubmit = useCallback(async () => {
+
+    try {
+      formRef.current?.setErrors({})
+
+      const schema = yup.object().shape({
+        cpf: yup.string(),
+        cnpj: yup.string(),
+        name: yup.string().required('Campo obrigatório'),
+        stateRegistration: yup.string(),
+        contact: yup.object({
+          email: yup.string().email('E-mail inválido'),
+          telephone: yup.array().of(yup.string()),
+          cellphone:yup.array().of(yup.string()),
+        }),
+        adress: yup.array().of(
+          yup.object({
+            cep: yup.string().required('Campo obrigatório'),
+            street: yup.string().required('Campo obrigatório'),
+            number: yup.string().required('Campo obrigatório'),
+            neighborhood: yup.string().required('Campo obrigatório'),
+            state: yup.string().required('Campo obrigatório'),
+            city: yup.string().required('Campo obrigatório'),
+          })
+        )
+      })
+
+      await schema.validate({}, {
+        abortEarly: false
+      })
+
+      onConfirm({} as Client)
+
+    } catch (error) {
+      if(error instanceof yup.ValidationError) {
+        const errors = getValidationErrors(error)
+        formRef.current?.setErrors(errors)
+        console.log(errors)
+      }
+    }
+  }, [onConfirm])
 
   const personFields: FieldVariations = {
     fisic: (
@@ -140,7 +209,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onFormSubmit, onDelete = () 
           : <h1>{clients[0].name}</h1> 
       }
 
-      <Form ref={formRef} onSubmit={onFormSubmit} >
+      <Form ref={formRef} onSubmit={handleFormSubmit} >
 
         <div className="grid">
           
