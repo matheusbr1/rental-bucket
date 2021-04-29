@@ -13,6 +13,7 @@ import RadioGroup from '@material-ui/core/RadioGroup'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 
 import TextField from 'components/TextField'
+import MaskedField from 'components/TextField/masked'
 
 import { FormHandles } from '@unform/core'
 import getValidationErrors from 'utils/getValidationFormErrors'
@@ -137,7 +138,9 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           
           { person === 'fisic' ? (
             <React.Fragment>
-              <TextField 
+
+              <MaskedField 
+                mask='cpf'
                 name='CPF' 
                 label='CPF'
                 variant="outlined" 

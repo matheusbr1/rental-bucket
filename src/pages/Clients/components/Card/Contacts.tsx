@@ -7,6 +7,7 @@ import TextField from 'components/TextField'
 import { Button, MenuItem } from '@material-ui/core'
 import ContactTable from '../Table/Contact'
 import Title from 'components/Title'
+import MaskedField from 'components/TextField/masked'
 
 const Contacts: React.FC = () => {
 
@@ -114,7 +115,8 @@ const Contacts: React.FC = () => {
 
             {
               contactField === 'telephone' && (
-                <TextField 
+                <MaskedField
+                  mask='telephone'
                   name='telephone'
                   label='Telefone'
                   variant="outlined" 
@@ -124,7 +126,8 @@ const Contacts: React.FC = () => {
 
             {
               contactField === 'cellphone' && (
-                <TextField 
+                <MaskedField 
+                  mask='cellphone'
                   name='cellphone'
                   label='Celular'
                   variant="outlined" 

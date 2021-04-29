@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { FormHandles } from '@unform/core'
 import { Form } from '@unform/web'
 import TextField from 'components/TextField'
+import MaskedField from 'components/TextField/masked'
 import { Button, MenuItem } from '@material-ui/core'
 import AdressTable from '../Table/Adress'
 import { states, citys } from 'mocks'
@@ -79,10 +80,12 @@ const Adresses: React.FC = () => {
         />
 
         <div className="grid">
-          <TextField 
+
+          <MaskedField 
             name='CEP'
             label='CEP'
             variant="outlined" 
+            mask='cep'
           />
 
           <TextField 

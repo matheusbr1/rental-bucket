@@ -9,6 +9,7 @@ import { useField } from '@unform/core'
 interface Props extends OutlinedTextFieldProps {
   style?: React.CSSProperties
   name: string
+  inputComponent?: React.ReactNode
 }
 
 const TextField: React.FC<Props> = ({ style, name, ...rest }) => {
