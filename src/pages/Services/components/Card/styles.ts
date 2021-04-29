@@ -9,12 +9,6 @@ export const Container = styled.div`
   border-radius: 10px;
   padding: 25px;
 
-  h1 {
-    margin: 10px;
-    font-weight: 400;
-    font-size: 1.5rem
-  }
-
   form {
     display: grid;
     grid-template-columns: repeat(3, 1fr);

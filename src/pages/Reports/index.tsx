@@ -13,6 +13,7 @@ import { FormHandles } from '@unform/core'
 import { Form } from '@unform/web'
 import { useSnackbar } from 'notistack'
 import getValidationErrors from 'utils/getValidationFormErrors'
+import Title from 'components/Title'
 
 const Reports: React.FC = () => {
 
@@ -190,7 +191,7 @@ const Reports: React.FC = () => {
 
       <Content>
 
-        <h1>Relatórios</h1>
+        <Title text='Relatórios' size='big' />
 
         <Form ref={formRef} onSubmit={handleNewReport} >
           <TextField 

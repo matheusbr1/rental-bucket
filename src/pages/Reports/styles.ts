@@ -3,7 +3,6 @@ import styled from 'styled-components'
 export const Container = styled.div`
   width: 100%;
   margin-top: 64px;
-
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -19,19 +18,11 @@ export const Container = styled.div`
 export const Content = styled.main`
 
   position: relative;
-
-  margin: 20px 0;
-
   width: 768px;
   box-shadow: 0px 1px 20px rgba(0, 0, 0, 0.14);
   border-radius: 10px;
   padding: 25px;
-
-  h1 {
-    margin: 10px;
-    font-weight: 400;
-    font-size: 1.5rem
-  }
+  margin: 20px 0;
 
   form {
     display: grid;

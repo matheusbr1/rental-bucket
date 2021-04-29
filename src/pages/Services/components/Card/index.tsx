@@ -11,6 +11,7 @@ import { Form } from '@unform/web'
 import { Container, Footer } from './styles'
 import { FormHandles } from '@unform/core'
 import getValidationErrors from 'utils/getValidationFormErrors'
+import Title from 'components/Title'
 
 interface Service {
   client: string
@@ -135,11 +136,11 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
   return (
     <Container>
-      { 
-        type === 'create' 
-          ? <h1>Novo Serviço</h1> 
-          : <h1>Serviço #1</h1> 
-      }
+
+      <Title 
+        text={type === 'create'  ?  'Novo Serviço' : 'Serviço #1'} 
+        size='big'
+      />
 
       <Form ref={formRef} onSubmit={handleFormSubmit} >
         <TextField 

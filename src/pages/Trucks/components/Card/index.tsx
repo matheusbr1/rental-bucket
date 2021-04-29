@@ -11,6 +11,7 @@ import { Container } from './styles'
 import { Form } from '@unform/web'
 import { FormHandles } from '@unform/core'
 import getValidationErrors from 'utils/getValidationFormErrors'
+import Title from 'components/Title'
 
 interface Truck {
   brand: string
@@ -121,11 +122,11 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
   return (
     <Container>
-      { 
-        type === 'create' 
-          ? <h1>Novo Caminhão</h1> 
-          : <h1>{truck.plate}</h1> 
-      }
+
+      <Title 
+        text={type === 'create'  ?  'Novo Caminhão' : truck.plate} 
+        size='big'
+      />
 
       <Form ref={formRef} onSubmit={handleFormSubmit} >
 

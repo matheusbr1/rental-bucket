@@ -12,6 +12,7 @@ import * as yup from 'yup'
 import { Container, Divider } from './styles'
 import { FormHandles } from '@unform/core'
 import getValidationErrors from 'utils/getValidationFormErrors'
+import Title from 'components/Title'
 
 interface Driver {
   name: string
@@ -142,12 +143,11 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
   return (
     <Container>
-      
-      { 
-        type === 'create' 
-          ? <h1>Novo Motorista</h1> 
-          : <h1>{drivers[0].name}</h1> 
-      }
+
+      <Title 
+        text={type === 'create'  ?  'Novo Motorista' : drivers[0].name} 
+        size='big'
+      />
 
       <Form ref={formRef} onSubmit={handleFormSubmit}>
         <div className="grid">
@@ -190,7 +190,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
         <Divider />
 
-        <h2>Endereço</h2>
+        <Title text='Endereço' />
 
         <div className="grid">
           <Scope path='adress'>
@@ -261,7 +261,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
         <Divider />
 
-        <h2>Contato</h2>
+        <Title text='Contato' />
 
         <div className="grid">
           <Scope path='contact' >

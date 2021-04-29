@@ -7,7 +7,6 @@ import { Container, Divider } from './styles'
 import { clients } from 'mocks'
 
 import FloatingButton from 'components/FloatingButton'
-import { MenuItem } from '@material-ui/core'
 
 import Radio from '@material-ui/core/Radio'
 import RadioGroup from '@material-ui/core/RadioGroup'
@@ -15,38 +14,28 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 
 import TextField from 'components/TextField'
 
-import AdressTable from '../Table/Adress'
-import ContactTable from '../Table/Contact'
 import { FormHandles } from '@unform/core'
 import getValidationErrors from 'utils/getValidationFormErrors'
 
-interface FieldVariations {
-  [key: string]: React.ReactNode
-}
-
-interface Adress {
-  cep: string
-  street: string
-  number: string
-  neighborhood: string
-  state: string
-  city: string
-  complement?: string
-}
-
-interface Contact {
-  email: string
-  telephone: string[]
-  cellphone: string[]
-}
+import Adresses from './Adresses'
+import Contacts from './Contacts'
+import Title from 'components/Title'
 
 interface Client {
   cpf?: string
   cnpj?: string
   name: string
   stateRegistration?: string
-  adress: Adress[]
-  contact: Contact
+  contact: string[]
+  adress: {
+    cep: string
+    street: string
+    number: string
+    neighborhood: string
+    state: string
+    city: string
+    complement?: string
+  }[]
 }
 
 interface CardProps {
@@ -67,12 +56,6 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
     setPerson((event.target as HTMLInputElement).value)
   }
 
-  const [contactField, setContactField] = useState('email')
-
-  const handleContactField = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setContactField((event.target as HTMLInputElement).value)
-  }
-
   const [isChanging, setIsChanging] = useState(false)
 
   const handleChange = useCallback(() => {
@@ -87,37 +70,34 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
     }
   }, [loading])
 
-  const handleFormSubmit = useCallback(async () => {
+  const handleFormSubmit = useCallback(async fields => {
 
     try {
       formRef.current?.setErrors({})
 
-      const schema = yup.object().shape({
-        cpf: yup.string(),
-        cnpj: yup.string(),
+      const fisicPersonSchema = yup.object().shape({
+        CPF: yup.string().required('Campo obrigatório'),
         name: yup.string().required('Campo obrigatório'),
+      })
+
+      const legalPersonSchema = yup.object().shape({
+        CNPJ: yup.string().required('Campo obrigatório'),
+        companyName: yup.string().required('Campo obrigatório'),
+        fantasyName: yup.string().required('Campo obrigatório'),
         stateRegistration: yup.string(),
-        contact: yup.object({
-          email: yup.string().email('E-mail inválido'),
-          telephone: yup.array().of(yup.string()),
-          cellphone:yup.array().of(yup.string()),
-        }),
-        adress: yup.array().of(
-          yup.object({
-            cep: yup.string().required('Campo obrigatório'),
-            street: yup.string().required('Campo obrigatório'),
-            number: yup.string().required('Campo obrigatório'),
-            neighborhood: yup.string().required('Campo obrigatório'),
-            state: yup.string().required('Campo obrigatório'),
-            city: yup.string().required('Campo obrigatório'),
-          })
-        )
       })
 
-      await schema.validate({}, {
-        abortEarly: false
-      })
 
+      if(person === 'fisic') {
+        await fisicPersonSchema.validate(fields, {
+          abortEarly: false
+        })
+      } else {
+        await legalPersonSchema.validate(fields, {
+          abortEarly: false
+        })
+      }
+     
       onConfirm({} as Client)
 
     } catch (error) {
@@ -127,93 +107,19 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
         console.log(errors)
       }
     }
-  }, [onConfirm])
-
-  const personFields: FieldVariations = {
-    fisic: (
-      <React.Fragment>
-        <TextField 
-          name='CPF' 
-          label='CPF'
-          variant="outlined" 
-          disabled={disabled}
-        />
-  
-        <TextField
-          name='name' 
-          label='Nome'
-          variant="outlined" 
-          disabled={disabled}
-        />
-      </React.Fragment>
-    ),
-    legal: (
-      <React.Fragment>
-        <TextField 
-          name='CNPJ' 
-          label='CNPJ'
-          variant="outlined" 
-          disabled={disabled}
-        />
-  
-        <TextField
-          name='companyName' 
-          label='Razão Social'
-          variant="outlined" 
-          disabled={disabled}
-        />
-  
-        <TextField
-          name='fantasyName' 
-          label='Nome Fantasia'
-          variant="outlined" 
-          disabled={disabled}
-        />
-      </React.Fragment>
-    )
-  }
-  
-  const contactFields: FieldVariations = {
-    email: (
-      <TextField
-        name='email'
-        label='Email'
-        variant="outlined" 
-        disabled={disabled}
-      />
-    ),
-    telephone: (
-      <TextField 
-        name='telephone'
-        label='Telefone'
-        variant="outlined" 
-        disabled={disabled}
-      />
-    ),
-    cellphone: (
-      <TextField 
-        name='cellphone'
-        label='Celular'
-        variant="outlined" 
-        disabled={disabled}
-      />
-    )
-  }
+  }, [onConfirm, person])
 
   return (
     <Container>
-      
-      { 
-        type === 'create' 
-          ? <h1>Novo Cliente</h1> 
-          : <h1>{clients[0].name}</h1> 
-      }
+
+    <Title 
+      text={type === 'create'  ?  'Novo Cliente' : clients[0].name} 
+      size='big'
+    />
 
       <Form ref={formRef} onSubmit={handleFormSubmit} >
-
         <div className="grid">
-          
-          <RadioGroup value={person} onChange={handlePerson}>
+          <RadioGroup name='person' value={person} onChange={handlePerson}>
             <FormControlLabel 
               value="fisic" 
               control={<Radio />} 
@@ -229,112 +135,89 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
             />
           </RadioGroup>
           
-          {personFields[person]}
-        </div>
+          { person === 'fisic' ? (
+            <React.Fragment>
+              <TextField 
+                name='CPF' 
+                label='CPF'
+                variant="outlined" 
+                disabled={disabled}
+              />
 
-        <Divider />
-
-        <h2>Endereço</h2>
-
-        <div className="grid">
-          <TextField 
-            name='CEP'
-            label='CEP'
-            variant="outlined" 
-          />
-
-          <TextField 
-            name='street'
-            label='Logradouro'
-            variant="outlined"
-          />
-
-          <TextField 
-            name='number'
-            label='Número'
-            variant="outlined" 
-          />
-
-          <TextField
-            name='state' 
-            label='Estado'
-            variant="outlined" 
-            select
-          >
-            <MenuItem value='SP'> SP </MenuItem>
-            <MenuItem value='RJ'> RJ </MenuItem>
-            <MenuItem value='MG'> MG </MenuItem>
-          </TextField>
-
-          <TextField
-            name='city' 
-            label='Cidade'
-            variant="outlined" 
-            select
-          >
-            <MenuItem value='Osasco'> Osasco </MenuItem>
-            <MenuItem value='Carapicuíba'> Carapicuíba </MenuItem>
-            <MenuItem value='Vinhedo'> Vinhedo </MenuItem>
-          </TextField>
-          
-          <TextField 
-            name='district'
-            label='Bairro'
-            variant="outlined" 
-          />
-
-          <TextField 
-            name='complement'
-            label='Complemento'
-            variant="outlined" 
-          />
-        </div>
-
-        <AdressTable title='Endereços cadastrados' />
-
-        <Divider />
-
-        <h2>Contato</h2>
-
-        <div className="grid">
-
-          <TextField
-            name='type' 
-            label='Tipo'
-            variant="outlined" 
-            onChange={handleContactField}
-            value={contactField}
-            disabled={disabled}
-            select
-          >
-            <MenuItem value='email'> Email </MenuItem>
-            <MenuItem value='telephone'> Telefone </MenuItem>
-            <MenuItem value='cellphone'> Celular </MenuItem>
-          </TextField>
-
-          {contactFields[contactField]}
+              <TextField
+                name='name' 
+                label='Nome'
+                variant="outlined" 
+                disabled={disabled}
+              />
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <TextField 
+                name='CNPJ' 
+                label='CNPJ'
+                variant="outlined" 
+                disabled={disabled}
+              />
         
+              <TextField
+                name='companyName' 
+                label='Razão Social'
+                variant="outlined" 
+                disabled={disabled}
+              />
+        
+              <TextField
+                name='fantasyName' 
+                label='Nome Fantasia'
+                variant="outlined" 
+                disabled={disabled}
+              />
+            </React.Fragment>
+          )}
         </div>
-
-        <ContactTable title='Contatos  cadastrados' />
-
         <div className='floating-buttons'>
           <FloatingButton variant='return' onClick={goBack} />
 
           {
             type === 'create' ? (
-              <FloatingButton variant='confirm' type='submit' loading={loading} />
+              <FloatingButton 
+                variant='confirm' 
+                type='submit' 
+                loading={loading} 
+              />
             ) : isChanging ? (
-                <FloatingButton variant='confirm' type='submit' loading={loading} />
+                <FloatingButton 
+                  variant='confirm' 
+                  type='submit' 
+                  loading={loading} 
+                />
               ) : (
                 <div className='group' >
-                  <FloatingButton variant='edit' onClick={handleChange} />
-                  <FloatingButton variant='delete' onClick={onDelete} loading={loading} />
+                  <FloatingButton 
+                    variant='edit' 
+                    onClick={handleChange} 
+                  />
+                  
+                  <FloatingButton 
+                    variant='delete' 
+                    onClick={onDelete} 
+                    loading={loading} 
+                  />
                 </div>
               )
           }
         </div>
       </Form>
+
+      <Divider />
+
+      <Adresses />
+
+      <Divider />
+
+      <Contacts />
+      
     </Container>
   )
 }

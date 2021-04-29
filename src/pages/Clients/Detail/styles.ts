@@ -24,18 +24,6 @@ export const Content = styled.main`
   border-radius: 10px;
   padding: 25px;
 
-  h1 {
-    margin: 10px 0;
-    font-weight: 400;
-    font-size: 1.5rem
-  }
-
-  h2 {
-    margin: 30px 0;
-    font-weight: 400;
-    font-size: 1.2rem
-  }
-
   form {
     margin: 5% 0 15% 0;
 

@@ -11,6 +11,7 @@ interface Props extends React.HTMLAttributes<HTMLButtonElement> {
   disabled?: boolean
   loading?: boolean
   type?: any
+  containerStyle?: object
 }
 
 const variationIcons = {
@@ -22,10 +23,10 @@ const variationIcons = {
 }
 
 const FloatingButton: React.FC<Props> = (
-  { onClick, loading, variant = 'add', disabled, type = 'button' }
+  { onClick, loading, variant = 'add', disabled, type = 'button', containerStyle }
 ) => {
   return (
-    <Container variant={variant}>
+    <Container variant={variant} style={containerStyle ?? {}} >
       <div>
         <Fab color="default" style={{ margin: 5 }} onClick={onClick} disabled={disabled} type={type}>
           {
