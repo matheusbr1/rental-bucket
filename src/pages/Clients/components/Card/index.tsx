@@ -156,7 +156,8 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
             </React.Fragment>
           ) : (
             <React.Fragment>
-              <TextField 
+               <MaskedField 
+                mask='cnpj'
                 name='CNPJ' 
                 label='CNPJ'
                 variant="outlined" 

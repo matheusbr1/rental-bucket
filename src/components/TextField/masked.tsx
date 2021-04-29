@@ -12,7 +12,7 @@ interface Props extends OutlinedTextFieldProps {
   style?: React.CSSProperties
   name: string
   inputComponent?: React.ReactNode
-  mask: 'cep' | 'cellphone' | 'telephone' | 'cpf'
+  mask: 'cep' | 'cellphone' | 'telephone' | 'cpf' | 'cnpj' | 'plate' | 'rg'
 }
 
 interface TextMaskCustomProps {
@@ -32,6 +32,15 @@ const maskVariations = {
   cpf: [
     /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '-', /\d/, /\d/
   ],
+  cnpj: [
+    /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/
+  ],
+  plate: [
+    /\D/, /\D/, /\D/, '-', /\d/, /\d/, /\d/, /\d/
+  ],
+  rg : [
+    /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '-', /\d/
+  ]
 }
 
 const MaskedField: React.FC<Props> = ({ style, name, mask, ...rest }) => {

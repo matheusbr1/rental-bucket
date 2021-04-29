@@ -151,7 +151,10 @@ const Adresses: React.FC = () => {
         </Button>
       </Form>
 
-      <AdressTable title='Endereços cadastrados' />
+      <AdressTable 
+        title='Endereços cadastrados' 
+        adresses={adresses}
+      />
     </div>
   )
 }

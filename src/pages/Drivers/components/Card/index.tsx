@@ -13,6 +13,7 @@ import { Container, Divider } from './styles'
 import { FormHandles } from '@unform/core'
 import getValidationErrors from 'utils/getValidationFormErrors'
 import Title from 'components/Title'
+import MaskedField from 'components/TextField/masked'
 
 interface Driver {
   name: string
@@ -158,14 +159,16 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
             disabled={disabled}
           />
 
-          <TextField 
+          <MaskedField 
+            mask='cpf'
             name='CPF' 
             label='CPF'
             variant="outlined" 
             disabled={disabled}
           />
 
-          <TextField 
+          <MaskedField 
+            mask='rg'
             name='RG' 
             label='RG'
             variant="outlined" 
@@ -194,7 +197,9 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
         <div className="grid">
           <Scope path='adress'>
-            <TextField 
+            
+            <MaskedField 
+              mask='cep'
               name='CEP'
               label='CEP'
               variant="outlined" 
@@ -272,14 +277,16 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
               disabled={disabled}
             />
 
-            <TextField 
+            <MaskedField 
+              mask='telephone'
               name='telephone'
               label='Telefone'
               variant="outlined" 
               disabled={disabled}
             />
 
-            <TextField 
+            <MaskedField 
+              mask='cellphone'
               name='cellphone'
               label='Celular'
               variant="outlined" 

@@ -12,6 +12,7 @@ import { Form } from '@unform/web'
 import { FormHandles } from '@unform/core'
 import getValidationErrors from 'utils/getValidationFormErrors'
 import Title from 'components/Title'
+import MaskedField from 'components/TextField/masked'
 
 interface Truck {
   brand: string
@@ -158,9 +159,10 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
               <MenuItem  value={model} key={model}>  {model} </MenuItem>
             ))}
           </TextField>
-
-          <TextField 
-            name='plate' 
+          
+          <MaskedField 
+            mask='plate'
+            name='Placa' 
             label='Placa'
             variant="outlined" 
             disabled={disabled}

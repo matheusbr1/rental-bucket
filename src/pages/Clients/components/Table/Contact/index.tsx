@@ -21,25 +21,18 @@ import { Container } from './styles'
 
 interface TableProps {
   title: string
+  contacts: {
+    type: string
+    telephone?: string
+    cellphone?: string
+    email?: string
+  }[]
 }
 
 interface Data {
   type: string
-  contact: string
+  contact: string | number | undefined
 }
-
-function createData(
-  type: string,
-  contact: string,
-): Data {
-  return { type, contact }
-}
-
-const rows = [
-  createData('Email', 'matheusbaron10@gmail.com'),
-  createData('Telefone fixo', '(11) 3691-3428'),
-  createData('Celular', '(11) 97803-5721'),
-]
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -96,6 +89,7 @@ interface EnhancedTableProps {
 
 function EnhancedTableHead(props: EnhancedTableProps) {
   const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props
+  
   const createSortHandler = (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
     onRequestSort(event, property)
   }
@@ -191,15 +185,27 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 )
 
-const Table: React.FC<TableProps> = ({ title }) => {
+const Table: React.FC<TableProps> = ({ title, contacts }) => {
   const classes = useStyles()
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<keyof Data>('type')
   const [selected, setSelected] = React.useState<string[]>([])
 
+  function createData(
+    type: string,
+    contact: string | number | undefined,
+  ): Data {
+    return { type, contact }
+  }
+  
+  const rows = contacts.map(contact => createData(
+    contact.type.charAt(0).toUpperCase() + contact.type.slice(1), // First Letter Upercase
+    contact?.telephone ??  contact?.cellphone ?? contact?.email
+  ))
+
   const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
     const classes = useToolbarStyles()
-    const { numSelected } = props;
+    const { numSelected } = props
   
     const handleEdit = useCallback(() => {
       // Editar
@@ -294,19 +300,19 @@ const Table: React.FC<TableProps> = ({ title }) => {
               rowCount={rows.length}
             />
             <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
+              {stableSort(rows as any, getComparator(order, orderBy))
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.type);
+                  const isItemSelected = isSelected(row.type as string);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.type)}
+                      onClick={(event) => handleClick(event, row.type as string)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.type}
+                      key={index}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">

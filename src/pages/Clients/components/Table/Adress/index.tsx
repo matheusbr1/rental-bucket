@@ -19,8 +19,19 @@ import EditIcon from '@material-ui/icons/Edit'
 
 import { Container } from './styles'
 
+interface Adress {
+  cep: string
+  street: string
+  number: string
+  neighborhood: string
+  state: string
+  city: string
+  complement?: string
+}
+
 interface TableProps {
   title: string
+  adresses: Adress[]
 }
 
 interface Data {
@@ -32,22 +43,6 @@ interface Data {
   cep: string
 }
 
-function createData(
-  street: string,
-  number: number,
-  neighborhood: string,
-  state: string,
-  city: string,
-  cep: string,
-): Data {
-  return { street, number, neighborhood, cep, state, city }
-}
-
-const rows = [
-  createData('Rua João Rodrigues de Moura', 321, 'Jardim Piracuama', 'São Paulo', 'SP', '05763-440'),
-  createData('Rua Guarupu', 987, 'Vila Curuçá', 'São Paulo', 'SP', '08030-170'),
-  createData('Rua Doutor João José', 12, 'Vila Sônia', 'São Paulo', 'SP', '05628-040'),
-]
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -203,11 +198,31 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 )
 
-const Table: React.FC<TableProps> = ({ title }) => {
+const Table: React.FC<TableProps> = ({ title, adresses }) => {
   const classes = useStyles()
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<keyof Data>('street')
   const [selected, setSelected] = React.useState<string[]>([])
+
+  function createData(
+    street: string,
+    number: number,
+    neighborhood: string,
+    state: string,
+    city: string,
+    cep: string,
+  ): Data {
+    return { street, number, neighborhood, cep, state, city }
+  }
+  
+  const rows = adresses.map(adress => createData(
+      adress.street, 
+      Number(adress.number), 
+      adress.neighborhood, 
+      adress.city, 
+      adress.state, 
+      adress.cep
+  ))
 
   const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
     const classes = useToolbarStyles()
@@ -318,7 +333,7 @@ const Table: React.FC<TableProps> = ({ title }) => {
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.street}
+                      key={index}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">

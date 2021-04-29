@@ -9,11 +9,18 @@ import ContactTable from '../Table/Contact'
 import Title from 'components/Title'
 import MaskedField from 'components/TextField/masked'
 
+interface Contact {
+  type: string
+  telephone?: string
+  cellphone?: string
+  email?: string
+}
+
 const Contacts: React.FC = () => {
 
   const formRef = useRef<FormHandles>(null)
 
-  const [contacts, setContacts] = useState<string[]>([])
+  const [contacts, setContacts] = useState<Contact[]>([])
 
   useEffect(() => console.log('Contatos Cadastrados', contacts), [contacts])
 
@@ -148,7 +155,10 @@ const Contacts: React.FC = () => {
         </Button>
       </Form>
 
-      <ContactTable title='Contatos cadastrados' />
+      <ContactTable 
+        title='Contatos cadastrados'
+        contacts={contacts}
+      />
     </div>
   )
 }
