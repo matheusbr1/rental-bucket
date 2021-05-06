@@ -8,8 +8,11 @@ import { Container, Content } from './styles'
 import { useHistory } from 'react-router'
 
 import Button from '@material-ui/core/Button'
+import { useData } from 'hooks/data'
 
 const List: React.FC = () => {
+
+  const { clients } = useData()
 
   const history = useHistory()
 
@@ -26,7 +29,7 @@ const List: React.FC = () => {
       <AppBar />
       
       <Content>
-        <Table title='Clientes' />
+        <Table title='Clientes' clients={clients} />
         
         <div className='floating-buttons' >
           <Button 

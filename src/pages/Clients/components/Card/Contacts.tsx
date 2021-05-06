@@ -8,19 +8,16 @@ import { Button, MenuItem } from '@material-ui/core'
 import ContactTable from '../Table/Contact'
 import Title from 'components/Title'
 import MaskedField from 'components/TextField/masked'
+import { IContact } from 'hooks/data'
 
-interface Contact {
-  type: string
-  telephone?: string
-  cellphone?: string
-  email?: string
+interface ContactProps {
+  contacts: IContact[]
+  setContacts(contacts: IContact[]): void
 }
 
-const Contacts: React.FC = () => {
+const Contacts: React.FC<ContactProps> = ({ contacts, setContacts }) => {
 
   const formRef = useRef<FormHandles>(null)
-
-  const [contacts, setContacts] = useState<Contact[]>([])
 
   useEffect(() => console.log('Contatos Cadastrados', contacts), [contacts])
 
@@ -73,10 +70,10 @@ const Contacts: React.FC = () => {
         abortEarly: false
       })
 
-      setContacts(oldState => ([
-        ...oldState,
+      setContacts([
+        ...contacts,
         data
-      ]))
+      ])
 
     } catch (error) {
       if(error instanceof yup.ValidationError) {
@@ -85,7 +82,7 @@ const Contacts: React.FC = () => {
         console.log(errors)
       }
     }
-  }, [contactField])
+  }, [contactField, contacts, setContacts])
 
   return (
     <div>

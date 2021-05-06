@@ -21,27 +21,11 @@ import getValidationErrors from 'utils/getValidationFormErrors'
 import Adresses from './Adresses'
 import Contacts from './Contacts'
 import Title from 'components/Title'
-
-interface Client {
-  cpf?: string
-  cnpj?: string
-  name: string
-  stateRegistration?: string
-  contact: string[]
-  adress: {
-    cep: string
-    street: string
-    number: string
-    neighborhood: string
-    state: string
-    city: string
-    complement?: string
-  }[]
-}
+import { IAdress, IContact, IClient } from 'hooks/data'
 
 interface CardProps {
   type: 'create' | 'update'
-  onConfirm(fields: Client): void
+  onConfirm(fields: IClient): void
   onDelete?(): void
   loading: boolean
 }
@@ -52,6 +36,10 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
   const formRef = useRef<FormHandles>(null)
 
   const [person, setPerson] = useState('fisic')
+
+  const [adresses, setAdresses] = useState<IAdress[]>([])
+
+  const [contacts, setContacts] = useState<IContact[]>([])
 
   const handlePerson = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPerson((event.target as HTMLInputElement).value)
@@ -88,7 +76,6 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
         stateRegistration: yup.string(),
       })
 
-
       if(person === 'fisic') {
         await fisicPersonSchema.validate(fields, {
           abortEarly: false
@@ -98,8 +85,12 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           abortEarly: false
         })
       }
-     
-      onConfirm({} as Client)
+
+      onConfirm({
+        ...fields,
+        contacts,
+        adresses
+      } as IClient)
 
     } catch (error) {
       if(error instanceof yup.ValidationError) {
@@ -108,7 +99,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
         console.log(errors)
       }
     }
-  }, [onConfirm, person])
+  }, [onConfirm, person, adresses, contacts])
 
   return (
     <Container>
@@ -216,11 +207,11 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
       <Divider />
 
-      <Adresses />
+      <Adresses adresses={adresses} setAdresses={setAdresses} />
 
       <Divider />
 
-      <Contacts />
+      <Contacts contacts={contacts} setContacts={setContacts} />
       
     </Container>
   )

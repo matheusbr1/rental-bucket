@@ -5,10 +5,13 @@ import { useSnackbar } from 'notistack'
 
 import { Container } from './styles'
 import Card from '../components/Card'
+import { useData } from 'hooks/data'
 
 const Create: React.FC = () => {
 
   const { goBack } = useHistory()
+
+  const { createNewDriver } = useData()
 
   const { enqueueSnackbar } = useSnackbar()
 
@@ -21,6 +24,8 @@ const Create: React.FC = () => {
     setLoading(true)
 
     try {
+      createNewDriver(fields)
+
       enqueueSnackbar('Motorista criado com sucesso!', {
         variant: 'success'
       })
@@ -33,7 +38,7 @@ const Create: React.FC = () => {
     } finally {
       setLoading(false)
     }
-  }, [goBack, enqueueSnackbar])
+  }, [goBack, enqueueSnackbar, createNewDriver])
 
   return (
     <Container>

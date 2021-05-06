@@ -21,9 +21,11 @@ import OpenIcon from '@material-ui/icons/Launch'
 
 import { Container } from './styles'
 import { useHistory } from 'react-router'
+import { IService } from 'hooks/data'
 
 interface TableProps {
   title: string
+  services: IService[]
 }
 
 interface Data {
@@ -34,26 +36,6 @@ interface Data {
   deadline: string
   status: string
 }
-
-function createData(
-  client: string,
-  type: string,
-  quantity: number,
-  equipment: string,
-  deadline: string,
-  status: string,
-): Data {
-  return { client, type, quantity, equipment, deadline, status }
-}
-
-const rows = [
-  createData('Construtora A', 'Troca', 3.7, 'Caçamba 5m³', '10/10/2021', 'Pendente'),
-  createData('Construtora B', 'Coloca', 25.0, 'Caçamba 5m³', '12/10/2021', 'Concluído'),
-  createData('Construtora C', 'Retirada', 16.0, 'Caçamba 5m³',  '13/10/2021', 'Pendente'),
-  createData('Particular A', 'Coloca', 6.0, 'Caçamba 5m³', '14/10/2021', 'Pendente'),
-  createData('Particular B', 'Retirada', 16.0, 'Caçamba 5m³',  '15/10/2021', 'Pendente'),
-  createData('Particular C', 'Troca', 3.2, 'Caçamba 5m³',  '16/10/2021',  'Concluído'),
-]
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -206,13 +188,33 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 )
 
-const Table: React.FC<TableProps> = ({ title }) => {
+const Table: React.FC<TableProps> = ({ title, services }) => {
   const classes = useStyles()
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<keyof Data>('type')
   const [selected, setSelected] = React.useState<string[]>([])
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
+
+  function createData(
+    client: string,
+    type: string,
+    quantity: number,
+    equipment: string,
+    deadline: string,
+    status: string,
+  ): Data {
+    return { client, type, quantity, equipment, deadline, status }
+  }
+  
+  const rows = services.map(service => createData(
+    service.client, 
+    service.service, 
+    service.quantity,
+    service.equipment, 
+    service.endDate.toDateString(), 
+    'Pendente'
+  ))
 
   const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
     const classes = useToolbarStyles()

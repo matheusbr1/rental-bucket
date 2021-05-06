@@ -18,20 +18,11 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
 
 import { Container } from './styles'
-
-interface Adress {
-  cep: string
-  street: string
-  number: string
-  neighborhood: string
-  state: string
-  city: string
-  complement?: string
-}
+import { IAdress } from 'hooks/data'
 
 interface TableProps {
   title: string
-  adresses: Adress[]
+  adresses: IAdress[]
 }
 
 interface Data {
@@ -42,7 +33,6 @@ interface Data {
   city: string
   cep: string
 }
-
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -221,7 +211,7 @@ const Table: React.FC<TableProps> = ({ title, adresses }) => {
       adress.neighborhood, 
       adress.city, 
       adress.state, 
-      adress.cep
+      adress.CEP
   ))
 
   const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {

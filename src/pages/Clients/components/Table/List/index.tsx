@@ -21,29 +21,17 @@ import OpenIcon from '@material-ui/icons/Launch'
 
 import { Container } from './styles'
 import { useHistory } from 'react-router'
+import { IClient } from 'hooks/data'
 
 interface TableProps {
-  title: string
+  title: string 
+  clients: IClient[]
 }
 
 interface Data {
   name: string
-  contact: string
+  contact: any
 }
-
-function createData(
-  name: string,
-  contact: string,
-): Data {
-  return { name, contact }
-}
-
-const rows = [
-  createData('Larissa Caroline de Paula', '(11) 2795-9980'),
-  createData('Antonio Kauê Lucca da Luz', '(11) 2612-6444'),
-  createData('Construtora C', '(11) 3701-4629'),
-  createData('Milena Aurora Márcia Fogaça', '(11) 2657-5882'),
-]
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -192,13 +180,32 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 )
 
-const Table: React.FC<TableProps> = ({ title }) => {
+const Table: React.FC<TableProps> = ({ title, clients }) => {
   const classes = useStyles()
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<keyof Data>('name')
   const [selected, setSelected] = React.useState<string[]>([])
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
+
+  function createData(
+    name: string,
+    contact: any,
+  ): Data {
+    return { name, contact }
+  }
+  
+  const rows = clients.map(client => {
+    const contact = client.contacts[0]
+
+
+    console.log(client.contacts)
+
+    return createData(
+      client.name, 
+      contact?.email || contact?.cellphone || contact?.telephone
+    )
+  })
 
   const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
     const classes = useToolbarStyles()
@@ -326,13 +333,13 @@ const Table: React.FC<TableProps> = ({ title }) => {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
+                  const isItemSelected = isSelected(row.name as any);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.name)}
+                      onClick={(event) => handleClick(event, row.name as any)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}

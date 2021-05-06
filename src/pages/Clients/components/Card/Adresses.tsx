@@ -10,21 +10,16 @@ import * as yup from 'yup'
 import getValidationErrors from 'utils/getValidationFormErrors'
 import Title from 'components/Title'
 
-interface Adress {
-  cep: string
-  street: string
-  number: string
-  neighborhood: string
-  state: string
-  city: string
-  complement?: string
+import { IAdress } from 'hooks/data'
+
+interface AdressesProps {
+  adresses: IAdress[]
+  setAdresses(adresses: IAdress[]): void
 }
 
-const Adresses: React.FC = () => {
+const Adresses: React.FC<AdressesProps> = ({ adresses, setAdresses }) => {
 
   const formRef = useRef<FormHandles>(null)
-
-  const [adresses, setAdresses] = useState<Adress[]>([])
 
   useEffect(() => console.log('Endereços Cadastrados', adresses), [adresses])
 
@@ -56,10 +51,10 @@ const Adresses: React.FC = () => {
         abortEarly: false
       })
 
-      setAdresses(oldState => ([
-        ...oldState,
+      setAdresses([
+        ...adresses,
         data
-      ]))
+      ])
 
     } catch (error) {
       if(error instanceof yup.ValidationError) {
@@ -68,7 +63,7 @@ const Adresses: React.FC = () => {
         console.log(errors)
       }
     }
-  }, [city, state])
+  }, [city, state, adresses, setAdresses])
 
   return (
     <div>

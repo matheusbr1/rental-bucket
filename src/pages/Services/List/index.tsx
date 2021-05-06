@@ -5,10 +5,13 @@ import FloatingButton from 'components/FloatingButton'
 
 import { Container, Content } from './styles'
 import { useHistory } from 'react-router'
+import { useData } from 'hooks/data'
 
 const List: React.FC = () => {
 
   const history = useHistory()
+
+  const { services } = useData()
 
   const handleCreate = useCallback(() => {
       history.push('new-service')
@@ -18,7 +21,10 @@ const List: React.FC = () => {
     <Container>
       <AppBar />
       <Content>
-        <Table title='Serviços' />
+        <Table 
+          title='Serviços'
+          services={services}
+        />
         
         <div className='floating-buttons' >
           <FloatingButton onClick={handleCreate} />

@@ -21,9 +21,11 @@ import OpenIcon from '@material-ui/icons/Launch'
 
 import { Container } from './styles'
 import { useHistory } from 'react-router'
+import { ITruck } from 'hooks/data'
 
 interface TableProps {
   title: string
+  trucks: ITruck[]
 }
 
 interface Data {
@@ -32,19 +34,6 @@ interface Data {
   model: string
   equipment: string
 }
-
-function createData(
-  plate: string,
-  brand: string,
-  model: string,
-  equipment: string
-): Data {
-  return { plate, brand, model, equipment }
-}
-
-const rows = [
-  createData('FKF-7151', 'Ford', 'F-1000 XLT 4x4 Diesel Turbo', 'Poliguindaste'),
-]
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -195,13 +184,29 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 )
 
-const Table: React.FC<TableProps> = ({ title }) => {
+const Table: React.FC<TableProps> = ({ title, trucks }) => {
   const classes = useStyles()
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<keyof Data>('plate')
   const [selected, setSelected] = React.useState<string[]>([])
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
+
+  function createData(
+    plate: string,
+    brand: string,
+    model: string,
+    equipment: string
+  ): Data {
+    return { plate, brand, model, equipment }
+  }
+  
+  const rows = trucks.map(truck => createData(
+    truck.plate, 
+    truck.brand, 
+    truck.model, 
+    truck.equipment
+  ))
 
   const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
     const classes = useToolbarStyles()
@@ -224,11 +229,21 @@ const Table: React.FC<TableProps> = ({ title }) => {
         })}
       >
         {numSelected > 0 ? (
-          <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
+          <Typography 
+            className={classes.title} 
+            color="inherit" 
+            variant="subtitle1" 
+            component="div"
+          >
             {numSelected} selected
           </Typography>
         ) : (
-          <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
+          <Typography 
+            className={classes.title} 
+            variant="h6" 
+            id="tableTitle" 
+            component="div"
+          >
             {title}
           </Typography>
         )}

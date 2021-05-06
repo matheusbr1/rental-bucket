@@ -21,28 +21,17 @@ import OpenIcon from '@material-ui/icons/Launch'
 
 import { Container } from './styles'
 import { useHistory } from 'react-router'
+import { IDriver } from 'hooks/data'
 
 interface TableProps {
   title: string
+  drivers: IDriver[]
 }
 
 interface Data {
   name: string
   contact: string
 }
-
-function createData(
-  name: string,
-  contact: string,
-): Data {
-  return { name, contact }
-}
-
-const rows = [
-  createData('João Diogo da Rosa', '(11) 2590-3843'),
-  createData('Thiago Julio Isaac Martins', '(11) 99141-9747'),
-  createData('Theo Thomas Leonardo das Neves', '(11) 2644-3809'),
-]
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -191,13 +180,25 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 )
 
-const Table: React.FC<TableProps> = ({ title }) => {
+const Table: React.FC<TableProps> = ({ title, drivers }) => {
   const classes = useStyles()
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<keyof Data>('name')
   const [selected, setSelected] = React.useState<string[]>([])
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
+
+  function createData(
+    name: string,
+    contact: string,
+  ): Data {
+    return { name, contact }
+  }
+  
+  const rows = drivers.map(driver => createData(
+    driver.name, 
+    driver.contact.cellphone ?? driver.contact.telephone
+  ))
 
   const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
     const classes = useToolbarStyles()

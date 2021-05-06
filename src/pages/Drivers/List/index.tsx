@@ -7,10 +7,13 @@ import { Container, Content } from './styles'
 import { useHistory } from 'react-router'
 
 import Button from '@material-ui/core/Button';
+import { useData } from 'hooks/data'
 
 const List: React.FC = () => {
 
   const history = useHistory()
+
+  const { drivers } = useData()
 
   const handleCreate = useCallback(() => {
     history.push('new-driver')
@@ -25,7 +28,7 @@ const List: React.FC = () => {
       <AppBar />
       
       <Content>
-        <Table title='Motoristas' />
+        <Table title='Motoristas' drivers={drivers} />
         
         <div className='floating-buttons' >
           <Button 
