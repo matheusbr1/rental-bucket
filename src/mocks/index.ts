@@ -258,18 +258,6 @@ export const truckEquipments = [
   'Rollon'
 ]
 
-export const states =  [
-  'SP',
-  'RJ',
-  'MG',
-]
-
-export const citys = [
- 'Osasco',
- 'Carapicuíba',
- 'Vinhedo',
-]
-
 export const reports = [
   'clients',
   'trucks',

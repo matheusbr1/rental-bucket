@@ -4,7 +4,7 @@ import { Scope } from '@unform/core'
 import { useHistory } from 'react-router-dom'
 import FloatingButton from 'components/FloatingButton'
 import TextField from 'components/TextField'
-import { brands, models, truckEquipments, trucks, years } from 'mocks'
+import { truckEquipments, trucks, years } from 'mocks'
 import * as yup from 'yup'
 
 import { Container } from './styles'
@@ -13,10 +13,22 @@ import { FormHandles } from '@unform/core'
 import getValidationErrors from 'utils/getValidationFormErrors'
 import Title from 'components/Title'
 import MaskedField from 'components/TextField/masked'
+import axios from 'axios'
+
+interface IBrand {
+  id: number
+  name: string
+}
+
+interface IModel {
+  id: string
+  marca: string
+  name: string
+}
 
 interface Truck {
-  brand: string
-  model: string
+  brand: IBrand | any
+  model: IModel | any
   plate: string
   equipment: string
   renavam: string
@@ -49,6 +61,52 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
       model: '',
     },
   } as Truck)
+
+  const [brands, setBrands] = useState<IBrand[]>([])
+  const [models, setModels] = useState<IModel[]>([])
+  
+  // Getting brands
+  useEffect(() => {
+    axios
+      .get('http://fipeapi.appspot.com/api/1/caminhoes/marcas.json')
+      .then(response => {
+
+        if(!response.data) {
+          return
+        }
+
+        console.log(response.data)
+
+        setBrands(response.data)
+      })
+  }, [])
+
+  // Getting models
+  useEffect(() => {
+    if (!truck.brand) {
+      return 
+    }
+
+    axios
+      .get(`http://fipeapi.appspot.com/api/1/caminhoes/veiculos/${truck.brand.id}.json`)
+      .then(response => {
+
+        if (!response.data) {
+          return
+        }
+
+        const models = response.data.map((model: IModel) => ({
+          id: model.id,
+          marca: model.marca,
+          name: model.name
+        }))
+
+        console.log(models)
+        setModels(models)
+      })
+
+    console.log(truck.brand)
+  }, [truck.brand])
 
   const handleChangeTruck = useCallback((path: string, value) => {
     setTruck(oldState => ({
@@ -95,8 +153,8 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
       formRef.current?.setErrors({})
 
       const schema = yup.object().shape({
-        brand: yup.string().required('Campo obrigatório'),
-        model: yup.string().required('Campo obrigatório'),
+        brand: yup.object().required('Campo obrigatório'),
+        model: yup.object().required('Campo obrigatório'),
         plate: yup.string().required('Campo obrigatório'),
         equipment: yup.string().required('Campo obrigatório'),
         renavam: yup.string().required('Campo obrigatório'),
@@ -141,8 +199,8 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
             value={truck.brand}
             onChange={e => handleChangeTruck('brand', e.target.value)}
           >
-            {brands.map(brand => (
-              <MenuItem value={brand} key={brand} > {brand} </MenuItem>
+            {brands.map((brand: any) => (
+              <MenuItem value={brand} key={brand.id} > {brand.name} </MenuItem>
             ))}
           </TextField>
 
@@ -151,12 +209,12 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
             name='model'
             label='Modelo'
             variant="outlined" 
-            disabled={disabled}
+            disabled={disabled || !models.length}
             value={truck.model}
             onChange={e => handleChangeTruck('model', e.target.value)}
           >
-            {models.map(model => (
-              <MenuItem  value={model} key={model}>  {model} </MenuItem>
+            {models.map((model: any) => (
+              <MenuItem  value={model} key={model.id}>  {model.name} </MenuItem>
             ))}
           </TextField>
           
