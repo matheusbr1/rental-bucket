@@ -5,16 +5,33 @@ import TextField from 'components/TextField'
 import MaskedField from 'components/TextField/masked'
 import { Button, MenuItem } from '@material-ui/core'
 import AdressTable from '../Table/Adress'
-import { states, citys } from 'mocks'
 import * as yup from 'yup'
 import getValidationErrors from 'utils/getValidationFormErrors'
 import Title from 'components/Title'
-
+import axios from 'axios'
 import { IAdress } from 'hooks/data'
 
 interface AdressesProps {
   adresses: IAdress[]
   setAdresses(adresses: IAdress[]): void
+}
+
+interface AdressProps {
+  logradouro: string 
+  uf: string 
+  localidade: string  
+  bairro: string 
+}
+
+interface IState {
+  id: number
+  sigla: string
+  nome: string
+}
+
+interface ICity {
+  id: number
+  nome: string
 }
 
 const Adresses: React.FC<AdressesProps> = ({ adresses, setAdresses }) => {
@@ -23,8 +40,60 @@ const Adresses: React.FC<AdressesProps> = ({ adresses, setAdresses }) => {
 
   useEffect(() => console.log('Endereços Cadastrados', adresses), [adresses])
 
-  const [city, setCity] = useState('')
+  const [states, setStates] = useState([])
+  const [citys, setCitys] = useState([])
+
+  const [street, setStreet] = useState('')
   const [state, setState] = useState('')
+  const [city, setCity] = useState('')
+  const [neighborhood, setNeighborhood] = useState('')
+  const [number, setNumber] = useState(0)
+
+  const [error, setError] = useState('')
+
+  // Getting States
+  useEffect(() => {
+    axios
+      .get('https://servicodados.ibge.gov.br/api/v1/localidades/estados')
+      .then(response => {
+
+      if (!response.data) {
+        return 
+      }
+
+      const states = response.data.map((state: IState) => state.sigla)
+
+      setStates(states)
+    })
+  }, [])
+
+  // Getting Citys
+  useEffect(() => {
+    if (!state) {
+      return
+    }
+
+    axios
+      .get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${state}/municipios`)
+      .then(response => {
+      if (!response.data) {
+        return 
+      }
+
+      const citys = response.data.map((city: ICity) => city.nome)
+
+      setCitys(citys)
+    })
+  }, [state])
+
+  const clearAdress = useCallback(() => {
+    formRef.current?.reset()
+    setState('')
+    setCity('')
+    setNeighborhood('')
+    setStreet('')
+    setNumber(0)
+  }, [])
 
   const handleAddAdress = useCallback(async (fields) => {
     console.log('Adresses fields', fields)
@@ -56,6 +125,8 @@ const Adresses: React.FC<AdressesProps> = ({ adresses, setAdresses }) => {
         data
       ])
 
+      clearAdress()
+
     } catch (error) {
       if(error instanceof yup.ValidationError) {
         const errors = getValidationErrors(error)
@@ -63,7 +134,39 @@ const Adresses: React.FC<AdressesProps> = ({ adresses, setAdresses }) => {
         console.log(errors)
       }
     }
-  }, [city, state, adresses, setAdresses])
+  }, [city, state, adresses, setAdresses, clearAdress])
+
+  const handleGetAdress = useCallback(e => {
+
+    const cep = e.target.value
+
+    axios
+      .get(`https://viacep.com.br/ws/${cep}/json`)
+      .then(response => {
+
+      if (!response.data) {
+        return
+      }
+
+      if(response.data.erro) {
+        setError('CEP inválido, tente novamente!')
+        formRef.current?.setFieldError('CEP', 'CEP inválido')
+      } else {
+        setError('')
+        formRef.current?.setFieldError('CEP', '')
+      }
+
+      const { logradouro, uf, localidade, bairro }: AdressProps = response.data
+
+      setStreet(logradouro)
+      setState(uf)
+      setCity(localidade)
+      setNeighborhood(bairro)
+
+      console.log(response.data)
+    })
+
+  },[])
 
   return (
     <div>
@@ -71,7 +174,11 @@ const Adresses: React.FC<AdressesProps> = ({ adresses, setAdresses }) => {
 
         <Title 
           text='Endereço' 
-          error={!adresses.length && 'Adicione pelo menos 1 endereço'} 
+          error={
+            error 
+              ? error
+              : !adresses.length && 'Adicione pelo menos 1 endereço'
+          } 
         />
 
         <div className="grid">
@@ -81,18 +188,24 @@ const Adresses: React.FC<AdressesProps> = ({ adresses, setAdresses }) => {
             label='CEP'
             variant="outlined" 
             mask='cep'
+            onBlur={handleGetAdress}
           />
 
           <TextField 
             name='street'
             label='Logradouro'
             variant="outlined"
+            value={street}
+            onChange={e => setStreet(e.target.value)}
           />
 
           <TextField 
             name='number'
             label='Número'
             variant="outlined" 
+            type='number'
+            value={number}
+            onChange={e => setNumber(Number(e.target.value))}
           />
 
           <TextField
@@ -112,6 +225,7 @@ const Adresses: React.FC<AdressesProps> = ({ adresses, setAdresses }) => {
             select
             name='city' 
             label='Cidade'
+            disabled={!citys.length}
             variant="outlined" 
             value={city}
             onChange={e => setCity(e.target.value)}
@@ -125,6 +239,8 @@ const Adresses: React.FC<AdressesProps> = ({ adresses, setAdresses }) => {
             name='neighborhood'
             label='Bairro'
             variant="outlined" 
+            value={neighborhood}
+            onChange={e => setNeighborhood(e.target.value)}
           />
 
           <TextField 

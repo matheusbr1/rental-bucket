@@ -6,8 +6,9 @@ import { useHistory } from 'react-router'
 import DateInput from 'components/DateInput'
 import FloatingButton from 'components/FloatingButton'
 import TextField from 'components/TextField'
-import { citys, drivers, states } from 'mocks'
+import { drivers } from 'mocks'
 import * as yup from 'yup'
+import axios from 'axios'
 
 import { Container, Divider } from './styles'
 import { FormHandles } from '@unform/core'
@@ -37,6 +38,24 @@ interface Driver {
   }
 }
 
+interface IState {
+  id: number
+  sigla: string
+  nome: string
+}
+
+interface ICity {
+  id: number
+  nome: string
+}
+
+interface AdressProps {
+  logradouro: string 
+  uf: string 
+  localidade: string  
+  bairro: string 
+}
+
 interface CardProps {
   type: 'create' | 'update'
   onConfirm(fields: Driver): void
@@ -52,14 +71,80 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
   const [birthday, setBirthday] = React.useState<Date | null>(new Date())
 
+  const [states, setStates] = useState([])
+  const [citys, setCitys] = useState([])
+
+  const [street, setStreet] = useState('')
+  const [state, setState] = useState('')
+  const [city, setCity] = useState('')
+  const [neighborhood, setNeighborhood] = useState('')
+  const [number, setNumber] = useState(0)
+
+  // Getting States
+   useEffect(() => {
+    axios
+      .get('https://servicodados.ibge.gov.br/api/v1/localidades/estados')
+      .then(response => {
+
+      if (!response.data) {
+        return 
+      }
+
+      const states = response.data.map((state: IState) => state.sigla)
+
+      setStates(states)
+    })
+  }, [])
+
+  // Getting Citys
+  useEffect(() => {
+    if (!state) {
+      return
+    }
+
+    axios
+      .get(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${state}/municipios`)
+      .then(response => {
+      if (!response.data) {
+        return 
+      }
+
+      const citys = response.data.map((city: ICity) => city.nome)
+
+      setCitys(citys)
+    })
+  }, [state])
+
+  // Selecting field
   useEffect(() => {
     if (type === 'update') {
       formRef?.current?.setData(drivers[0])
     }
   }, [type])
+  
+  const handleGetAdress = useCallback(e => {
 
-  const [state, setState] = useState('')
-  const [city, setCity] = useState('')
+    const cep = e.target.value
+
+    axios
+      .get(`https://viacep.com.br/ws/${cep}/json`)
+      .then(response => {
+
+      if (!response.data) {
+        return
+      }
+      
+      formRef.current?.setFieldError('adress.CEP', response.data?.erro ? 'CEP inválido' : '')
+
+      const { logradouro, uf, localidade, bairro }: AdressProps = response.data
+
+      setStreet(logradouro)
+      setState(uf)
+      setCity(localidade)
+      setNeighborhood(bairro)
+      console.log(response.data)
+    })
+  },[])
 
   const handleBirhday = (date: Date | null) => {
     setBirthday(date)
@@ -99,10 +184,11 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
       const schema = yup.object().shape({
 
-        name: yup.string().required('Campo obrigatório'),
-        CNH: yup.string().required('Campo obrigatório'),
         CPF: yup.string().required('Campo obrigatório'),
         RG: yup.string().required('Campo obrigatório'),
+        
+        name: yup.string().required('Campo obrigatório'),
+        CNH: yup.string().required('Campo obrigatório'),
         
         birthday: yup.date()
           .required('Campo obrigatório')
@@ -202,14 +288,17 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
               mask='cep'
               name='CEP'
               label='CEP'
-              variant="outlined" 
+              variant="outlined"
+              onBlur={handleGetAdress}
               disabled={disabled}
             />
 
             <TextField 
               name='street'
               label='Logradouro'
-              variant="outlined" 
+              variant="outlined"
+              value={street}
+              onChange={e => setStreet(e.target.value)}
               disabled={disabled}
             />
 
@@ -217,6 +306,8 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
               name='number'
               label='Número'
               variant="outlined" 
+              value={number}
+              onChange={e => setNumber(Number(e.target.value))}
               disabled={disabled}
             />
 
@@ -238,8 +329,8 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
               select
               name='city' 
               label='Cidade'
-              variant="outlined" 
-              disabled={disabled}
+              variant="outlined"
+              disabled={disabled || !citys.length}
               value={city}
               onChange={e => setCity(e.target.value)}
             >
@@ -252,6 +343,8 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
               name='neighborhood'
               label='Bairro'
               variant="outlined" 
+              value={neighborhood}
+              onChange={e => setNeighborhood(e.target.value)}
               disabled={disabled}
             />
 
