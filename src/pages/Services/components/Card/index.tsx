@@ -1,32 +1,22 @@
 import { MenuItem } from '@material-ui/core'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import * as yup from 'yup'
 import DateInput from 'components/DateInput'
 import FloatingButton from 'components/FloatingButton'
 import TextField from 'components/TextField'
-import { clients, drivers, equipments, services, trucks } from 'mocks'
+import { clients, drivers, equipments, services as serviceTypes, trucks } from 'mocks'
 import { Form } from '@unform/web'
 
 import { Container, Footer } from './styles'
 import { FormHandles } from '@unform/core'
 import getValidationErrors from 'utils/getValidationFormErrors'
 import Title from 'components/Title'
-
-interface Service {
-  client: string
-  adress: string
-  driver: string
-  truck: string
-  equipment: string
-  service: string
-  quantity: number
-  endDate: Date | null | string
-}
+import { IService, useData } from 'hooks/data'
 
 interface CardProps {
   type: 'create' | 'update'
-  onConfirm(fields: Service): void
+  onConfirm(fields: IService): void
   onDelete?(): void
   loading: boolean
 }
@@ -35,13 +25,18 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
   const formRef = useRef<FormHandles>(null)
 
+  const { services } = useData()
+
   const { goBack } = useHistory()
+
+  const path: { id: string } = useParams()
 
   const [isChanging, setIsChanging] = useState(false)
 
   const disabled = useMemo(() => type === 'update' && !isChanging, [type, isChanging])
 
   const [service, setService] = useState({
+    id: 0,
     client: '',
     adress: '',
     driver: '',
@@ -50,22 +45,24 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
     service: '',
     quantity: 1,
     endDate: new Date()
-  } as Service)
+  } as IService)
 
   useEffect(() => {
-    if (type === 'update') {
-      setService({
-        client: clients[0].name,
-        adress: clients[0].adress[0].cep,
-        driver: drivers[0].name,
-        truck: trucks[0].plate,
-        equipment: equipments[0],
-        service: services[0],
-        quantity: 2,
-        endDate: new Date()
-      })
+    if (type !== 'update') {
+      return
     }
-  }, [type])
+
+    const id = Number(path.id)
+
+    const filtered = services.filter(service => service.id === id)[0]
+
+    if (!filtered) {
+      console.log('404 - Not found')
+      return
+    }
+
+    setService(filtered)
+  }, [type, path, services])
 
   const handleChangeService = useCallback((path: string, value) => {
     setService(oldState => ({
@@ -121,9 +118,16 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
       await schema.validate(service, {
         abortEarly: false
-      })
+      })  
 
-      onConfirm(service)
+      if (type === 'update') {
+        onConfirm(service)
+      } else {
+        onConfirm({
+          ...service,
+          id: services.length + 1
+        })
+      }
 
     } catch (error) {
       if(error instanceof yup.ValidationError) {
@@ -132,13 +136,17 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
         console.log(errors)
       }
     }
-  }, [service, onConfirm])
+  }, [service, onConfirm, services, type])
 
   return (
     <Container>
 
       <Title 
-        text={type === 'create'  ?  'Novo Serviço' : 'Serviço #1'} 
+        text={
+          type === 'create'  
+            ?  'Novo Serviço' 
+            : `Serviço: ${service.service} - ${service.client}`
+        } 
         size='big'
       />
 
@@ -224,8 +232,8 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           value={service.service}
           onChange={e => handleChangeService('service', e.target.value)}
         >
-          {services.map((service, index) => (
-            <MenuItem key={index} value={service}> {service} </MenuItem>
+          {serviceTypes.map((type, index) => (
+            <MenuItem key={index} value={type}> {type} </MenuItem>
           ))}
         </TextField>
 

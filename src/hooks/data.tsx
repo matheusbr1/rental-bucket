@@ -41,6 +41,7 @@ export interface IDriver {
 }
 
 export interface IService {
+  id: number
   adress: string
   client: string
   driver: string
@@ -79,6 +80,7 @@ const DataContext = createContext<IDataContext>({} as IDataContext)
 const DataProvider: React.FC = ({ children }) => {
 
   const [services, setServices] = useState<IService[]>([{
+    id: 1,
     adress: "05628-040",
     client: "Antonio Kauê Lucca da Luz",
     driver: "João Diogo da Rosa",
