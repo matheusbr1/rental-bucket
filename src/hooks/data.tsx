@@ -18,6 +18,7 @@ export interface IContact {
 }
 
 export interface IClient {
+  id: number
   CPF?: string
   CNPJ?: string
   name: string
@@ -27,6 +28,7 @@ export interface IClient {
 }
 
 export interface IDriver {
+  id: number
   name: string
   CPF: string
   RG: string
@@ -52,11 +54,23 @@ export interface IService {
   truck: string
 }
 
+export interface IBrand {
+  id: number
+  name: string
+}
+
+export interface IModel {
+  id: string
+  marca: string
+  name: string
+}
+
 export interface ITruck {
-  brand: string
-  equipment: string
-  model: string
+  id: number
+  brand: IBrand | any
+  model: IModel | any
   plate: string
+  equipment: string
   renavam: string
   year: {
     manufacture: string
@@ -98,17 +112,38 @@ const DataProvider: React.FC = ({ children }) => {
     ])
   }, [])
 
-  const [trucks, setTrucks] = useState<ITruck[]>([{
-    brand: "Mercedes",
-    equipment: "Rollon",
-    model: "Ranger XLT 3.0 PSE 163cv 4x4 CD TB Dies",
-    plate: "BAO-0061",
-    renavam: "10321312",
-    year: {
-      manufacture: "2001",
-      model: "2001",
-    }
-  }])
+//   const [trucks, setTrucks] = useState<ITruck[]>([{
+//     id: 1,
+//     brand: {
+//       name: "FORD",
+//       id: 105
+//     },
+//     model: {
+//       id: "6679",
+//       marca: "FORD",
+//       name: "CARGO 1119 Turbo 2p (diesel)(E5)"
+//     },
+//     plate: "AAA-0000",
+//     equipment: "Rollon",
+//     renavam: "99999999",
+//     year: {
+//       manufacture: "2001",
+//       model: "2001"
+//     }
+// }])
+
+const [trucks, setTrucks] = useState<ITruck[]>([{
+  id: 1,
+  brand: "Mercedes",
+  equipment: "Rollon",
+  model: "Ranger XLT 3.0 PSE 163cv 4x4 CD TB Dies",
+  plate: "BAO-0061",
+  renavam: "10321312",
+  year: {
+    manufacture: "2001",
+    model: "2001",
+  }
+}])
 
   const createNewTruck =  useCallback((truck: ITruck) => {
     setTrucks(otherTrucks => [
@@ -118,6 +153,7 @@ const DataProvider: React.FC = ({ children }) => {
   }, [])
 
   const [drivers, setDrivers] = useState<IDriver[]>([{
+    id: 1,
     name: 'Theo Thomas Leonardo das Neves',
     CPF: '337.117.348-80',
     RG: '20.498.441-5',
@@ -137,6 +173,27 @@ const DataProvider: React.FC = ({ children }) => {
       cellphone: '(11) 99141-9747',
       email: 'theoThomas@gmail.com'
     }
+  }, {
+    id: 2,
+    name: 'Augusto Joaquim Heitor Silveira',
+    CPF: '084.713.940-90',
+    RG: '42.217.269-8',
+    CNH: '123123',
+    birthday: '22/04/1941',
+    adress: { 
+      CEP: '48905-540', 
+      street: 'Rua Colibri', 
+      number: '796',  
+      neighborhood: 'Jardim Novo Encontro',
+      state: 'BA', 
+      city: 'Juazeiro',
+      complement: ''
+    },
+    contact: {
+      telephone: '(74) 2755-6049',
+      cellphone: '(74) 98491-0828',
+      email: 'augustojoaquimheitorsilveira-97@bucaneiro.com.br'
+    }
   }])
 
   const createNewDriver = useCallback((driver: IDriver) => {
@@ -147,6 +204,7 @@ const DataProvider: React.FC = ({ children }) => {
   }, [])
 
   const [clients, setClients] = useState<IClient[]>([{
+    id: 1,
     CPF: '568.753.008-85',
     name: 'Larissa Caroline de Paula',
     contacts: [{
@@ -168,6 +226,25 @@ const DataProvider: React.FC = ({ children }) => {
         street: 'Rua Doutor João José de Carvalho', 
         number: '12',  
         neighborhood: 'Vila Sônia',
+        state: 'SP', 
+        city: 'São Paulo',
+        complement: ''
+      }
+    ]
+  }, {
+    id: 2,
+    CPF: '473.007.178-61',
+    name: 'Matheus Baron Ribeiro',
+    contacts: [{
+      type: 'cellphone',
+      cellphone: '(11) 97803-5721'
+    }],
+    adress: [
+      { 
+        CEP: '06065-220   ', 
+        street: 'Rua Santo Roverco', 
+        number: '187',  
+        neighborhood: 'Jaguaribe',
         state: 'SP', 
         city: 'São Paulo',
         complement: ''

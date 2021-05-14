@@ -4,7 +4,6 @@ import { Form } from '@unform/web'
 import * as yup from 'yup'
 
 import { Container, Divider } from './styles'
-import { clients } from 'mocks'
 
 import FloatingButton from 'components/FloatingButton'
 
@@ -21,7 +20,8 @@ import getValidationErrors from 'utils/getValidationFormErrors'
 import Adresses from './Adresses'
 import Contacts from './Contacts'
 import Title from 'components/Title'
-import { IAdress, IContact, IClient } from 'hooks/data'
+import { IAdress, IContact, IClient, useData } from 'hooks/data'
+import { useParams } from 'react-router-dom'
 
 interface CardProps {
   type: 'create' | 'update'
@@ -31,15 +31,48 @@ interface CardProps {
 }
 
 const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => {} }) => {
+  const formRef = useRef<FormHandles>(null)
+  
   const { goBack } = useHistory()
 
-  const formRef = useRef<FormHandles>(null)
+  const path: { id: string } = useParams()
+
+  const { clients } = useData()
+
+  const [client, setClient] = useState({ 
+    id: 0,
+    name: '',
+    CPF: '',
+    adress: [],
+    contacts: [],
+   } as IClient)
 
   const [person, setPerson] = useState('fisic')
 
   const [adresses, setAdresses] = useState<IAdress[]>([])
 
   const [contacts, setContacts] = useState<IContact[]>([])
+
+  useEffect(() => {
+    if (type !== 'update') {
+      return
+    }
+
+    const id = Number(path.id)
+
+    const filtered = clients.filter(client => client.id === id)[0]
+
+    if (!filtered) {
+      console.log('404 - Not found')
+      return
+    }
+
+    setClient(filtered)
+    setContacts(filtered.contacts)
+    setAdresses(filtered.adress)
+    
+    formRef.current?.setData(filtered)
+  }, [type, path, clients])
 
   const handlePerson = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPerson((event.target as HTMLInputElement).value)
@@ -87,6 +120,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
       }
 
       onConfirm({
+        id: clients.length + 1 ,
         ...fields,
         contacts,
         adresses
@@ -99,13 +133,13 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
         console.log(errors)
       }
     }
-  }, [onConfirm, person, adresses, contacts])
+  }, [onConfirm, person, adresses, contacts, clients])
 
   return (
     <Container>
 
     <Title 
-      text={type === 'create'  ?  'Novo Cliente' : clients[0].name} 
+      text={type === 'create'  ?  'Novo Cliente' : client?.name} 
       size='big'
     />
 

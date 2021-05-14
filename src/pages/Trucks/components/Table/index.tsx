@@ -29,6 +29,7 @@ interface TableProps {
 }
 
 interface Data {
+  id: number
   plate: string
   brand: string
   model: string
@@ -193,15 +194,17 @@ const Table: React.FC<TableProps> = ({ title, trucks }) => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
 
   function createData(
+    id: number,
     plate: string,
     brand: string,
     model: string,
     equipment: string
   ): Data {
-    return { plate, brand, model, equipment }
+    return { id, plate, brand, model, equipment }
   }
   
   const rows = trucks.map(truck => createData(
+    truck.id,
     truck.plate, 
     truck.brand, 
     truck.model, 

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import clsx from 'clsx'
 import { createStyles, lighten, makeStyles, Theme } from '@material-ui/core/styles'
 import MaterialTable from '@material-ui/core/Table'
@@ -29,6 +29,7 @@ interface TableProps {
 }
 
 interface Data {
+  id: number
   name: string
   contact: any
 }
@@ -189,23 +190,25 @@ const Table: React.FC<TableProps> = ({ title, clients }) => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
 
   function createData(
+    id: number,
     name: string,
     contact: any,
   ): Data {
-    return { name, contact }
+    return { id, name, contact }
   }
   
   const rows = clients.map(client => {
     const contact = client.contacts[0]
 
-
-    console.log(client.contacts)
-
     return createData(
+      client.id,
       client.name, 
       contact?.email || contact?.cellphone || contact?.telephone
     )
   })
+
+  const [selectedList, setSelectedList] = useState<number[]>([])
+  const [currentSeleted, setCurrentSelected] = useState<number>()
 
   const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
     const classes = useToolbarStyles()
@@ -214,12 +217,16 @@ const Table: React.FC<TableProps> = ({ title, clients }) => {
     const history = useHistory()
   
     const handleEdit = useCallback(() => {
-      history.push('/clients/1')
+      history.push(`/clients/${currentSeleted}`)
     }, [history])
   
     const handleOpen = useCallback(() => {
-      history.push('/clients/1')
+      history.push(`/clients/${currentSeleted}`)
     }, [history])
+
+    const handleDelete = useCallback(() => {
+      console.log('Deletar: ', selectedList)
+    },[])
   
     return (
       <Toolbar
@@ -252,7 +259,7 @@ const Table: React.FC<TableProps> = ({ title, clients }) => {
         )}
         {numSelected > 0 && (
           <Tooltip title="Deletar">
-            <IconButton>
+            <IconButton onClick={handleDelete} >
               <DeleteIcon />
             </IconButton>
           </Tooltip>
@@ -276,9 +283,24 @@ const Table: React.FC<TableProps> = ({ title, clients }) => {
     setSelected([])
   }
 
-  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
+  const handleClick = (event: React.MouseEvent<unknown>, name: string, id: number) => {
     const selectedIndex = selected.indexOf(name)
     let newSelected: string[] = []
+
+    setCurrentSelected(id)
+
+    setSelectedList((otherSelecteds: number[]) => {
+      const isSelected = otherSelecteds.filter(clientID => clientID === id)[0]
+
+      if (isSelected) {
+        return otherSelecteds.filter(clientID => clientID !== id)
+      } else {
+        return [
+          ...otherSelecteds,
+          id
+        ]
+      }
+    })    
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, name)
@@ -334,12 +356,11 @@ const Table: React.FC<TableProps> = ({ title, clients }) => {
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const isItemSelected = isSelected(row.name as any);
-                  const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.name as any)}
+                      onClick={(event) => handleClick(event, row.name as any, Number(row.id))}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -347,12 +368,9 @@ const Table: React.FC<TableProps> = ({ title, clients }) => {
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ 'aria-labelledby': labelId }}
-                        />
+                        <Checkbox checked={isItemSelected} />
                       </TableCell>
-                      <TableCell component="th" id={labelId} scope="row" padding="none">
+                      <TableCell component="th" scope="row" padding="none">
                         {row.name}
                       </TableCell>
                       <TableCell align="left">{row.contact}</TableCell>

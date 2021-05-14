@@ -5,7 +5,7 @@ import AppBar from 'components/AppBar'
 import DateInput from 'components/DateInput'
 import FloatingButton from 'components/FloatingButton'
 import TextField from 'components/TextField'
-import { clients, drivers, equipments, reports, services, trucks } from 'mocks'
+import { clients, drivers, equipments, reports, services } from 'mocks'
 import * as yup from 'yup'
 
 import { Container, Content } from './styles'
@@ -14,12 +14,15 @@ import { Form } from '@unform/web'
 import { useSnackbar } from 'notistack'
 import getValidationErrors from 'utils/getValidationFormErrors'
 import Title from 'components/Title'
+import { useData } from 'hooks/data'
 
 const Reports: React.FC = () => {
 
   const formRef = useRef<FormHandles>(null)
 
   const { goBack } = useHistory()
+
+  const { trucks } = useData()
 
   const { enqueueSnackbar } = useSnackbar()
 

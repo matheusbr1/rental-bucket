@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import clsx from 'clsx'
 import { createStyles, lighten, makeStyles, Theme } from '@material-ui/core/styles'
 import MaterialTable from '@material-ui/core/Table'
@@ -6,6 +6,7 @@ import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableHead from '@material-ui/core/TableHead'
+import TablePagination from '@material-ui/core/TablePagination'
 import TableRow from '@material-ui/core/TableRow'
 import TableSortLabel from '@material-ui/core/TableSortLabel'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -16,30 +17,22 @@ import IconButton from '@material-ui/core/IconButton'
 import Tooltip from '@material-ui/core/Tooltip'
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
+import OpenIcon from '@material-ui/icons/Launch'
 
 import { Container } from './styles'
+import { useHistory } from 'react-router'
+import { IDriver } from 'hooks/data'
 
 interface TableProps {
   title: string
+  drivers: IDriver[]
 }
 
 interface Data {
-  type: string
+  id: number
+  name: string
   contact: string
 }
-
-function createData(
-  type: string,
-  contact: string,
-): Data {
-  return { type, contact }
-}
-
-const rows = [
-  createData('Email', 'matheusbaron10@gmail.com'),
-  createData('Telefone fixo', '(11) 3691-3428'),
-  createData('Celular', '(11) 97803-5721'),
-]
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -80,7 +73,7 @@ interface HeadCell {
 }
 
 const headCells: HeadCell[] = [
-  { id: 'type', numeric: false, disablePadding: true, label: 'Tipo' },
+  { id: 'name', numeric: false, disablePadding: true, label: 'Nome' },
   { id: 'contact', numeric: false, disablePadding: false, label: 'Contato' },
 ]
 
@@ -154,9 +147,6 @@ const useToolbarStyles = makeStyles((theme: Theme) =>
           },
     title: {
       flex: '1 1 100%',
-      fontSize: '1rem',
-      fontWeight: 400,
-      fontFamily: 'Roboto'
     },
   }),
 );
@@ -191,19 +181,48 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 )
 
-const Table: React.FC<TableProps> = ({ title }) => {
+const Table: React.FC<TableProps> = ({ title, drivers }) => {
   const classes = useStyles()
   const [order, setOrder] = React.useState<Order>('asc')
-  const [orderBy, setOrderBy] = React.useState<keyof Data>('type')
+  const [orderBy, setOrderBy] = React.useState<keyof Data>('name')
   const [selected, setSelected] = React.useState<string[]>([])
+  const [page, setPage] = React.useState(0)
+  const [rowsPerPage, setRowsPerPage] = React.useState(5)
+
+  function createData(
+    id: number,
+    name: string,
+    contact: string,
+  ): Data {
+    return { id, name, contact }
+  }
+  
+  const rows = drivers.map(driver => createData(
+    driver.id,
+    driver.name, 
+    driver.contact.cellphone ?? driver.contact.telephone
+  ))
+
+  const [selectedList, setSelectedList] = useState<number[]>([])
+  const [currentSeleted, setCurrentSelected] = useState<number>()
 
   const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
     const classes = useToolbarStyles()
     const { numSelected } = props;
   
+    const history = useHistory()
+
     const handleEdit = useCallback(() => {
-      // Editar
-    }, [])
+      history.push(`/drivers/${currentSeleted}`)
+    }, [history])
+  
+    const handleOpen = useCallback(() => {
+      history.push(`/drivers/${currentSeleted}`)
+    }, [history])
+
+    const handleDelete = useCallback(() => {
+      console.log('Deletar: ', selectedList)
+    },[])
   
     return (
       <Toolbar
@@ -215,19 +234,28 @@ const Table: React.FC<TableProps> = ({ title }) => {
           <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
             {numSelected} selected
           </Typography>
-        ) :  <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-          {title}
-        </Typography>}
+        ) : (
+          <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
+            {title}
+          </Typography>
+        )}
+        {numSelected === 1 && (
+          <Tooltip title="Abrir">
+            <IconButton onClick={handleOpen}>
+              <OpenIcon />
+            </IconButton>
+          </Tooltip>
+        )}
         {numSelected === 1 && (
           <Tooltip title="Editar">
-            <IconButton onClick={handleEdit} >
+            <IconButton onClick={handleEdit}>
               <EditIcon />
             </IconButton>
           </Tooltip>
         )}
         {numSelected > 0 && (
           <Tooltip title="Deletar">
-            <IconButton>
+            <IconButton onClick={handleDelete}>
               <DeleteIcon />
             </IconButton>
           </Tooltip>
@@ -244,16 +272,31 @@ const Table: React.FC<TableProps> = ({ title }) => {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.type)
+      const newSelecteds = rows.map((n) => n.name)
       setSelected(newSelecteds)
       return
     }
     setSelected([])
   }
 
-  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
+  const handleClick = (event: React.MouseEvent<unknown>, name: string, id: number) => {
     const selectedIndex = selected.indexOf(name)
     let newSelected: string[] = []
+
+    setCurrentSelected(id)
+
+    setSelectedList((otherSelecteds: number[]) => {
+      const isSelected = otherSelecteds.filter(driverID => driverID === id)[0]
+
+      if (isSelected) {
+        return otherSelecteds.filter(driverID => driverID !== id)
+      } else {
+        return [
+          ...otherSelecteds,
+          id
+        ]
+      }
+    })    
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, name)
@@ -271,7 +314,18 @@ const Table: React.FC<TableProps> = ({ title }) => {
     setSelected(newSelected)
   }
 
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage)
+  }
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(event.target.value, 10))
+    setPage(0)
+  }
+
   const isSelected = (name: string) => selected.indexOf(name) !== -1
+
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage)
 
   return (
     <Container className={classes.root}>
@@ -295,34 +349,48 @@ const Table: React.FC<TableProps> = ({ title }) => {
             />
             <TableBody>
               {stableSort(rows, getComparator(order, orderBy))
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.type);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+                  const isItemSelected = isSelected(row.name);
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.type)}
+                      onClick={(event) => handleClick(event, row.name, row.id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.type}
+                      key={row.name}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ 'aria-labelledby': labelId }}
-                        />
+                        <Checkbox checked={isItemSelected} />
                       </TableCell>
-                      <TableCell id={labelId} padding="none">{row.type} </TableCell>
+                      <TableCell component="th"  scope="row" padding="none">
+                        {row.name}
+                      </TableCell>
                       <TableCell align="left">{row.contact}</TableCell>
                     </TableRow>
                   )
                 })}
+              {emptyRows > 0 && (
+                <TableRow style={{ height: 53 * emptyRows }}>
+                  <TableCell colSpan={6} />
+                </TableRow>
+              )}
             </TableBody>
           </MaterialTable>
         </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={rows.length}
+          rowsPerPage={rowsPerPage}
+          labelRowsPerPage='Quantidade por Página'
+          page={page}
+          onChangePage={handleChangePage}
+          onChangeRowsPerPage={handleChangeRowsPerPage}
+        />
       </Paper>
     </Container>
   )

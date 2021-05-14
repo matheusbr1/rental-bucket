@@ -6,7 +6,6 @@ import { useHistory } from 'react-router'
 import DateInput from 'components/DateInput'
 import FloatingButton from 'components/FloatingButton'
 import TextField from 'components/TextField'
-import { drivers } from 'mocks'
 import * as yup from 'yup'
 import axios from 'axios'
 
@@ -15,28 +14,8 @@ import { FormHandles } from '@unform/core'
 import getValidationErrors from 'utils/getValidationFormErrors'
 import Title from 'components/Title'
 import MaskedField from 'components/TextField/masked'
-
-interface Driver {
-  name: string
-  CPF: string
-  RG: string
-  CNH: string
-  birthday: Date | null
-  adress: {
-    CEP: string
-    street: string
-    number: number
-    state: string
-    city: string
-    neighborhood: string
-    complement: string
-  }
-  contact: {
-    email: string
-    telephone: string
-    cellphone: string
-  }
-}
+import { IDriver, useData } from 'hooks/data'
+import { useParams } from 'react-router-dom'
 
 interface IState {
   id: number
@@ -58,7 +37,7 @@ interface AdressProps {
 
 interface CardProps {
   type: 'create' | 'update'
-  onConfirm(fields: Driver): void
+  onConfirm(fields: IDriver): void
   onDelete?(): void
   loading: boolean
 }
@@ -68,6 +47,10 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
   const formRef = useRef<FormHandles>(null)
 
   const { goBack } = useHistory()
+
+  const { drivers } = useData()
+
+  const path: { id: string } = useParams()
 
   const [birthday, setBirthday] = React.useState<Date | null>(new Date())
 
@@ -79,6 +62,31 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
   const [city, setCity] = useState('')
   const [neighborhood, setNeighborhood] = useState('')
   const [number, setNumber] = useState(0)
+
+  useEffect(() => {
+    if (type !== 'update') {
+      return
+    }
+
+    const id = Number(path.id)
+
+    const filtered = drivers.filter(driver => driver.id === id)[0]
+
+    if (!filtered) {
+      console.log('404 - Not found')
+      return
+    }
+
+    const { street, state, city, neighborhood, number } = filtered.adress
+
+    setStreet(street)
+    setState(state)
+    setCity(city)
+    setNeighborhood(neighborhood)
+    setNumber(Number(number))
+
+    formRef.current?.setData(filtered)
+  }, [type, path, drivers])
 
   // Getting States
    useEffect(() => {
@@ -114,13 +122,6 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
       setCitys(citys)
     })
   }, [state])
-
-  // Selecting field
-  useEffect(() => {
-    if (type === 'update') {
-      formRef?.current?.setData(drivers[0])
-    }
-  }, [type])
   
   const handleGetAdress = useCallback(e => {
 
@@ -164,7 +165,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
     }
   }, [loading])
 
-  const handleFormSubmit = useCallback(async (fields: Driver) => {
+  const handleFormSubmit = useCallback(async (fields: IDriver) => {
 
     const data = {
       ...fields, 
@@ -217,7 +218,10 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
         abortEarly: false
       })
 
-      onConfirm(data)
+      onConfirm({
+        ...data,
+        id: drivers.length + 1,
+      } as IDriver)
 
     } catch (error) {
       if(error instanceof yup.ValidationError) {
@@ -226,7 +230,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
         console.log(errors)
       }
     }
-  }, [onConfirm, birthday, state, city])
+  }, [onConfirm, birthday, state, city, drivers])
 
   return (
     <Container>

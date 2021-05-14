@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import AppBar  from 'components/AppBar'
-import Table from '../components/Table/List'
+import Table from '../components/Table'
 import FloatingButton from 'components/FloatingButton'
 
 import { Container, Content } from './styles'

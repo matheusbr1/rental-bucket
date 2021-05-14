@@ -233,7 +233,7 @@ const Table: React.FC<TableProps> = ({ title, services }) => {
     }, [history])
   
     const handleOpen = useCallback(() => {
-      history.push('/services/1')
+      history.push(`/services/${currentSeleted}`)
     }, [history])
 
     const handleDelete = useCallback(() => {
@@ -302,9 +302,9 @@ const Table: React.FC<TableProps> = ({ title, services }) => {
     setCurrentSelected(id)
 
     setSelectedList((otherSelecteds: number[]) => {
-      const isServiceSelected = otherSelecteds.filter(serviceID => serviceID === id)[0]
+      const isSelected = otherSelecteds.filter(serviceID => serviceID === id)[0]
 
-      if (isServiceSelected) {
+      if (isSelected) {
         return otherSelecteds.filter(serviceID => serviceID !== id)
       } else {
         return [
