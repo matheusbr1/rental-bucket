@@ -7,12 +7,13 @@ import FloatingButton from 'components/FloatingButton'
 import TextField from 'components/TextField'
 import { clients, drivers, equipments, services as serviceTypes, trucks } from 'mocks'
 import { Form } from '@unform/web'
-
-import { Container, Footer } from './styles'
 import { FormHandles } from '@unform/core'
 import getValidationErrors from 'utils/getValidationFormErrors'
 import Title from 'components/Title'
-import { IService, useData } from 'hooks/data'
+import { useData } from 'hooks/data'
+import { IService } from 'interfaces'
+
+import { Container, Footer } from './styles'
 
 interface CardProps {
   type: 'create' | 'update'

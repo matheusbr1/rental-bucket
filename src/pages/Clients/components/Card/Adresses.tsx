@@ -9,7 +9,7 @@ import * as yup from 'yup'
 import getValidationErrors from 'utils/getValidationFormErrors'
 import Title from 'components/Title'
 import axios from 'axios'
-import { IAdress } from 'hooks/data'
+import { IAdress } from 'interfaces'
 
 interface AdressesProps {
   adresses: IAdress[]

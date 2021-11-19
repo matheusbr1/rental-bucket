@@ -8,14 +8,15 @@ import FloatingButton from 'components/FloatingButton'
 import TextField from 'components/TextField'
 import * as yup from 'yup'
 import axios from 'axios'
-
-import { Container, Divider } from './styles'
 import { FormHandles } from '@unform/core'
 import getValidationErrors from 'utils/getValidationFormErrors'
 import Title from 'components/Title'
 import MaskedField from 'components/TextField/masked'
-import { IDriver, useData } from 'hooks/data'
+import { useData } from 'hooks/data'
+import { IDriver } from 'interfaces'
 import { useParams } from 'react-router-dom'
+
+import { Container, Divider } from './styles'
 
 interface IState {
   id: number

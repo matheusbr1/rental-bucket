@@ -8,7 +8,7 @@ import { Button, MenuItem } from '@material-ui/core'
 import ContactTable from '../Table/Contact'
 import Title from 'components/Title'
 import MaskedField from 'components/TextField/masked'
-import { IContact } from 'hooks/data'
+import { IContact } from 'interfaces'
 
 interface ContactProps {
   contacts: IContact[]

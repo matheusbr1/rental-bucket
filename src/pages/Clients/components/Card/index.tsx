@@ -2,26 +2,22 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useHistory } from 'react-router'
 import { Form } from '@unform/web'
 import * as yup from 'yup'
-
-import { Container, Divider } from './styles'
-
 import FloatingButton from 'components/FloatingButton'
-
 import Radio from '@material-ui/core/Radio'
 import RadioGroup from '@material-ui/core/RadioGroup'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
-
 import TextField from 'components/TextField'
 import MaskedField from 'components/TextField/masked'
-
 import { FormHandles } from '@unform/core'
 import getValidationErrors from 'utils/getValidationFormErrors'
+import { useData } from 'hooks/data'
+import { IAdress, IContact, IClient } from 'interfaces'
+import Title from 'components/Title'
+import { useParams } from 'react-router-dom'
 
 import Adresses from './Adresses'
 import Contacts from './Contacts'
-import Title from 'components/Title'
-import { IAdress, IContact, IClient, useData } from 'hooks/data'
-import { useParams } from 'react-router-dom'
+import { Container, Divider } from './styles'
 
 interface CardProps {
   type: 'create' | 'update'

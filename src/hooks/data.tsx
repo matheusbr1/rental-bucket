@@ -1,82 +1,5 @@
 import React, { createContext, useState, useContext, useCallback } from 'react'
-
-export interface IAdress { 
-  CEP: string
-  street: string
-  number: string
-  neighborhood: string
-  state: string
-  city: string
-  complement?: string
-}
-
-export interface IContact {
-  type: string
-  telephone?: string
-  cellphone?: string
-  email?: string
-}
-
-export interface IClient {
-  id: number
-  CPF?: string
-  CNPJ?: string
-  name: string
-  stateRegistration?: string
-  contacts: IContact[]
-  adress: IAdress[]
-}
-
-export interface IDriver {
-  id: number
-  name: string
-  CPF: string
-  RG: string
-  CNH: string
-  birthday: string | Date
-  adress: IAdress
-  contact: {
-    telephone: string
-    cellphone: string
-    email: string
-  }
-}
-
-export interface IService {
-  id: number
-  adress: string
-  client: string
-  driver: string
-  endDate: Date
-  equipment: string
-  quantity: number
-  service: string
-  truck: string
-}
-
-export interface IBrand {
-  id: number
-  name: string
-}
-
-export interface IModel {
-  id: string
-  marca: string
-  name: string
-}
-
-export interface ITruck {
-  id: number
-  brand: IBrand | any
-  model: IModel | any
-  plate: string
-  equipment: string
-  renavam: string
-  year: {
-    manufacture: string
-    model: string
-  }
-}
+import { IService, ITruck, IDriver, IClient } from 'interfaces'
 
 interface IDataContext {
   services: IService[]
@@ -111,26 +34,6 @@ const DataProvider: React.FC = ({ children }) => {
       service
     ])
   }, [])
-
-//   const [trucks, setTrucks] = useState<ITruck[]>([{
-//     id: 1,
-//     brand: {
-//       name: "FORD",
-//       id: 105
-//     },
-//     model: {
-//       id: "6679",
-//       marca: "FORD",
-//       name: "CARGO 1119 Turbo 2p (diesel)(E5)"
-//     },
-//     plate: "AAA-0000",
-//     equipment: "Rollon",
-//     renavam: "99999999",
-//     year: {
-//       manufacture: "2001",
-//       model: "2001"
-//     }
-// }])
 
 const [trucks, setTrucks] = useState<ITruck[]>([{
   id: 1,

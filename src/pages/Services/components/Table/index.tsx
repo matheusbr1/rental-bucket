@@ -18,10 +18,10 @@ import Tooltip from '@material-ui/core/Tooltip'
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
 import OpenIcon from '@material-ui/icons/Launch'
+import { useHistory } from 'react-router'
+import { IService } from 'interfaces'
 
 import { Container } from './styles'
-import { useHistory } from 'react-router'
-import { IService } from 'hooks/data'
 
 interface TableProps {
   title: string
