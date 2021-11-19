@@ -8,7 +8,7 @@ export const driverSchema = yup.object().shape({
   birthday: yup.date()
     .required('Campo obrigatório')
     .typeError('Campo obrigatório'),
-  adress: yup.object({
+  address: yup.object({
     CEP: yup.string().required('Campo obrigatório'),
     street: yup.string().required('Campo obrigatório'),
     number: yup.string().required('Campo obrigatório'),

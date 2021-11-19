@@ -1,4 +1,4 @@
-export interface IAdress { 
+export interface IAddress { 
   CEP: string
   street: string
   number: string
@@ -22,7 +22,7 @@ export interface IClient {
   name: string
   stateRegistration?: string
   contacts: IContact[]
-  adress: IAdress[]
+  address: IAddress[]
 }
 
 export interface IDriver {
@@ -32,7 +32,7 @@ export interface IDriver {
   RG: string
   CNH: string
   birthday: string | Date
-  adress: IAdress
+  address: IAddress
   contact: {
     telephone: string
     cellphone: string
@@ -42,7 +42,7 @@ export interface IDriver {
 
 export interface IService {
   id: number
-  adress: string
+  address: string
   client: string
   driver: string
   endDate: Date

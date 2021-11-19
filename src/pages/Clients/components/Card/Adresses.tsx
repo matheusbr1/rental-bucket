@@ -4,20 +4,20 @@ import { Form } from '@unform/web'
 import TextField from 'components/TextField'
 import MaskedField from 'components/TextField/masked'
 import { Button, MenuItem } from '@material-ui/core'
-import AdressTable from '../Table/Adress'
+import AddressTable from '../Table/Address'
 import * as yup from 'yup'
 import getValidationErrors from 'utils/getValidationFormErrors'
 import Title from 'components/Title'
 import axios from 'axios'
-import { IAdress } from 'interfaces'
+import { IAddress } from 'interfaces'
 import { addressSchema } from 'validations/addressSchema'
 
 interface AdressesProps {
-  adresses: IAdress[]
-  setAdresses(adresses: IAdress[]): void
+  adresses: IAddress[]
+  setAdresses(adresses: IAddress[]): void
 }
 
-interface AdressProps {
+interface AddressProps {
   logradouro: string 
   uf: string 
   localidade: string  
@@ -148,7 +148,7 @@ const Adresses: React.FC<AdressesProps> = ({ adresses, setAdresses }) => {
         formRef.current?.setFieldError('CEP', '')
       }
 
-      const { logradouro, uf, localidade, bairro }: AdressProps = response.data
+      const { logradouro, uf, localidade, bairro }: AddressProps = response.data
 
       setStreet(logradouro)
       setState(uf)
@@ -254,7 +254,7 @@ const Adresses: React.FC<AdressesProps> = ({ adresses, setAdresses }) => {
         </Button>
       </Form>
 
-      <AdressTable 
+      <AddressTable 
         title='Endereços cadastrados' 
         adresses={adresses}
       />

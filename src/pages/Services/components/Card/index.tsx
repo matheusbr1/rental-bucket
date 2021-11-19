@@ -40,7 +40,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
   const [service, setService] = useState({
     id: 0,
     client: '',
-    adress: '',
+    address: '',
     driver: '',
     truck: '',
     equipment: '',
@@ -150,16 +150,16 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
         <TextField 
           select
-          name='adress' 
+          name='address' 
           label='Endereço'
           variant="outlined" 
           disabled={disabled}
-          value={service.adress}
-          onChange={e => handleChangeService('adress', e.target.value)}
+          value={service.address}
+          onChange={e => handleChangeService('address', e.target.value)}
         >
-          {clients[0].adress.map((adress, index) => (
-            <MenuItem key={index} value={adress.cep}>
-              {adress.street} - {adress.number} - {adress.neighborhood}
+          {clients[0].address.map((address, index) => (
+            <MenuItem key={index} value={address.cep}>
+              {address.street} - {address.number} - {address.neighborhood}
             </MenuItem>
           ))}
         </TextField>

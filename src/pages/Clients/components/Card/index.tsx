@@ -11,7 +11,7 @@ import MaskedField from 'components/TextField/masked'
 import { FormHandles } from '@unform/core'
 import getValidationErrors from 'utils/getValidationFormErrors'
 import { useData } from 'hooks/data'
-import { IAdress, IContact, IClient } from 'interfaces'
+import { IAddress, IContact, IClient } from 'interfaces'
 import Title from 'components/Title'
 import { useParams } from 'react-router-dom'
 
@@ -39,13 +39,13 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
     id: 0,
     name: '',
     CPF: '',
-    adress: [],
+    address: [],
     contacts: [],
    } as IClient)
 
   const [person, setPerson] = useState('fisic')
 
-  const [adresses, setAdresses] = useState<IAdress[]>([])
+  const [adresses, setAdresses] = useState<IAddress[]>([])
 
   const [contacts, setContacts] = useState<IContact[]>([])
 
@@ -65,7 +65,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
     setClient(filtered)
     setContacts(filtered.contacts)
-    setAdresses(filtered.adress)
+    setAdresses(filtered.address)
     
     formRef.current?.setData(filtered)
   }, [type, path, clients])

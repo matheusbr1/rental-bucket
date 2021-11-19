@@ -7,7 +7,7 @@ export const clients = [
       telephone: ['(16) 3701-4629'],
       cellphone: ['(16) 99474-4795'],
     },
-    adress: [
+    address: [
       { 
         cep: '05763-440', 
         street: 'Rua João Rodrigues de Moura', 
@@ -36,7 +36,7 @@ export const clients = [
       telephone: ['(12) 2612-6444'],
       cellphone: ['(12) 98430-2458', '(12) 98589-1526'],
     },
-    adress: [
+    address: [
       { 
         cep: '08030-170',  
         street: 'Rua Guarupu', 
@@ -56,7 +56,7 @@ export const clients = [
       telephone: ['(14) 2795-9980'],
       cellphone: ['(14) 98991-7496'],
     },
-    adress: [
+    address: [
       { 
         cep: '04457-120',  
         street: 'Rua Luís Bueno de Miranda', 
@@ -78,7 +78,7 @@ export const clients = [
       telephone: ['(19) 2747-8372'],
       cellphone: ['(19) 99623-9418'],
     },
-    adress: [
+    address: [
       { 
         cep: '04457-120',  
         street: 'Rua Luís Bueno de Miranda', 
@@ -100,7 +100,7 @@ export const clients = [
       telephone: ['(11) 2657-5882'],
       cellphone: ['(11) 98299-6434'],
     },
-    adress: [
+    address: [
       { 
         cep: '04457-120',  
         street: 'Rua Luís Bueno de Miranda', 
@@ -121,7 +121,7 @@ export const drivers = [
     RG: '20.498.441-5',
     CNH: '123123',
     birthday: '23/06/1972',
-    adress: { 
+    address: { 
       CEP: '05396-010', 
       street: 'Rua Antenor de Freitas', 
       number: '393',  
@@ -142,7 +142,7 @@ export const drivers = [
     rg: '24.495.594-3',
     cnh: '123123',
     birthday: '25/03/1972',
-    adress: { 
+    address: { 
       cep: '19025-460', 
       street: 'Rua Christiano Kliemchem', 
       number: '423',  
@@ -163,7 +163,7 @@ export const drivers = [
     rg: '11.520.885-9',
     cnh: '123123',
     birthday: '26/02/1972',
-    adress: { 
+    address: { 
       cep: '19804-320', 
       street: 'Rua Caxambu', 
       number: '938',  

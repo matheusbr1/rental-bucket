@@ -1,7 +1,7 @@
 import * as yup from 'yup'
 
 export const servicesSchema = yup.object().shape({
-  adress: yup.string().required('Campo obrigatório'),
+  address: yup.string().required('Campo obrigatório'),
   client: yup.string().required('Campo obrigatório'),
   driver: yup.string().required('Campo obrigatório'),
   equipment: yup.string().required('Campo obrigatório'),

@@ -16,13 +16,13 @@ import IconButton from '@material-ui/core/IconButton'
 import Tooltip from '@material-ui/core/Tooltip'
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
-import { IAdress } from 'interfaces'
+import { IAddress } from 'interfaces'
 
 import { Container } from './styles'
 
 interface TableProps {
   title: string
-  adresses: IAdress[]
+  adresses: IAddress[]
 }
 
 interface Data {
@@ -205,13 +205,13 @@ const Table: React.FC<TableProps> = ({ title, adresses }) => {
     return { street, number, neighborhood, cep, state, city }
   }
   
-  const rows = adresses.map(adress => createData(
-      adress.street, 
-      Number(adress.number), 
-      adress.neighborhood, 
-      adress.city, 
-      adress.state, 
-      adress.CEP
+  const rows = adresses.map(address => createData(
+      address.street, 
+      Number(address.number), 
+      address.neighborhood, 
+      address.city, 
+      address.state, 
+      address.CEP
   ))
 
   const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {

@@ -4,6 +4,7 @@ import AppBar  from 'components/AppBar'
 import { useSnackbar } from 'notistack'
 import Card from '../components/Card'
 import { useData } from 'hooks/data'
+import { api } from 'services/api'
 
 import { Container } from './styles'
 
@@ -24,6 +25,8 @@ const Create: React.FC = () => {
     setLoading(true)
 
     try {
+      await api.post('/drivers', fields)
+
       createNewDriver(fields)
 
       enqueueSnackbar('Motorista criado com sucesso!', {

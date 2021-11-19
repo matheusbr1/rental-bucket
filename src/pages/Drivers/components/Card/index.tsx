@@ -30,7 +30,7 @@ interface ICity {
   nome: string
 }
 
-interface AdressProps {
+interface AddressProps {
   logradouro: string 
   uf: string 
   localidade: string  
@@ -79,7 +79,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
       return
     }
 
-    const { street, state, city, neighborhood, number } = filtered.adress
+    const { street, state, city, neighborhood, number } = filtered.address
 
     setStreet(street)
     setState(state)
@@ -125,7 +125,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
     })
   }, [state])
   
-  const handleGetAdress = useCallback(e => {
+  const handleGetAddress = useCallback(e => {
 
     const cep = e.target.value
 
@@ -137,9 +137,9 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
         return
       }
       
-      formRef.current?.setFieldError('adress.CEP', response.data?.erro ? 'CEP inválido' : '')
+      formRef.current?.setFieldError('address.CEP', response.data?.erro ? 'CEP inválido' : '')
 
-      const { logradouro, uf, localidade, bairro }: AdressProps = response.data
+      const { logradouro, uf, localidade, bairro }: AddressProps = response.data
 
       setStreet(logradouro)
       setState(uf)
@@ -172,8 +172,8 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
     const data = {
       ...fields, 
       birthday,
-      adress: {
-        ...fields.adress,
+      address: {
+        ...fields.address,
         state, 
         city
       }
@@ -257,14 +257,14 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
         <Title text='Endereço' />
 
         <div className="grid">
-          <Scope path='adress'>
+          <Scope path='address'>
             
             <MaskedField 
               mask='cep'
               name='CEP'
               label='CEP'
               variant="outlined"
-              onBlur={handleGetAdress}
+              onBlur={handleGetAddress}
               disabled={disabled}
             />
 
