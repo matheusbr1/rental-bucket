@@ -9,6 +9,7 @@ import ContactTable from '../Table/Contact'
 import Title from 'components/Title'
 import MaskedField from 'components/TextField/masked'
 import { IContact } from 'interfaces'
+import { contactSchema } from 'validations/contactSchema'
 
 interface ContactProps {
   contacts: IContact[]
@@ -40,33 +41,7 @@ const Contacts: React.FC<ContactProps> = ({ contacts, setContacts }) => {
     try {
       formRef.current?.setErrors({})
 
-      const schema = yup.object().shape({
-        type: yup.string(),
-
-        email: yup.string()
-          .when('type', {
-            is: 'email',
-            then: yup.string()
-              .email('E-mail inválido')
-              .required('Campo Obrigatório')
-          }),
-        
-        telephone: yup.string()
-          .when('type', {
-            is: 'telephone',
-            then: yup.string()
-              .required('Campo Obrigatório')
-          }),
-        
-        cellphone: yup.string()
-          .when('type', {
-            is: 'cellphone',
-            then: yup.string()
-              .required('Campo Obrigatório')
-          }),
-      })
-
-      await schema.validate(data, {
+      await contactSchema.validate(data, {
         abortEarly: false
       })
 

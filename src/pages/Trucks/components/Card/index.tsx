@@ -14,6 +14,7 @@ import getValidationErrors from 'utils/getValidationFormErrors'
 import Title from 'components/Title'
 import MaskedField from 'components/TextField/masked'
 import axios from 'axios'
+import { trucksSchema } from 'validations/trucksSchema'
 
 interface IBrand {
   id: number
@@ -152,19 +153,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
     try {
       formRef.current?.setErrors({})
 
-      const schema = yup.object().shape({
-        brand: yup.object().required('Campo obrigatório'),
-        model: yup.object().required('Campo obrigatório'),
-        plate: yup.string().required('Campo obrigatório'),
-        equipment: yup.string().required('Campo obrigatório'),
-        renavam: yup.string().required('Campo obrigatório'),
-        year: yup.object({
-          manufacture: yup.string().required('Campo obrigatório'),
-          model: yup.string().required('Campo obrigatório'),
-        })
-      })
-
-      await schema.validate(truck, {
+      await trucksSchema.validate(truck, {
         abortEarly: false
       })
 

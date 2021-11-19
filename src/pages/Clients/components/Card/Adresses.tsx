@@ -10,6 +10,7 @@ import getValidationErrors from 'utils/getValidationFormErrors'
 import Title from 'components/Title'
 import axios from 'axios'
 import { IAdress } from 'interfaces'
+import { addressSchema } from 'validations/addressSchema'
 
 interface AdressesProps {
   adresses: IAdress[]
@@ -107,16 +108,7 @@ const Adresses: React.FC<AdressesProps> = ({ adresses, setAdresses }) => {
     try {
       formRef.current?.setErrors({})
 
-      const schema = yup.object().shape({
-        CEP: yup.string().required('Campo obrigatório'),
-        street: yup.string().required('Campo obrigatório'),
-        number: yup.string().required('Campo obrigatório'),
-        neighborhood: yup.string().required('Campo obrigatório'),
-        state: yup.string().required('Campo obrigatório'),
-        city: yup.string().required('Campo obrigatório'),
-      })
-
-      await schema.validate(data, {
+      await addressSchema.validate(data, {
         abortEarly: false
       })
 

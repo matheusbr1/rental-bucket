@@ -7,7 +7,6 @@ import FloatingButton from 'components/FloatingButton'
 import TextField from 'components/TextField'
 import { clients, drivers, equipments, reports, services } from 'mocks'
 import * as yup from 'yup'
-
 import { Container, Content } from './styles'
 import { FormHandles } from '@unform/core'
 import { Form } from '@unform/web'
@@ -15,6 +14,7 @@ import { useSnackbar } from 'notistack'
 import getValidationErrors from 'utils/getValidationFormErrors'
 import Title from 'components/Title'
 import { useData } from 'hooks/data'
+import { reportsSchema } from 'validations/reportsSchema'
 
 const Reports: React.FC = () => {
 
@@ -150,24 +150,7 @@ const Reports: React.FC = () => {
       
       formRef.current?.setErrors({})
 
-      const schema = yup.object().shape({
-        type: yup.string().required('Campo Obrigatório'),
-        
-        initialDate: yup.date()
-          .required('Campo Obrigatório')
-          .typeError('Campo Obrigatório'),
-        
-        finalDate: yup.date()
-          .required('Campo Obrigatório')
-          .typeError('Campo Obrigatório'),
-        
-        client: yup.string(),
-        truck: yup.string(),
-        equipments: yup.string(),
-        drivers: yup.string()
-      })
-
-      await schema.validate(data, {
+      await reportsSchema.validate(data, {
         abortEarly: false
       })
 
