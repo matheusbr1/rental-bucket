@@ -1,5 +1,7 @@
-import React, { createContext, useState, useContext, useCallback } from 'react'
+import React, { createContext, useState, useContext, useCallback, useEffect } from 'react'
 import { IService, ITruck, IDriver, IClient } from 'interfaces'
+import { drivers as mockedDrivers } from 'mocks'
+import { api } from 'services/api'
 
 interface IDataContext {
   services: IService[]
@@ -55,49 +57,7 @@ const DataProvider: React.FC = ({ children }) => {
     ])
   }, [])
 
-  const [drivers, setDrivers] = useState<IDriver[]>([{
-    id: 1,
-    name: 'Theo Thomas Leonardo das Neves',
-    CPF: '337.117.348-80',
-    RG: '20.498.441-5',
-    CNH: '123123',
-    birthday: '23/06/1972',
-    address: { 
-      CEP: '05396-010', 
-      street: 'Rua Antenor de Freitas', 
-      number: '393',  
-      neighborhood: 'Parque dos Príncipes',
-      state: 'SP', 
-      city: 'Osasco',
-      complement: ''
-    },
-    contact: {
-      telephone: '(11) 2644-3809',
-      cellphone: '(11) 99141-9747',
-      email: 'theoThomas@gmail.com'
-    }
-  }, {
-    id: 2,
-    name: 'Augusto Joaquim Heitor Silveira',
-    CPF: '084.713.940-90',
-    RG: '42.217.269-8',
-    CNH: '123123',
-    birthday: '22/04/1941',
-    address: { 
-      CEP: '48905-540', 
-      street: 'Rua Colibri', 
-      number: '796',  
-      neighborhood: 'Jardim Novo Encontro',
-      state: 'BA', 
-      city: 'Juazeiro',
-      complement: ''
-    },
-    contact: {
-      telephone: '(74) 2755-6049',
-      cellphone: '(74) 98491-0828',
-      email: 'augustojoaquimheitorsilveira-97@bucaneiro.com.br'
-    }
-  }])
+  const [drivers, setDrivers] = useState<IDriver[]>(mockedDrivers)
 
   const createNewDriver = useCallback((driver: IDriver) => {
     setDrivers(otherDrivers => [
@@ -160,6 +120,12 @@ const DataProvider: React.FC = ({ children }) => {
      ...otherClients,
      client
    ]))
+  }, [])
+
+  useEffect(() => {
+    api.get('/drivers').then(response => {
+      setDrivers(response.data)
+    })
   }, [])
 
  return (

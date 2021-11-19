@@ -116,6 +116,7 @@ export const clients = [
 
 export const drivers = [
   {
+    id: 1,
     name: 'Theo Thomas Leonardo das Neves',
     CPF: '337.117.348-80',
     RG: '20.498.441-5',
@@ -131,51 +132,9 @@ export const drivers = [
       complement: ''
     },
     contact: {
-      telephone: ['(11) 2644-3809'],
-      cellphone: ['(11) 99141-9747'],
+      telephone: '(11) 2644-3809',
+      cellphone: '(11) 99141-9747',
       email: 'theoThomas@gmail.com'
-    }
-  },
-  {
-    name: 'João Diogo da Rosa',
-    cpf: '345.402.988-01',
-    rg: '24.495.594-3',
-    cnh: '123123',
-    birthday: '25/03/1972',
-    address: { 
-      cep: '19025-460', 
-      street: 'Rua Christiano Kliemchem', 
-      number: '423',  
-      neighborhood: 'Parque São Matheus',
-      state: 'SP', 
-      city: 'São Paulo',
-      complement: ''
-    },
-    contact: {
-      telephone: ['(18) 2590-3843'],
-      cellphone: ['(18) 98788-1759'],
-      email: 'joaodiogodarosa-95@willianareiaepedra.com.br'
-    }
-  },
-  {
-    name: 'Thiago Julio Isaac Martins',
-    cpf: '842.253.568-84',
-    rg: '11.520.885-9',
-    cnh: '123123',
-    birthday: '26/02/1972',
-    address: { 
-      cep: '19804-320', 
-      street: 'Rua Caxambu', 
-      number: '938',  
-      neighborhood: 'Vila Carvalho',
-      state: 'SP', 
-      city: 'Assis',
-      complement: ''
-    },
-    contact: {
-      telephone: ['(18) 2590-3843'],
-      cellphone: ['(18) 98788-1759'],
-      email: 'thiagojulioisaacmartins..thiagojulioisaacmartins@protenisbarra.com.br'
     }
   }
 ]

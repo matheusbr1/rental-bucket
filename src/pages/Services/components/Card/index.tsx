@@ -5,7 +5,7 @@ import * as yup from 'yup'
 import DateInput from 'components/DateInput'
 import FloatingButton from 'components/FloatingButton'
 import TextField from 'components/TextField'
-import { clients, drivers, equipments, services as serviceTypes, trucks } from 'mocks'
+import { clients, equipments, services as serviceTypes, trucks } from 'mocks'
 import { Form } from '@unform/web'
 import { FormHandles } from '@unform/core'
 import getValidationErrors from 'utils/getValidationFormErrors'
@@ -27,7 +27,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
   const formRef = useRef<FormHandles>(null)
 
-  const { services } = useData()
+  const { services, drivers } = useData()
 
   const { goBack } = useHistory()
 
