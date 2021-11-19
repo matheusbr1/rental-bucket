@@ -1,109 +1,59 @@
-import React, { useCallback, useRef, useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
-import { useSnackbar } from 'notistack'
-import { Checkbox } from '@material-ui/core'
-import { Form } from '@unform/web'
-
-import TextField from 'components/TextField'
+import React, { useCallback } from 'react'
+import { Container, Content } from './styles'
+import truckIlustration from 'assets/truckIlustration.svg'
+import googleLogo from 'assets/googleLogo.svg'
 import Button from 'components/Button'
-
-import { Container, Content, Header, Inputs } from './styles'
-import { FormHandles } from '@unform/core'
+import { useGoogleLogin } from 'react-use-googlelogin'
+import { useHistory } from 'react-router'
 
 const SignIn: React.FC = () => {
-
-  const formRef = useRef<FormHandles>(null)
+  const googleAuth = useGoogleLogin({
+    // clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID as string
+    clientId: '745815052969-p903q9vcfpgb21vtc8egf7fg86ihu425.apps.googleusercontent.com'
+  })
 
   const history = useHistory()
 
-  const { enqueueSnackbar } = useSnackbar()
+  const handleSignIn = useCallback(async () => {
+    const { signIn } = googleAuth
 
-  const [isRemeberInputsActive, setIsRememberInputsActive] = useState(false)
+    const user = await signIn()
 
-  const handleRememberInputs = useCallback(() => {
-    setIsRememberInputsActive(state => !state)
-  }, [])
+    console.log(user)
 
-  const [loading, setLoading] = useState(false)
-
-  const handleSignIn = useCallback((fields) => {
-
-    console.log('fields', fields)
-
-    setLoading(true)
-
-    setTimeout(() => {
-      history.push('/services')
-
-      setLoading(false)
-    }, 2000)
-  }, [history])  
-
-  const handleForgotPassword = useCallback(() => {
-    
-    enqueueSnackbar('Entre em contato com o administrador!', {
-      variant: 'info'
-    })
-
-  }, [enqueueSnackbar])
+    user && history.push('/services')
+  }, [googleAuth, history])
 
   return (
     <Container>
-      
       <Content>
-        
-        <Header>
-          <h1>Login</h1>
-          <span>Acesse para continuar</span>
-        </Header>
-
-        <Form ref={formRef} onSubmit={handleSignIn} >
-          <Inputs>
-            <TextField
-              variant="outlined"
-              label="E-mail" 
-              name="email" 
-              inputProps={{ 
-                defaultValue: 'matheusbaron10@gmail.com' 
-              }} 
-            />
-
-            <TextField
-              variant="outlined"
-              label="Senha" 
-              name="password" 
-              inputProps={{ 
-                defaultValue: '12345',
-                type: 'password'
-              }} 
-            />
-
-            <div className='options-line' >
-              <div className='remember-me' >
-              
-                <Checkbox
-                  checked={isRemeberInputsActive}
-                  onChange={handleRememberInputs}
-                  style={{  
-                    color: '#529A67'
-                  }}
-                />
-
-                <p>Lembrar-me</p>
-              </div>
-
-              <Link to="/" onClick={handleForgotPassword} > Esqueci minha Senha </Link>
-            </div>
           
-          </Inputs>
+        <img src={truckIlustration} alt='truck' />
+        
+        <main>
+          <h1>
+            Faça Login Para  <br /> 
+            Acessar a Plataforma 
+          </h1>
 
-          <Button type='submit' onClick={handleSignIn} loading={loading} >
-            Entrar
+          <Button style={{
+              color: 'rgba(0, 0, 0, 0.54)',
+              background: '#fff',
+              padding: '0.7rem 2.5rem',
+              fontWeight: 'bold',
+              borderRadius: 8,
+              fontSize: 20
+            }}
+            onClick={handleSignIn}
+          >
+            <img src={googleLogo} alt="Google" style={{
+              marginRight: 10
+            }}/>
+            
+            Entrar com o Google
           </Button>
-        </Form>
-
+        </main>
       </Content>
-
     </Container>
   )
 }

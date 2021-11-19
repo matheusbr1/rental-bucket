@@ -14,9 +14,10 @@ import NotificationsIcon from "@material-ui/icons/Notifications"
 import MoreIcon from "@material-ui/icons/MoreVert"
 import LogoutIcon from "@material-ui/icons/ExitToApp"
 import { fade, makeStyles, Theme, createStyles } from "@material-ui/core/styles"
+import { useGoogleLogin } from 'react-use-googlelogin'
+import { useHistory } from 'react-router'
 
 import { Container } from './styles'
-import { useHistory } from 'react-router'
 
 interface AppBarProps {
   search?: boolean
@@ -24,11 +25,20 @@ interface AppBarProps {
 
 const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
 
+  const googleAuth = useGoogleLogin({
+    // clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID as string
+    clientId: '745815052969-p903q9vcfpgb21vtc8egf7fg86ihu425.apps.googleusercontent.com'
+  })
+
   const history = useHistory()
 
-  const handleSignOut = useCallback(() => {
-    history.push('/')
-  }, [history])
+  const handleSignOut = useCallback(async () => {
+    const { signOut, isSignedIn } = googleAuth
+
+    await signOut()
+
+    !isSignedIn && history.push('/')
+  }, [googleAuth, history])
 
   const useStyles = makeStyles((theme: Theme) =>
     createStyles({
