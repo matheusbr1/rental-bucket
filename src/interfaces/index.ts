@@ -15,7 +15,7 @@ export interface IContact {
   email?: string
 }
 
-export interface IClient {
+export interface ICustomer {
   id: number
   CPF?: string
   CNPJ?: string
@@ -40,15 +40,15 @@ export interface IDriver {
   }
 }
 
-export interface IService {
+export interface IWork {
   id: number
   address: string
-  client: string
+  customer: string
   driver: string
   endDate: Date
   equipment: string
   quantity: number
-  service: string
+  work: string
   truck: string
 }
 

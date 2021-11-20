@@ -8,7 +8,7 @@ export const reportsSchema = yup.object().shape({
   finalDate: yup.date()
     .required('Campo Obrigatório')
     .typeError('Campo Obrigatório'),
-  client: yup.string(),
+  customer: yup.string(),
   truck: yup.string(),
   equipments: yup.string(),
   drivers: yup.string()

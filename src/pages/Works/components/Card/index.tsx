@@ -5,20 +5,20 @@ import * as yup from 'yup'
 import DateInput from 'components/DateInput'
 import FloatingButton from 'components/FloatingButton'
 import TextField from 'components/TextField'
-import { clients, equipments, services as serviceTypes, trucks } from 'mocks'
+import { customers, equipments, works as workTypes, trucks } from 'mocks'
 import { Form } from '@unform/web'
 import { FormHandles } from '@unform/core'
 import getValidationErrors from 'utils/getValidationFormErrors'
 import Title from 'components/Title'
 import { useData } from 'hooks/data'
-import { IService } from 'interfaces'
+import { IWork } from 'interfaces'
 
 import { Container, Footer } from './styles'
 import { servicesSchema } from 'validations/servicesSchema'
 
 interface CardProps {
   type: 'create' | 'update'
-  onConfirm(fields: IService): void
+  onConfirm(fields: IWork): void
   onDelete?(): void
   loading: boolean
 }
@@ -27,7 +27,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
   const formRef = useRef<FormHandles>(null)
 
-  const { services, drivers } = useData()
+  const { works, drivers } = useData()
 
   const { goBack } = useHistory()
 
@@ -37,17 +37,17 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
   const disabled = useMemo(() => type === 'update' && !isChanging, [type, isChanging])
 
-  const [service, setService] = useState({
+  const [work, setService] = useState({
     id: 0,
-    client: '',
+    customer: '',
     address: '',
     driver: '',
     truck: '',
     equipment: '',
-    service: '',
+    work: '',
     quantity: 1,
     endDate: new Date()
-  } as IService)
+  } as IWork)
 
   useEffect(() => {
     if (type !== 'update') {
@@ -56,7 +56,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
     const id = Number(path.id)
 
-    const filtered = services.filter(service => service.id === id)[0]
+    const filtered = works.filter(work => work.id === id)[0]
 
     if (!filtered) {
       console.log('404 - Not found')
@@ -64,9 +64,9 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
     }
 
     setService(filtered)
-  }, [type, path, services])
+  }, [type, path, works])
 
-  const handleChangeService = useCallback((path: string, value) => {
+  const handleChangeWork = useCallback((path: string, value) => {
     setService(oldState => ({
       ...oldState,
       [path]: value
@@ -99,16 +99,16 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
     try {
       formRef.current?.setErrors({})
 
-      await servicesSchema.validate(service, {
+      await servicesSchema.validate(work, {
         abortEarly: false
       })  
 
       if (type === 'update') {
-        onConfirm(service)
+        onConfirm(work)
       } else {
         onConfirm({
-          ...service,
-          id: services.length + 1
+          ...work,
+          id: works.length + 1
         })
       }
 
@@ -119,7 +119,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
         console.log(errors)
       }
     }
-  }, [service, onConfirm, services, type])
+  }, [work, onConfirm, works, type])
 
   return (
     <Container>
@@ -128,7 +128,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
         text={
           type === 'create'  
             ?  'Novo Serviço' 
-            : `Serviço: ${service.service} - ${service.client}`
+            : `Serviço: ${work.work} - ${work.customer}`
         } 
         size='big'
       />
@@ -136,15 +136,15 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
       <Form ref={formRef} onSubmit={handleFormSubmit} >
         <TextField 
           select
-          name='client' 
+          name='customer' 
           label='Cliente'
           variant="outlined" 
           disabled={disabled}
-          value={service.client}
-          onChange={e => handleChangeService('client', e.target.value)}
+          value={work.customer}
+          onChange={e => handleChangeWork('customer', e.target.value)}
         >
-          {clients.map((client, index) => (
-            <MenuItem key={index} value={client.name} >{client.name}</MenuItem>
+          {customers.map((customer, index) => (
+            <MenuItem key={index} value={customer.name} >{customer.name}</MenuItem>
           ))}
         </TextField>
 
@@ -154,10 +154,10 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           label='Endereço'
           variant="outlined" 
           disabled={disabled}
-          value={service.address}
-          onChange={e => handleChangeService('address', e.target.value)}
+          value={work.address}
+          onChange={e => handleChangeWork('address', e.target.value)}
         >
-          {clients[0].address.map((address, index) => (
+          {customers[0].address.map((address, index) => (
             <MenuItem key={index} value={address.cep}>
               {address.street} - {address.number} - {address.neighborhood}
             </MenuItem>
@@ -170,8 +170,8 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           label='Motorista'
           variant="outlined" 
           disabled={disabled}
-          value={service.driver}
-          onChange={e => handleChangeService('driver', e.target.value)}
+          value={work.driver}
+          onChange={e => handleChangeWork('driver', e.target.value)}
         >
           {drivers.map((driver, index) => (
             <MenuItem key={index} value={driver.name}> {driver.name} </MenuItem>
@@ -184,8 +184,8 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           label='Equipamento'
           variant="outlined"
           disabled={disabled}
-          value={service.equipment}
-          onChange={e => handleChangeService('equipment', e.target.value)}
+          value={work.equipment}
+          onChange={e => handleChangeWork('equipment', e.target.value)}
         >
           {equipments.map((equipment, index) => (
             <MenuItem key={index} value={equipment}> {equipment} </MenuItem>
@@ -198,8 +198,8 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           label='Caminhão'
           variant="outlined"
           disabled={disabled}
-          value={service.truck}
-          onChange={e => handleChangeService('truck', e.target.value)}
+          value={work.truck}
+          onChange={e => handleChangeWork('truck', e.target.value)}
         >
           {trucks.map((truck, index) => (
             <MenuItem key={index} value={truck.plate}> {truck.plate} </MenuItem>
@@ -208,14 +208,14 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
         <TextField 
           select 
-          name='service' 
+          name='work' 
           label='Serviço'
           variant="outlined"
           disabled={disabled}
-          value={service.service}
-          onChange={e => handleChangeService('service', e.target.value)}
+          value={work.work}
+          onChange={e => handleChangeWork('work', e.target.value)}
         >
-          {serviceTypes.map((type, index) => (
+          {workTypes.map((type, index) => (
             <MenuItem key={index} value={type}> {type} </MenuItem>
           ))}
         </TextField>
@@ -227,8 +227,8 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           variant="outlined"
           type='number'
           disabled={disabled}
-          value={service.quantity}
-          onChange={e => handleChangeService('quantity', Number(e.target.value))}
+          value={work.quantity}
+          onChange={e => handleChangeWork('quantity', Number(e.target.value))}
         />
 
         <DateInput 

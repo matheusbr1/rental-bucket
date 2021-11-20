@@ -2,10 +2,10 @@ import * as yup from 'yup'
 
 export const servicesSchema = yup.object().shape({
   address: yup.string().required('Campo obrigatório'),
-  client: yup.string().required('Campo obrigatório'),
+  customer: yup.string().required('Campo obrigatório'),
   driver: yup.string().required('Campo obrigatório'),
   equipment: yup.string().required('Campo obrigatório'),
-  service: yup.string().required('Campo obrigatório'),
+  work: yup.string().required('Campo obrigatório'),
   truck: yup.string().required('Campo obrigatório'),
   quantity: yup.number()
     .required('Campo obrigatório')

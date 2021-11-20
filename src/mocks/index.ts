@@ -1,4 +1,4 @@
-export const clients = [
+export const customers = [
   {
     cpf: '568.753.008-85',
     name: 'Larissa Caroline de Paula',
@@ -184,7 +184,7 @@ export const equipments = [
   'Caçamba 16m³'
 ]
 
-export const services = [
+export const works = [
   'Troca',
   'Retirada',
   'Coloca'
@@ -215,12 +215,4 @@ export const truckEquipments = [
   'Coletor',
   'Basculante',
   'Rollon'
-]
-
-export const reports = [
-  'clients',
-  'trucks',
-  'equipments',
-  'drivers',
-  'services',
 ]

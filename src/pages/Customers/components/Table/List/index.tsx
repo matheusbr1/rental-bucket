@@ -18,14 +18,14 @@ import Tooltip from '@material-ui/core/Tooltip'
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
 import OpenIcon from '@material-ui/icons/Launch'
-import { IClient } from 'interfaces'
+import { ICustomer } from 'interfaces'
 import { useHistory } from 'react-router'
 
 import { Container } from './styles'
 
 interface TableProps {
   title: string 
-  clients: IClient[]
+  customers: ICustomer[]
 }
 
 interface Data {
@@ -181,7 +181,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 )
 
-const Table: React.FC<TableProps> = ({ title, clients }) => {
+const Table: React.FC<TableProps> = ({ title, customers }) => {
   const classes = useStyles()
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<keyof Data>('name')
@@ -197,12 +197,12 @@ const Table: React.FC<TableProps> = ({ title, clients }) => {
     return { id, name, contact }
   }
   
-  const rows = clients.map(client => {
-    const contact = client.contacts[0]
+  const rows = customers.map(customer => {
+    const contact = customer.contacts[0]
 
     return createData(
-      client.id,
-      client.name, 
+      customer.id,
+      customer.name, 
       contact?.email || contact?.cellphone || contact?.telephone
     )
   })
@@ -217,11 +217,11 @@ const Table: React.FC<TableProps> = ({ title, clients }) => {
     const history = useHistory()
   
     const handleEdit = useCallback(() => {
-      history.push(`/clients/${currentSeleted}`)
+      history.push(`/customers/${currentSeleted}`)
     }, [history])
   
     const handleOpen = useCallback(() => {
-      history.push(`/clients/${currentSeleted}`)
+      history.push(`/customers/${currentSeleted}`)
     }, [history])
 
     const handleDelete = useCallback(() => {

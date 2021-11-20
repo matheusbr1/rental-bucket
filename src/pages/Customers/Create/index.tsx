@@ -12,7 +12,7 @@ const Create: React.FC = () => {
 
   const { goBack } = useHistory()
 
-  const { createNewClient } = useData()
+  const { createNewCustomer  } = useData()
 
   const { enqueueSnackbar } = useSnackbar()
 
@@ -27,7 +27,7 @@ const Create: React.FC = () => {
     try {
       // Requisição
 
-      createNewClient(fields)
+      createNewCustomer(fields)
 
       enqueueSnackbar('Cliente criado com sucesso!', {
         variant: 'success'
@@ -42,7 +42,7 @@ const Create: React.FC = () => {
       setLoading(false)
     }
 
-  }, [goBack, enqueueSnackbar, createNewClient])
+  }, [goBack, enqueueSnackbar, createNewCustomer])
 
   return (
     <Container>

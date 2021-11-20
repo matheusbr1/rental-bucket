@@ -1,39 +1,39 @@
 import React, { createContext, useState, useContext, useCallback, useEffect } from 'react'
-import { IService, ITruck, IDriver, IClient } from 'interfaces'
+import { IWork, ITruck, IDriver, ICustomer } from 'interfaces'
 import { drivers as mockedDrivers } from 'mocks'
 import { api } from 'services/api'
 
 interface IDataContext {
-  services: IService[]
-  createNewService(service: IService): void
+  works: IWork[]
+  createNewWork(work: IWork): void
   trucks: ITruck[]
   createNewTruck(truck: ITruck): void
   drivers: IDriver[]
   createNewDriver(driver: IDriver): void
-  clients: IClient[]
-  createNewClient(client: IClient): void
+  customers: ICustomer[]
+  createNewCustomer(customer: ICustomer): void
 }
 
 const DataContext = createContext<IDataContext>({} as IDataContext)
 
 const DataProvider: React.FC = ({ children }) => {
 
-  const [services, setServices] = useState<IService[]>([{
+  const [works, setWorks] = useState<IWork[]>([{
     id: 1,
     address: "05628-040",
-    client: "Antonio Kauê Lucca da Luz",
+    customer: "Antonio Kauê Lucca da Luz",
     driver: "João Diogo da Rosa",
     endDate: new Date(),
     equipment: "Container de lixo",
     quantity: 1,
-    service: "Retirada",
+    work: "Retirada",
     truck: "DAD-8320",
   }])
 
-  const createNewService =  useCallback((service: IService) => {
-    setServices(otherServices => [
-      ...otherServices,
-      service
+  const createNewWork =  useCallback((work: IWork) => {
+    setWorks(otherWorks => [
+      ...otherWorks,
+      work
     ])
   }, [])
 
@@ -66,7 +66,7 @@ const DataProvider: React.FC = ({ children }) => {
     ])
   }, [])
 
-  const [clients, setClients] = useState<IClient[]>([{
+  const [customers, setCustomers] = useState<ICustomer[]>([{
     id: 1,
     CPF: '568.753.008-85',
     name: 'Larissa Caroline de Paula',
@@ -115,10 +115,10 @@ const DataProvider: React.FC = ({ children }) => {
     ]
   }])
 
-  const createNewClient = useCallback((client: IClient) => {
-   setClients(otherClients => ([
-     ...otherClients,
-     client
+  const createNewCustomer = useCallback((customer: ICustomer) => {
+    setCustomers(otherCustomers => ([
+     ...otherCustomers,
+     customer
    ]))
   }, [])
 
@@ -130,14 +130,14 @@ const DataProvider: React.FC = ({ children }) => {
 
  return (
     <DataContext.Provider value={{ 
-      services, 
-      createNewService,
+      works, 
+      createNewWork,
       trucks,
       createNewTruck,
       drivers,
       createNewDriver,
-      clients,
-      createNewClient
+      customers,
+      createNewCustomer
     }}>
       {children}
     </DataContext.Provider>

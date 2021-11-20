@@ -11,10 +11,10 @@ const List: React.FC = () => {
 
   const history = useHistory()
 
-  const { services } = useData()
+  const { works } = useData()
 
   const handleCreate = useCallback(() => {
-      history.push('new-service')
+      history.push('new-work')
   }, [history])
 
   return (
@@ -23,7 +23,7 @@ const List: React.FC = () => {
       <Content>
         <Table 
           title='Serviços'
-          services={services}
+          works={works}
         />
         
         <div className='floating-buttons' >

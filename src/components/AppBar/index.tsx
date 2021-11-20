@@ -144,10 +144,10 @@ const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={() => history.push('/clients')}>Clientes</MenuItem>
+      <MenuItem onClick={() => history.push('/customers')}>Clientes</MenuItem>
       <MenuItem onClick={() => history.push('/drivers')}>Motoristas</MenuItem>
       <MenuItem onClick={() => history.push('/trucks')}>Caminhões</MenuItem>
-      <MenuItem onClick={() => history.push('/services')}>Serviços</MenuItem>
+      <MenuItem onClick={() => history.push('/works')}>Serviços</MenuItem>
     </Menu>
   )
 
@@ -163,11 +163,11 @@ const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
       onClose={handleMobileMenuClose}
     >
 
-      <MenuItem  onClick={() => history.push('/services')}>
+      <MenuItem  onClick={() => history.push('/works')}>
         <p>Serviços</p>
       </MenuItem>
 
-      <MenuItem  onClick={() => history.push('/clients')}>
+      <MenuItem  onClick={() => history.push('/customers')}>
         <p>Clientes</p>
       </MenuItem>
 
@@ -177,10 +177,6 @@ const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
 
       <MenuItem  onClick={() => history.push('/trucks')}>
         <p>Caminhões</p>
-      </MenuItem>
-
-      <MenuItem  onClick={() => history.push('/reports')}>
-        <p>Relatórios</p>
       </MenuItem>
 
       <MenuItem onClick={handleSignOut}>
@@ -222,10 +218,6 @@ const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
               <Badge badgeContent={17} color="secondary">
                 <NotificationsIcon />
               </Badge>
-            </IconButton>
-
-            <IconButton color="inherit" onClick={() => history.push('/reports')} >
-              <ReportIcon />
             </IconButton>
 
             <IconButton

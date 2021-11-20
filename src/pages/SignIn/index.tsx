@@ -21,7 +21,7 @@ const SignIn: React.FC = () => {
 
     console.log(user)
 
-    user && history.push('/services')
+    user && history.push('/works')
   }, [googleAuth, history])
 
   return (

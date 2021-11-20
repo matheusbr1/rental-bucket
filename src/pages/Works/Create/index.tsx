@@ -13,7 +13,7 @@ const Create: React.FC = () => {
 
   const { enqueueSnackbar } = useSnackbar()
 
-  const { createNewService } = useData()
+  const { createNewWork } = useData()
 
   const [loading, setLoading] = useState(false)
 
@@ -25,7 +25,7 @@ const Create: React.FC = () => {
 
     try {
 
-      createNewService(fields)
+      createNewWork(fields)
 
       enqueueSnackbar('Serviço criado com sucesso!', {
         variant: 'success'
@@ -39,7 +39,7 @@ const Create: React.FC = () => {
     } finally {
       setLoading(false)
     }
-  }, [goBack, enqueueSnackbar, createNewService])
+  }, [goBack, enqueueSnackbar, createNewWork])
 
   return (
     <Container>

@@ -19,13 +19,13 @@ import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
 import OpenIcon from '@material-ui/icons/Launch'
 import { useHistory } from 'react-router'
-import { IService } from 'interfaces'
+import { IWork } from 'interfaces'
 
 import { Container } from './styles'
 
 interface TableProps {
   title: string
-  services: IService[]
+  works: IWork[]
 }
 
 interface Data {
@@ -33,7 +33,7 @@ interface Data {
   type: string
   equipment: string
   quantity: number
-  client: string
+  customer: string
   deadline: string
   status: string
 }
@@ -77,7 +77,7 @@ interface HeadCell {
 }
 
 const headCells: HeadCell[] = [
-  { id: 'client', numeric: false, disablePadding: true, label: 'Cliente' },
+  { id: 'customer', numeric: false, disablePadding: true, label: 'Cliente' },
   { id: 'type', numeric: false, disablePadding: false, label: 'Tipo' },
   { id: 'quantity', numeric: false, disablePadding: false, label: 'Quantidade' },
   { id: 'equipment', numeric: false, disablePadding: false, label: 'Equipamento' },
@@ -189,7 +189,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 )
 
-const Table: React.FC<TableProps> = ({ title, services }) => {
+const Table: React.FC<TableProps> = ({ title, works }) => {
   const classes = useStyles()
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<keyof Data>('type')
@@ -199,23 +199,23 @@ const Table: React.FC<TableProps> = ({ title, services }) => {
 
   function createData(
     id: number,
-    client: string,
+    customer: string,
     type: string,
     quantity: number,
     equipment: string,
     deadline: string,
     status: string,
   ): Data {
-    return { id, client, type, quantity, equipment, deadline, status }
+    return { id, customer, type, quantity, equipment, deadline, status }
   }
   
-  const rows = services.map(service => createData(
-    service.id,
-    service.client, 
-    service.service, 
-    service.quantity,
-    service.equipment, 
-    service.endDate.toDateString(), 
+  const rows = works.map(work => createData(
+    work.id,
+    work.customer, 
+    work.work, 
+    work.quantity,
+    work.equipment, 
+    work.endDate.toDateString(), 
     'Pendente'
   ))
 
@@ -229,11 +229,11 @@ const Table: React.FC<TableProps> = ({ title, services }) => {
     const history = useHistory()
   
     const handleEdit = useCallback(() => {
-      history.push(`/services/${currentSeleted}`)
+      history.push(`/works/${currentSeleted}`)
     }, [history])
   
     const handleOpen = useCallback(() => {
-      history.push(`/services/${currentSeleted}`)
+      history.push(`/works/${currentSeleted}`)
     }, [history])
 
     const handleDelete = useCallback(() => {
@@ -288,7 +288,7 @@ const Table: React.FC<TableProps> = ({ title, services }) => {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.client)
+      const newSelecteds = rows.map((n) => n.customer)
       setSelected(newSelecteds)
       return
     }
@@ -367,23 +367,23 @@ const Table: React.FC<TableProps> = ({ title, services }) => {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.client);
+                  const isItemSelected = isSelected(row.customer);
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.client, row.id)}
+                      onClick={(event) => handleClick(event, row.customer, row.id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.client}
+                      key={row.customer}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
                         <Checkbox checked={isItemSelected} />
                       </TableCell>
                       <TableCell component="th" scope="row" padding="none">
-                        {row.client}
+                        {row.customer}s
                       </TableCell>
                       <TableCell align="left">{row.type}</TableCell>
                       <TableCell align="left">{row.quantity}</TableCell>

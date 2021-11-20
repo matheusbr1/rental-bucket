@@ -16,11 +16,11 @@ const List: React.FC = () => {
   const { trucks } = useData()
 
   const handleCreate = useCallback(() => {
-    history.push('new-truck')
+    history.push('trucks/create')
   }, [history])
 
-  const handleNatigateToServices = useCallback(() => {
-    history.push('services')
+  const handleNatigateToWorks = useCallback(() => {
+    history.push('works')
   }, [history])
 
   return (
@@ -33,7 +33,7 @@ const List: React.FC = () => {
         <div className='floating-buttons' >
           <Button 
           
-          onClick={handleNatigateToServices}
+          onClick={handleNatigateToWorks}
 
           style={{
             height: 50,

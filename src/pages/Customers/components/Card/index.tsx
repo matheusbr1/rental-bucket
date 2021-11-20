@@ -11,7 +11,7 @@ import MaskedField from 'components/TextField/masked'
 import { FormHandles } from '@unform/core'
 import getValidationErrors from 'utils/getValidationFormErrors'
 import { useData } from 'hooks/data'
-import { IAddress, IContact, IClient } from 'interfaces'
+import { IAddress, IContact, ICustomer } from 'interfaces'
 import Title from 'components/Title'
 import { useParams } from 'react-router-dom'
 
@@ -21,7 +21,7 @@ import { Container, Divider } from './styles'
 
 interface CardProps {
   type: 'create' | 'update'
-  onConfirm(fields: IClient): void
+  onConfirm(fields: ICustomer): void
   onDelete?(): void
   loading: boolean
 }
@@ -33,15 +33,15 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
   const path: { id: string } = useParams()
 
-  const { clients } = useData()
+  const { customers } = useData()
 
-  const [client, setClient] = useState({ 
+  const [customer, setCustomer] = useState({ 
     id: 0,
     name: '',
     CPF: '',
     address: [],
     contacts: [],
-   } as IClient)
+   } as ICustomer)
 
   const [person, setPerson] = useState('fisic')
 
@@ -56,19 +56,19 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
     const id = Number(path.id)
 
-    const filtered = clients.filter(client => client.id === id)[0]
+    const filtered = customers.filter(customer => customer.id === id)[0]
 
     if (!filtered) {
       console.log('404 - Not found')
       return
     }
 
-    setClient(filtered)
+    setCustomer(filtered)
     setContacts(filtered.contacts)
     setAdresses(filtered.address)
     
     formRef.current?.setData(filtered)
-  }, [type, path, clients])
+  }, [type, path, customers])
 
   const handlePerson = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPerson((event.target as HTMLInputElement).value)
@@ -116,11 +116,11 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
       }
 
       onConfirm({
-        id: clients.length + 1 ,
+        id: customers.length + 1 ,
         ...fields,
         contacts,
         adresses
-      } as IClient)
+      } as ICustomer)
 
     } catch (error) {
       if(error instanceof yup.ValidationError) {
@@ -129,13 +129,13 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
         console.log(errors)
       }
     }
-  }, [onConfirm, person, adresses, contacts, clients])
+  }, [onConfirm, person, adresses, contacts, customers])
 
   return (
     <Container>
 
     <Title 
-      text={type === 'create'  ?  'Novo Cliente' : client?.name} 
+      text={type === 'create'  ?  'Novo Cliente' : customer?.name} 
       size='big'
     />
 

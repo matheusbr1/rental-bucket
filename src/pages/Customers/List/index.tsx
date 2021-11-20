@@ -12,16 +12,16 @@ import { useData } from 'hooks/data'
 
 const List: React.FC = () => {
 
-  const { clients } = useData()
+  const { customers } = useData()
 
   const history = useHistory()
 
   const handleCreate = useCallback(() => {
-    history.push('new-client')
+    history.push('customers/create')
   }, [history])
 
-  const handleNatigateToServices = useCallback(() => {
-    history.push('services')
+  const handleNatigateToWorks = useCallback(() => {
+    history.push('works')
   }, [history])
 
   return (
@@ -29,12 +29,12 @@ const List: React.FC = () => {
       <AppBar />
       
       <Content>
-        <Table title='Clientes' clients={clients} />
+        <Table title='Clientes' customers={customers} />
         
         <div className='floating-buttons' >
           <Button 
           
-          onClick={handleNatigateToServices}
+          onClick={handleNatigateToWorks}
 
           style={{
             height: 50,
