@@ -1,4 +1,5 @@
 import { MenuItem } from '@material-ui/core'
+import { IBrand, IModel, ITruck } from 'interfaces'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Scope } from '@unform/core'
 import { useHistory } from 'react-router-dom'
@@ -6,42 +7,19 @@ import FloatingButton from 'components/FloatingButton'
 import TextField from 'components/TextField'
 import { truckEquipments, trucks, years } from 'mocks'
 import * as yup from 'yup'
-
 import { Container } from './styles'
 import { Form } from '@unform/web'
 import { FormHandles } from '@unform/core'
 import getValidationErrors from 'utils/getValidationFormErrors'
 import Title from 'components/Title'
 import MaskedField from 'components/TextField/masked'
-import axios from 'axios'
 import { trucksSchema } from 'validations/trucksSchema'
-
-interface IBrand {
-  id: number
-  name: string
-}
-
-interface IModel {
-  id: string
-  marca: string
-  name: string
-}
-
-interface Truck {
-  brand: IBrand | any
-  model: IModel | any
-  plate: string
-  equipment: string
-  renavam: string
-  year: {
-    manufacture: string
-    model: string
-  }
-}
+import { getBrands } from 'fetchs/getBrands'
+import { getModels } from 'fetchs/getModels'
 
 interface CardProps {
   type: 'create' | 'update'
-  onConfirm(fields: Truck): void
+  onConfirm(fields: ITruck): void
   onDelete?(): void
   loading: boolean
 }
@@ -51,62 +29,32 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
   const { goBack } = useHistory()
 
-  const [truck, setTruck] = useState({
-    brand: '',
-    model: '',
-    plate: '',
-    equipment: '',
-    renavam: '',
-    year: {
-      manufacture: '',
-      model: '',
-    },
-  } as Truck)
-
+  const [truck, setTruck] = useState<ITruck>({} as ITruck)
   const [brands, setBrands] = useState<IBrand[]>([])
   const [models, setModels] = useState<IModel[]>([])
   
   // Getting brands
   useEffect(() => {
-    axios
-      .get('http://fipeapi.appspot.com/api/1/caminhoes/marcas.json')
-      .then(response => {
-
-        if(!response.data) {
-          return
-        }
-
-        console.log(response.data)
-
-        setBrands(response.data)
-      })
+    (async () => {
+      try {
+        const brands = await getBrands()
+        setBrands(brands)
+       } catch (error) {
+        // Show a toast
+       }
+    })()
   }, [])
 
   // Getting models
   useEffect(() => {
-    if (!truck.brand) {
-      return 
-    }
-
-    axios
-      .get(`http://fipeapi.appspot.com/api/1/caminhoes/veiculos/${truck.brand.id}.json`)
-      .then(response => {
-
-        if (!response.data) {
-          return
-        }
-
-        const models = response.data.map((model: IModel) => ({
-          id: model.id,
-          marca: model.marca,
-          name: model.name
-        }))
-
-        console.log(models)
+    (async () => {
+      try {
+        const models = await getModels(truck.brand.id)
         setModels(models)
-      })
-
-    console.log(truck.brand)
+      } catch (error) {
+        // Show a toast
+      }
+    })()
   }, [truck.brand])
 
   const handleChangeTruck = useCallback((path: string, value) => {
@@ -128,7 +76,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
   useEffect(() => {
     if (type === 'update') {
-      setTruck(trucks[0])
+      setTruck(trucks[0] as any)
     }
   }, [type])
 
@@ -185,7 +133,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
             label='Marca'
             variant="outlined" 
             disabled={disabled}
-            value={truck.brand}
+            value={truck?.brand}
             onChange={e => handleChangeTruck('brand', e.target.value)}
           >
             {brands.map((brand: any) => (
@@ -224,7 +172,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
               label='Ano de Fabricação'
               variant="outlined" 
               disabled={disabled}
-              value={truck.year.manufacture}
+              value={truck?.year?.manufacture}
               onChange={e => handleYears('manufacture', e.target.value)}
             >
               {years.map(year => (
@@ -238,7 +186,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
               label='Ano do Modelo'
               variant="outlined" 
               disabled={disabled}
-              value={truck.year.model}
+              value={truck?.year?.model}
               onChange={e => handleYears('model', e.target.value)}
             >
               {years.map(year => (
@@ -253,7 +201,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
             label='Equipamento'
             variant="outlined" 
             disabled={disabled}
-            value={truck.equipment}
+            value={truck?.equipment}
             onChange={e => handleChangeTruck('equipment', e.target.value)}
           >
            {truckEquipments.map(equipment => (
@@ -266,7 +214,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
             label='Renavan'
             variant="outlined" 
             disabled={disabled}
-            value={truck.renavam}
+            value={truck?.renavam}
             onChange={e => handleChangeTruck('renavam', e.target.value)}
           />
         </div>

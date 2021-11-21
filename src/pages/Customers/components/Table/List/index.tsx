@@ -217,11 +217,11 @@ const Table: React.FC<TableProps> = ({ title, customers }) => {
     const history = useHistory()
   
     const handleEdit = useCallback(() => {
-      history.push(`/customers/${currentSeleted}`)
+      history.push(`/customer/${currentSeleted}`)
     }, [history])
   
     const handleOpen = useCallback(() => {
-      history.push(`/customers/${currentSeleted}`)
+      history.push(`/customer/${currentSeleted}`)
     }, [history])
 
     const handleDelete = useCallback(() => {

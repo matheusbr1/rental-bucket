@@ -213,11 +213,11 @@ const Table: React.FC<TableProps> = ({ title, drivers }) => {
     const history = useHistory()
 
     const handleEdit = useCallback(() => {
-      history.push(`/drivers/${currentSeleted}`)
+      history.push(`/driver/${currentSeleted}`)
     }, [history])
   
     const handleOpen = useCallback(() => {
-      history.push(`/drivers/${currentSeleted}`)
+      history.push(`/driver/${currentSeleted}`)
     }, [history])
 
     const handleDelete = useCallback(() => {

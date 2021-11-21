@@ -2,12 +2,11 @@ import React, { useCallback } from 'react'
 import AppBar  from 'components/AppBar'
 import Table from '../components/Table'
 import FloatingButton from 'components/FloatingButton'
-
-import { Container, Content } from './styles'
 import { useHistory } from 'react-router'
-
 import Button from '@material-ui/core/Button';
 import { useData } from 'hooks/data'
+
+import { Container, Content } from './styles'
 
 const List: React.FC = () => {
 
@@ -16,7 +15,7 @@ const List: React.FC = () => {
   const { drivers } = useData()
 
   const handleCreate = useCallback(() => {
-    history.push('drivers/new')
+    history.push('drivers/create')
   }, [history])
 
   const handleNatigateToWorks = useCallback(() => {

@@ -229,11 +229,11 @@ const Table: React.FC<TableProps> = ({ title, works }) => {
     const history = useHistory()
   
     const handleEdit = useCallback(() => {
-      history.push(`/works/${currentSeleted}`)
+      history.push(`/work/${currentSeleted}`)
     }, [history])
   
     const handleOpen = useCallback(() => {
-      history.push(`/works/${currentSeleted}`)
+      history.push(`/work/${currentSeleted}`)
     }, [history])
 
     const handleDelete = useCallback(() => {

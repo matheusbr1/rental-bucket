@@ -5,16 +5,16 @@ import * as yup from 'yup'
 import DateInput from 'components/DateInput'
 import FloatingButton from 'components/FloatingButton'
 import TextField from 'components/TextField'
-import { customers, equipments, works as workTypes, trucks } from 'mocks'
+import { customers, equipments, workTypes, trucks } from 'mocks'
 import { Form } from '@unform/web'
 import { FormHandles } from '@unform/core'
 import getValidationErrors from 'utils/getValidationFormErrors'
 import Title from 'components/Title'
 import { useData } from 'hooks/data'
 import { IWork } from 'interfaces'
+import { servicesSchema } from 'validations/servicesSchema'
 
 import { Container, Footer } from './styles'
-import { servicesSchema } from 'validations/servicesSchema'
 
 interface CardProps {
   type: 'create' | 'update'
@@ -37,7 +37,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
   const disabled = useMemo(() => type === 'update' && !isChanging, [type, isChanging])
 
-  const [work, setService] = useState({
+  const [work, setWork] = useState({
     id: 0,
     customer: '',
     address: '',
@@ -63,11 +63,11 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
       return
     }
 
-    setService(filtered)
+    setWork(filtered)
   }, [type, path, works])
 
   const handleChangeWork = useCallback((path: string, value) => {
-    setService(oldState => ({
+    setWork(oldState => ({
       ...oldState,
       [path]: value
     }))
@@ -80,7 +80,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
   const [endDate, setEndDate] = React.useState<Date | null>(new Date())
 
   const handleEndDate = useCallback((date) => {
-    setService(oldState => ({
+    setWork(oldState => ({
       ...oldState,
       endDate: date
     }))

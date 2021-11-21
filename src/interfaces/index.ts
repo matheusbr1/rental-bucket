@@ -59,7 +59,6 @@ export interface IBrand {
 
 export interface IModel {
   id: string
-  marca: string
   name: string
 }
 

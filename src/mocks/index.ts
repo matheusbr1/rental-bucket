@@ -184,7 +184,7 @@ export const equipments = [
   'Caçamba 16m³'
 ]
 
-export const works = [
+export const workTypes = [
   'Troca',
   'Retirada',
   'Coloca'

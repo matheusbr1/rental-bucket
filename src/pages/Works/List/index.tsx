@@ -14,7 +14,7 @@ const List: React.FC = () => {
   const { works } = useData()
 
   const handleCreate = useCallback(() => {
-      history.push('new-work')
+      history.push('works/create')
   }, [history])
 
   return (
@@ -29,7 +29,6 @@ const List: React.FC = () => {
         <div className='floating-buttons' >
           <FloatingButton onClick={handleCreate} />
         </div>
-
       </Content>
     </Container>
   )

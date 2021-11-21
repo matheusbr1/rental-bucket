@@ -218,11 +218,11 @@ const Table: React.FC<TableProps> = ({ title, trucks }) => {
     const history = useHistory()
   
     const handleEdit = useCallback(() => {
-      history.push('/trucks/1')
+      history.push('/truck/1')
     }, [history])
   
     const handleOpen = useCallback(() => {
-      history.push('/trucks/1')
+      history.push('/truck/1')
     }, [history])
   
     return (
