@@ -9,9 +9,7 @@ import Table from '../components/Table/List'
 import { Container, Content } from './styles'
 
 const List: React.FC = () => {
-
   const { customers } = useData()
-
   const history = useHistory()
 
   const handleCreate = useCallback(() => {
@@ -31,20 +29,18 @@ const List: React.FC = () => {
         
         <div className='floating-buttons' >
           <Button 
-          
-          onClick={handleNatigateToWorks}
-
-          style={{
-            height: 50,
-            borderRadius: 10,
-            padding: 20
-          }}>
+            onClick={handleNatigateToWorks}
+            style={{
+              height: 50,
+              borderRadius: 10,
+              padding: 20
+            }}
+          >
             Retornar para Serviços
           </Button>
           
           <FloatingButton onClick={handleCreate} />
         </div>
-
       </Content>
     </Container>
   )

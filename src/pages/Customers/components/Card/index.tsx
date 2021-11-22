@@ -138,14 +138,14 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           <RadioGroup name='person' value={person} onChange={handlePerson}>
             <FormControlLabel 
               value="fisic" 
-              control={<Radio />} 
+              control={<Radio color='primary' />} 
               label="Pessoa Física" 
               disabled={disabled} 
             />
             
             <FormControlLabel 
               value="legal" 
-              control={<Radio />} 
+              control={<Radio color='primary' />} 
               label="Pessoa Jurídica" 
               disabled={disabled} 
             />

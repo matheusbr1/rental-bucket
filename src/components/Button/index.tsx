@@ -15,7 +15,6 @@ const Button: React.FC<Props> = ({ loading, children, ...rest }) => {
         width: '100%',
         height: 50,
         borderRadius: 15,
-        background: '#529A67',
         color: '#FFFFFF'
       }}
       {...rest}

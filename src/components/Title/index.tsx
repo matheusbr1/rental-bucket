@@ -1,4 +1,5 @@
 import React from 'react'
+import { Typography } from '@material-ui/core'
 
 import { Container, Error } from './styles'
 
@@ -13,18 +14,24 @@ const Title: React.FC<TitleProps> = ({ text, error, size = 'medium', ...rest }) 
     <Container isErrored={Boolean(error)} size={size} >
 
       {size === 'small' && (
-        <h3 {...rest} > { text } </h3>
+        <Typography variant='h4' {...rest} >
+          { text }
+        </Typography>
       )}
 
       {size === 'medium' && (
-        <h2 {...rest} > { text } </h2>
+        <Typography variant='h3' {...rest}>
+          { text }
+        </Typography>
       )}
 
       {size === 'large' && (
-        <h1 {...rest} > { text } </h1>
+        <Typography variant='h1' {...rest}>
+          { text }
+        </Typography>
       )}
 
-      { Boolean(error) && <Error> ( { error } )</Error>}
+      { Boolean(error) && <Error> ( { error } )</Error> }
     </Container>
   )
 }
