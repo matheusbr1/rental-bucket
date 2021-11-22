@@ -1,8 +1,6 @@
 import React, { useEffect, useRef } from 'react'
-
 import DateFnsUtils from '@date-io/date-fns'
 import { useField } from '@unform/core'
-
 import { 
   MuiPickersUtilsProvider, KeyboardDatePicker, KeyboardDatePickerProps 
 } from '@material-ui/pickers'

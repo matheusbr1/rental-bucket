@@ -157,7 +157,6 @@ const Adresses: React.FC<AdressesProps> = ({ adresses, setAdresses }) => {
 
       console.log(response.data)
     })
-
   },[])
 
   return (

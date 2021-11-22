@@ -6,13 +6,13 @@ import { useSnackbar } from 'notistack'
 import { Container } from './styles'
 
 import Card from '../components/Card'
-import { useData } from 'hooks/data'
+import { useData } from 'hooks/useData'
 
 const Create: React.FC = () => {
 
   const { goBack } = useHistory()
 
-  const { createNewCustomer  } = useData()
+  const { createCustomer  } = useData()
 
   const { enqueueSnackbar } = useSnackbar()
 
@@ -27,7 +27,7 @@ const Create: React.FC = () => {
     try {
       // Requisição
 
-      createNewCustomer(fields)
+      createCustomer(fields)
 
       enqueueSnackbar('Cliente criado com sucesso!', {
         variant: 'success'
@@ -42,7 +42,7 @@ const Create: React.FC = () => {
       setLoading(false)
     }
 
-  }, [goBack, enqueueSnackbar, createNewCustomer])
+  }, [goBack, enqueueSnackbar, createCustomer])
 
   return (
     <Container>

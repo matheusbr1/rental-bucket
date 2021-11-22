@@ -3,7 +3,7 @@ import { useHistory } from 'react-router'
 import AppBar  from 'components/AppBar'
 import { useSnackbar } from 'notistack'
 import Card from '../components/Card'
-import { useData } from 'hooks/data'
+import { useData } from 'hooks/useData'
 import { api } from 'services/api'
 
 import { Container } from './styles'
@@ -12,7 +12,7 @@ const Create: React.FC = () => {
 
   const { goBack } = useHistory()
 
-  const { createNewDriver } = useData()
+  const { createDriver } = useData()
 
   const { enqueueSnackbar } = useSnackbar()
 
@@ -27,7 +27,7 @@ const Create: React.FC = () => {
     try {
       await api.post('/drivers', fields)
 
-      createNewDriver(fields)
+      createDriver(fields)
 
       enqueueSnackbar('Motorista criado com sucesso!', {
         variant: 'success'
@@ -41,7 +41,7 @@ const Create: React.FC = () => {
     } finally {
       setLoading(false)
     }
-  }, [goBack, enqueueSnackbar, createNewDriver])
+  }, [goBack, enqueueSnackbar, createDriver])
 
   return (
     <Container>

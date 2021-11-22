@@ -121,7 +121,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
       <Title 
         text={type === 'create'  ?  'Novo Caminhão' : truck.plate} 
-        size='big'
+        size='large'
       />
 
       <Form ref={formRef} onSubmit={handleFormSubmit} >

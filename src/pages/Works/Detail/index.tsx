@@ -1,13 +1,12 @@
 import React, { useCallback, useState } from 'react'
 import { useSnackbar } from 'notistack'
-
 import AppBar  from 'components/AppBar'
-import { Container } from './styles'
-import Card from '../components/Card'
 import { useHistory } from 'react-router'
 
-const Detail: React.FC = () => {
+import { Container } from './styles'
+import Card from '../components/Card'
 
+const Detail: React.FC = () => {
   const { goBack } = useHistory()
 
   const { enqueueSnackbar } = useSnackbar()
@@ -36,7 +35,6 @@ const Detail: React.FC = () => {
   }, [enqueueSnackbar])
 
   const handleDelete = useCallback(async () => {
-
     setLoading(true)
 
     try {

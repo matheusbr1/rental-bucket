@@ -5,15 +5,14 @@ import * as yup from 'yup'
 import getValidationErrors from 'utils/getValidationFormErrors'
 import TextField from 'components/TextField'
 import { Button, MenuItem } from '@material-ui/core'
-import ContactTable from '../Table/Contact'
 import Title from 'components/Title'
 import MaskedField from 'components/TextField/masked'
 import { IContact } from 'interfaces'
 import { contactSchema } from 'validations/contactSchema'
 
 interface ContactProps {
-  contacts: IContact[]
-  setContacts(contacts: IContact[]): void
+  contacts: IContact
+  setContacts(contacts: IContact): void
 }
 
 const Contacts: React.FC<ContactProps> = ({ contacts, setContacts }) => {
@@ -45,10 +44,7 @@ const Contacts: React.FC<ContactProps> = ({ contacts, setContacts }) => {
         abortEarly: false
       })
 
-      setContacts([
-        ...contacts,
-        data
-      ])
+      setContacts(contacts)
 
     } catch (error) {
       if(error instanceof yup.ValidationError) {
@@ -64,7 +60,7 @@ const Contacts: React.FC<ContactProps> = ({ contacts, setContacts }) => {
       <Form ref={formRef} onSubmit={handleAddContact} >
         <Title 
           text='Contatos' 
-          error={!contacts.length && 'Adicione pelo menos 1 contato'}  
+          error={!contacts && 'Adicione pelo menos 1 contato'}
         />
 
         <div className="grid">
@@ -126,11 +122,6 @@ const Contacts: React.FC<ContactProps> = ({ contacts, setContacts }) => {
             Cadastrar contato
         </Button>
       </Form>
-
-      <ContactTable 
-        title='Contatos cadastrados'
-        contacts={contacts}
-      />
     </div>
   )
 }

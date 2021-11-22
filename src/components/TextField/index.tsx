@@ -1,10 +1,8 @@
 import React, { useEffect, useRef } from 'react'
-
 import { OutlinedTextFieldProps } from  '@material-ui/core'
+import { useField } from '@unform/core'
 
 import { Container } from './styles'
-
-import { useField } from '@unform/core'
 
 interface Props extends OutlinedTextFieldProps {
   style?: React.CSSProperties

@@ -1,23 +1,17 @@
 import React, { useCallback, useState } from 'react'
 import { useSnackbar } from 'notistack'
-
+import { useHistory } from 'react-router'
 import AppBar  from 'components/AppBar'
+
 import Card from '../components/Card'
 import { Container } from './styles'
-import { useHistory } from 'react-router'
 
 const Detail: React.FC = () => {
-
   const { goBack } = useHistory()
-
   const { enqueueSnackbar } = useSnackbar()
-
   const [loading, setLoading] = useState(false)
   
   const handleEdit = useCallback((fields) => {
-      
-    console.log('data', fields)
-
     setLoading(true)
 
     try {
@@ -34,7 +28,6 @@ const Detail: React.FC = () => {
   }, [enqueueSnackbar])
 
   const handleDelete = useCallback(() => {
-
     setLoading(true)
 
     try {
@@ -52,7 +45,6 @@ const Detail: React.FC = () => {
     }
   }, [enqueueSnackbar, goBack])
 
-
   return (
     <Container>
       <AppBar search={false} />
@@ -63,7 +55,6 @@ const Detail: React.FC = () => {
         onConfirm={handleEdit}
         onDelete={handleDelete}
       />
-
     </Container>
   )
 }

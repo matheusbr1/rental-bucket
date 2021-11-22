@@ -5,7 +5,7 @@ import { Container, Error } from './styles'
 interface TitleProps {
   text: string
   error?: string | false
-  size?: 'small' | 'medium' | 'big'
+  size?: 'small' | 'medium' | 'large'
 }
 
 const Title: React.FC<TitleProps> = ({ text, error, size = 'medium', ...rest }) => {
@@ -20,7 +20,7 @@ const Title: React.FC<TitleProps> = ({ text, error, size = 'medium', ...rest }) 
         <h2 {...rest} > { text } </h2>
       )}
 
-      {size === 'big' && (
+      {size === 'large' && (
         <h1 {...rest} > { text } </h1>
       )}
 

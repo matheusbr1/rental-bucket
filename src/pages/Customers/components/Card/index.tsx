@@ -10,7 +10,7 @@ import TextField from 'components/TextField'
 import MaskedField from 'components/TextField/masked'
 import { FormHandles } from '@unform/core'
 import getValidationErrors from 'utils/getValidationFormErrors'
-import { useData } from 'hooks/data'
+import { useData } from 'hooks/useData'
 import { IAddress, IContact, ICustomer } from 'interfaces'
 import Title from 'components/Title'
 import { useParams } from 'react-router-dom'
@@ -35,19 +35,13 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
   const { customers } = useData()
 
-  const [customer, setCustomer] = useState({ 
-    id: 0,
-    name: '',
-    CPF: '',
-    address: [],
-    contacts: [],
-   } as ICustomer)
+  const [customer, setCustomer] = useState<ICustomer>({} as ICustomer)
 
   const [person, setPerson] = useState('fisic')
 
   const [adresses, setAdresses] = useState<IAddress[]>([])
 
-  const [contacts, setContacts] = useState<IContact[]>([])
+  const [contacts, setContacts] = useState<IContact>({} as IContact)
 
   useEffect(() => {
     if (type !== 'update') {
@@ -64,7 +58,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
     }
 
     setCustomer(filtered)
-    setContacts(filtered.contacts)
+    setContacts(filtered.contact)
     setAdresses(filtered.address)
     
     formRef.current?.setData(filtered)
@@ -134,10 +128,10 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
   return (
     <Container>
 
-    <Title 
-      text={type === 'create'  ?  'Novo Cliente' : customer?.name} 
-      size='big'
-    />
+      <Title 
+        text={type === 'create'  ?  'Novo Cliente' : customer?.name} 
+        size='large'
+      />
 
       <Form ref={formRef} onSubmit={handleFormSubmit} >
         <div className="grid">
@@ -158,8 +152,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           </RadioGroup>
           
           { person === 'fisic' ? (
-            <React.Fragment>
-
+            <>
               <MaskedField 
                 mask='cpf'
                 name='CPF' 
@@ -174,9 +167,9 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
                 variant="outlined" 
                 disabled={disabled}
               />
-            </React.Fragment>
+            </>
           ) : (
-            <React.Fragment>
+            <>
                <MaskedField 
                 mask='cnpj'
                 name='CNPJ' 
@@ -198,7 +191,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
                 variant="outlined" 
                 disabled={disabled}
               />
-            </React.Fragment>
+            </>
           )}
         </div>
         <div className='floating-buttons'>

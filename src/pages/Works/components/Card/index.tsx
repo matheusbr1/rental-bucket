@@ -10,7 +10,7 @@ import { Form } from '@unform/web'
 import { FormHandles } from '@unform/core'
 import getValidationErrors from 'utils/getValidationFormErrors'
 import Title from 'components/Title'
-import { useData } from 'hooks/data'
+import { useData } from 'hooks/useData'
 import { IWork } from 'interfaces'
 import { servicesSchema } from 'validations/servicesSchema'
 
@@ -130,7 +130,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
             ?  'Novo Serviço' 
             : `Serviço: ${work.work} - ${work.customer}`
         } 
-        size='big'
+        size='large'
       />
 
       <Form ref={formRef} onSubmit={handleFormSubmit} >
@@ -158,7 +158,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
           onChange={e => handleChangeWork('address', e.target.value)}
         >
           {customers[0].address.map((address, index) => (
-            <MenuItem key={index} value={address.cep}>
+            <MenuItem key={index} value={address.CEP}>
               {address.street} - {address.number} - {address.neighborhood}
             </MenuItem>
           ))}

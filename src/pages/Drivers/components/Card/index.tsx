@@ -11,7 +11,7 @@ import { FormHandles } from '@unform/core'
 import getValidationErrors from 'utils/getValidationFormErrors'
 import Title from 'components/Title'
 import MaskedField from 'components/TextField/masked'
-import { useData } from 'hooks/data'
+import { useData } from 'hooks/useData'
 import { IDriver } from 'interfaces'
 import { useParams } from 'react-router-dom'
 import * as yup from 'yup'
@@ -208,7 +208,7 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
       <Title 
         text={type === 'create'  ?  'Novo Motorista' : drivers[0].name} 
-        size='big'
+        size='large'
       />
 
       <Form ref={formRef} onSubmit={handleFormSubmit}>

@@ -1,14 +1,12 @@
 import React, { useCallback } from 'react'
 import AppBar  from 'components/AppBar'
 import FloatingButton from 'components/FloatingButton'
+import { useHistory } from 'react-router'
+import Button from '@material-ui/core/Button'
+import { useData } from 'hooks/useData'
 
 import Table from '../components/Table/List'
-
 import { Container, Content } from './styles'
-import { useHistory } from 'react-router'
-
-import Button from '@material-ui/core/Button'
-import { useData } from 'hooks/data'
 
 const List: React.FC = () => {
 

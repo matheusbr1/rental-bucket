@@ -10,7 +10,7 @@ export async function getModels(brandId: number): Promise<IModel[]> {
   const { data } = await axios
     .get(`https://parallelum.com.br/fipe/api/v1/caminhoes/marcas/${brandId}/modelos`)
 
-  const models: IModel[] = data.map(({ codigo, nome }: IModelAPI) => ({
+  const models: IModel[] = data.modelos.map(({ codigo, nome }: IModelAPI) => ({
     id: Number(codigo),
     name: nome
   }))

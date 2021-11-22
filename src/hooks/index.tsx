@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { DataProvider } from './data'
+import { DataProvider } from './useData'
 
 const AppProvider: React.FC = ({ children }) => (
     <DataProvider>

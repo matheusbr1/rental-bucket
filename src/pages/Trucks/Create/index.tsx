@@ -5,13 +5,13 @@ import { useSnackbar } from 'notistack'
 
 import { Container } from './styles'
 import Card from '../components/Card'
-import { useData } from 'hooks/data'
+import { useData } from 'hooks/useData'
 
 const Create: React.FC = () => {
 
   const { goBack } = useHistory()
 
-  const { createNewTruck } = useData()
+  const { createTruck } = useData()
 
   const { enqueueSnackbar } = useSnackbar()
 
@@ -21,7 +21,7 @@ const Create: React.FC = () => {
 
     console.log('fields', fields)
 
-    createNewTruck(fields)
+    createTruck(fields)
 
     setLoading(true)
 
@@ -34,7 +34,7 @@ const Create: React.FC = () => {
 
       setLoading(false)
     }, 2000)
-  }, [goBack, enqueueSnackbar, createNewTruck])
+  }, [goBack, enqueueSnackbar, createTruck])
 
   return (
     <Container>

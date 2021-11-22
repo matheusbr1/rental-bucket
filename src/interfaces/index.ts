@@ -9,10 +9,9 @@ export interface IAddress {
 }
 
 export interface IContact {
-  type: string
-  telephone?: string
-  cellphone?: string
-  email?: string
+  telephone: string
+  cellphone: string
+  email: string
 }
 
 export interface ICustomer {
@@ -21,7 +20,7 @@ export interface ICustomer {
   CNPJ?: string
   name: string
   stateRegistration?: string
-  contacts: IContact[]
+  contact: IContact
   address: IAddress[]
 }
 

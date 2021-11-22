@@ -198,7 +198,7 @@ const Table: React.FC<TableProps> = ({ title, customers }) => {
   }
   
   const rows = customers.map(customer => {
-    const contact = customer.contacts[0]
+    const contact = customer.contact
 
     return createData(
       customer.id,

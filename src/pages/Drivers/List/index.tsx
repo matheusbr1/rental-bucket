@@ -4,7 +4,7 @@ import Table from '../components/Table'
 import FloatingButton from 'components/FloatingButton'
 import { useHistory } from 'react-router'
 import Button from '@material-ui/core/Button';
-import { useData } from 'hooks/data'
+import { useData } from 'hooks/useData'
 
 import { Container, Content } from './styles'
 

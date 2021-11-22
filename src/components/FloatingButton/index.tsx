@@ -1,6 +1,5 @@
 import React from 'react'
 import { CircularProgress, Fab } from '@material-ui/core'
-
 import { Edit, Add, Delete, KeyboardArrowLeft, Check  } from '@material-ui/icons'
 
 import { Container } from './styles'

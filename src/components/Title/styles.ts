@@ -2,13 +2,13 @@ import styled, { css } from 'styled-components'
 
 interface TitleProps {
   isErrored: boolean
-  size: 'small' | 'medium' | 'big'
+  size: 'small' | 'medium' | 'large'
 }
 
 const marginVariations = {
   small: css `margin: 10px 0;`,
   medium: css `margin: 30px 0;`,
-  big: css `margin: 30px 0;`
+  large: css `margin: 30px 0;`
 }
 
 export const Container = styled.div<TitleProps>`
