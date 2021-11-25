@@ -9,11 +9,11 @@ import Menu from "@material-ui/core/Menu"
 import SearchIcon from "@material-ui/icons/Search"
 import MoreIcon from "@material-ui/icons/MoreVert"
 import LogoutIcon from "@material-ui/icons/ExitToApp"
+import Box from "@material-ui/core/Box"
 import { fade, makeStyles, Theme, createStyles } from "@material-ui/core/styles"
 import { useGoogleLogin } from 'react-use-googlelogin'
 import { useHistory } from 'react-router'
-
-import { Container } from './styles'
+import clsx from  'clsx'
 
 interface AppBarProps {
   search?: boolean
@@ -36,8 +36,15 @@ const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
     !isSignedIn && history.push('/')
   }, [googleAuth, history])
 
-  const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
+  const useStyles = makeStyles((theme: Theme) => createStyles({
+      container: {
+        width: '100%',
+        position: 'fixed',
+        zIndex: 10,
+        top: 0,
+        left: 0,
+        right: 0,
+      },
       grow: {
         flexGrow: 1
       },
@@ -103,7 +110,9 @@ const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
   )
 
   const classes = useStyles();
+  
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  
   const [
     mobileMoreAnchorEl,
     setMobileMoreAnchorEl
@@ -130,6 +139,7 @@ const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
   }
 
   const menuId = "primary-search-account-menu"
+  
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
@@ -182,11 +192,11 @@ const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
   )
 
   return (
-    <Container className={classes.grow}>
+    <Box className={clsx(classes.grow, classes.container)}>
       <Bar position="static">
         <Toolbar>
           
-          <Typography className={classes.title} variant="h6" noWrap>
+          <Typography className={classes.title} variant="h3" noWrap>
             Rental Bucket
           </Typography>
 
@@ -239,9 +249,11 @@ const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
           
         </Toolbar>
       </Bar>
+
       {renderMobileMenu}
       {renderMenu}
-    </Container>
+      
+    </Box>
   )
 }
 

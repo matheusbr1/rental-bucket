@@ -1,10 +1,10 @@
 import React, { useCallback, useState } from 'react'
 import AppBar  from 'components/AppBar'
 import { useSnackbar } from 'notistack'
+import { useHistory } from 'react-router'
 
 import { Container } from './styles'
 import Card from '../components/Card'
-import { useHistory } from 'react-router'
 
 const Create: React.FC = () => {
 

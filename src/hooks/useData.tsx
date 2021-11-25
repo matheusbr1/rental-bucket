@@ -80,6 +80,7 @@ const DataProvider: React.FC = ({ children }) => {
 
 function useData (): IDataContext {
   const context = useContext(DataContext)
+  
   return context
 }
 

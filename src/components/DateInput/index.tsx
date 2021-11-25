@@ -1,11 +1,19 @@
 import React, { useEffect, useRef } from 'react'
 import DateFnsUtils from '@date-io/date-fns'
+import { styled } from '@material-ui/core'
 import { useField } from '@unform/core'
 import { 
-  MuiPickersUtilsProvider, KeyboardDatePicker, KeyboardDatePickerProps 
+  MuiPickersUtilsProvider, 
+  KeyboardDatePicker, 
+  KeyboardDatePickerProps 
 } from '@material-ui/pickers'
 
-import { Container } from './styles'
+const Container = styled('div')(({ theme }) => ({
+  margin: '10px 0px',
+  '& .MuiOutlinedInput-root': {
+    borderRadius: 10
+  }
+}))
 
 interface DateInputProps extends KeyboardDatePickerProps {
   name: string

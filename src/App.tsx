@@ -2,7 +2,7 @@ import Routes from './routes'
 import GlobalStyle from './styles/global'
 import { SnackbarProvider } from 'notistack'
 import AppProvider from 'hooks'
-import { ThemeProvider } from '@material-ui/core'
+import { ThemeProvider, CssBaseline } from '@material-ui/core'
 import { theme } from 'styles/theme'
 
 function App() {
@@ -12,9 +12,9 @@ function App() {
         <AppProvider>
           <Routes />
         </AppProvider>
-      
       </SnackbarProvider>
       
+      <CssBaseline />
       <GlobalStyle />
     </ThemeProvider>
   )
