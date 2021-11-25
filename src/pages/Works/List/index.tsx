@@ -11,7 +11,9 @@ const List: React.FC = () => {
 
   const history = useHistory()
 
-  const { works } = useData()
+  const { appData } = useData()
+
+  const { works } = appData
 
   const handleCreate = useCallback(() => {
       history.push('works/create')

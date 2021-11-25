@@ -12,7 +12,9 @@ const List: React.FC = () => {
 
   const history = useHistory()
 
-  const { drivers } = useData()
+  const { appData } = useData()
+
+  const { drivers } = appData
 
   const handleCreate = useCallback(() => {
     history.push('drivers/create')

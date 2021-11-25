@@ -1,3 +1,15 @@
+export interface IState {
+  works: IWork[]
+  trucks: ITruck[]
+  drivers: IDriver[]
+  customers: ICustomer[]
+}
+
+export interface ReducerAction {
+  type: string
+  payload?: any
+}
+
 export interface IAddress { 
   CEP: string
   street: string

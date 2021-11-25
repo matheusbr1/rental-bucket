@@ -50,7 +50,9 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
   const { goBack } = useHistory()
 
-  const { drivers } = useData()
+  const { appData } = useData()
+
+  const { drivers } = appData
 
   const path: { id: string } = useParams()
 

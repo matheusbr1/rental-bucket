@@ -9,7 +9,10 @@ import Table from '../components/Table/List'
 import { Container, Content } from './styles'
 
 const List: React.FC = () => {
-  const { customers } = useData()
+  const { appData } = useData()
+
+  const { customers } = appData
+  
   const history = useHistory()
 
   const handleCreate = useCallback(() => {

@@ -11,7 +11,9 @@ import { Container, Content } from './styles'
 const List: React.FC = () => {
   const history = useHistory()
 
-  const { trucks } = useData()
+  const { appData } = useData()
+
+  const { trucks } = appData
 
   const handleCreate = useCallback(() => {
     history.push('trucks/create')

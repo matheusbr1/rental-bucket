@@ -27,7 +27,9 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
   const formRef = useRef<FormHandles>(null)
 
-  const { works, drivers } = useData()
+  const { appData } = useData()
+
+  const { works, drivers } = appData
 
   const { goBack } = useHistory()
 

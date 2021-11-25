@@ -33,7 +33,9 @@ const Card: React.FC<CardProps> = ({ type, loading, onConfirm, onDelete = () => 
 
   const path: { id: string } = useParams()
 
-  const { customers } = useData()
+  const { appData } = useData()
+
+  const { customers } = appData
 
   const [customer, setCustomer] = useState<ICustomer>({} as ICustomer)
 

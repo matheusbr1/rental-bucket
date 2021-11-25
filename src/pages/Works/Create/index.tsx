@@ -3,6 +3,7 @@ import { useHistory } from 'react-router'
 import AppBar  from 'components/AppBar'
 import { useSnackbar } from 'notistack'
 import { useData } from 'hooks/useData'
+import { Actions } from 'store/actions'
 
 import { Container } from './styles'
 import Card from '../components/Card'
@@ -12,17 +13,15 @@ const Create: React.FC = () => {
 
   const { enqueueSnackbar } = useSnackbar()
 
-  const { createWork } = useData()
+  const { dispatch } = useData()
 
   const [loading, setLoading] = useState(false)
 
   const handleCreate = useCallback(async (fields) => {
-    console.log('Data', fields)
-
     setLoading(true)
 
     try {
-      createWork(fields)
+      dispatch({ type: Actions.CREATE_WORK, payload: fields })
 
       enqueueSnackbar('Serviço criado com sucesso!', {
         variant: 'success'
@@ -36,7 +35,7 @@ const Create: React.FC = () => {
     } finally {
       setLoading(false)
     }
-  }, [goBack, enqueueSnackbar, createWork])
+  }, [goBack, enqueueSnackbar, dispatch])
 
   return (
     <Container>

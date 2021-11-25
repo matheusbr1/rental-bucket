@@ -2,32 +2,28 @@ import React, { useCallback, useState } from 'react'
 import { useHistory } from 'react-router'
 import AppBar  from 'components/AppBar'
 import { useSnackbar } from 'notistack'
+import { useData } from 'hooks/useData'
+import { Actions } from 'store/actions'
 
 import { Container } from './styles'
-
 import Card from '../components/Card'
-import { useData } from 'hooks/useData'
 
 const Create: React.FC = () => {
-
   const { goBack } = useHistory()
 
-  const { createCustomer  } = useData()
+  const { dispatch  } = useData()
 
   const { enqueueSnackbar } = useSnackbar()
 
   const [loading, setLoading] = useState(false)
 
   const handleCreate = useCallback((fields) => {
-
-    console.log('data', fields)
-
     setLoading(true)
 
     try {
       // Requisição
 
-      createCustomer(fields)
+      dispatch({ type: Actions.CREATE_CUSTOMER, payload: fields })
 
       enqueueSnackbar('Cliente criado com sucesso!', {
         variant: 'success'
@@ -42,7 +38,7 @@ const Create: React.FC = () => {
       setLoading(false)
     }
 
-  }, [goBack, enqueueSnackbar, createCustomer])
+  }, [goBack, enqueueSnackbar, dispatch])
 
   return (
     <Container>

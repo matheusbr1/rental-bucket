@@ -5,6 +5,7 @@ import { useSnackbar } from 'notistack'
 import Card from '../components/Card'
 import { useData } from 'hooks/useData'
 import { api } from 'services/api'
+import { Actions } from 'store/actions'
 
 import { Container } from './styles'
 
@@ -12,7 +13,7 @@ const Create: React.FC = () => {
 
   const { goBack } = useHistory()
 
-  const { createDriver } = useData()
+  const { dispatch } = useData()
 
   const { enqueueSnackbar } = useSnackbar()
 
@@ -27,7 +28,7 @@ const Create: React.FC = () => {
     try {
       await api.post('/drivers', fields)
 
-      createDriver(fields)
+      dispatch({ type: Actions.CREATE_DRIVER, payload: fields })
 
       enqueueSnackbar('Motorista criado com sucesso!', {
         variant: 'success'
@@ -41,7 +42,7 @@ const Create: React.FC = () => {
     } finally {
       setLoading(false)
     }
-  }, [goBack, enqueueSnackbar, createDriver])
+  }, [goBack, enqueueSnackbar, dispatch])
 
   return (
     <Container>
