@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useContext } from 'react'
 import Bar from "@material-ui/core/AppBar"
 import Toolbar from "@material-ui/core/Toolbar"
 import IconButton from "@material-ui/core/IconButton"
@@ -14,12 +14,15 @@ import { fade, makeStyles, Theme, createStyles } from "@material-ui/core/styles"
 import { useGoogleLogin } from 'react-use-googlelogin'
 import { useHistory } from 'react-router'
 import clsx from  'clsx'
+import { ThemeModeContext } from 'contexts/themeMode'
+import { Brightness2, WbSunny } from '@material-ui/icons';
 
 interface AppBarProps {
   search?: boolean
 }
 
 const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
+  const { theme, hadleToggleTheme } = useContext(ThemeModeContext)
 
   const googleAuth = useGoogleLogin({
     // clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID as string
@@ -217,6 +220,16 @@ const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
           )}
 
           <div className={classes.grow} />
+
+          <IconButton
+            aria-label="account of current user"
+            aria-controls="menu-appbar"
+            aria-haspopup="true"
+            onClick={hadleToggleTheme}
+            color="inherit"
+          >
+            {theme === 'dark' ?  <WbSunny /> : <Brightness2 />}
+          </IconButton>
 
           <div className={classes.sectionDesktop}>
 
