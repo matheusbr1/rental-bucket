@@ -8,8 +8,8 @@ interface Props extends ButtonProps {
 const StyledButton = styled(MuiButton)(({ theme }) => ({
   width: '100%',
   height: 50,
-  borderRadius: 15,
   color: theme.palette.common.white,
+  fontSize: '1rem',
   '& .MuiCircularProgress-colorPrimary': {
     color: theme.palette.common.white
   }
@@ -17,7 +17,7 @@ const StyledButton = styled(MuiButton)(({ theme }) => ({
 
 const Button: React.FC<Props> = ({ loading, children, ...rest }) => {
   return (
-    <StyledButton  variant="contained"  {...rest} >
+    <StyledButton variant="contained" {...rest} >
       { loading ? <CircularProgress variant='indeterminate' size={30}/> : children }
     </StyledButton>
   )

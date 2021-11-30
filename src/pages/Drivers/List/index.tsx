@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import AppBar  from 'components/AppBar'
-import Table from '../components/Table'
+import Table from 'components/Table/Drivers'
 import FloatingButton from 'components/FloatingButton'
 import { useHistory } from 'react-router'
 import Button from '@material-ui/core/Button';

@@ -3,6 +3,7 @@ export interface IState {
   trucks: ITruck[]
   drivers: IDriver[]
   customers: ICustomer[]
+  work: IWork
 }
 
 export interface ReducerAction {

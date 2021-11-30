@@ -4,16 +4,18 @@ import AppBar  from 'components/AppBar'
 import { useSnackbar } from 'notistack'
 import { useData } from 'hooks/useData'
 import { Actions } from 'store/actions'
-
-import { Container } from './styles'
-import Card from '../components/Card'
+import { Container, Grid, MenuItem, TextField, Typography, } from '@material-ui/core'
+import { customers, drivers, equipments, trucks, workTypes } from 'mocks'
+import Button from 'components/Button'
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
+import DateFnsUtils from '@date-io/date-fns'
 
 const Create: React.FC = () => {
   const { goBack } = useHistory()
 
   const { enqueueSnackbar } = useSnackbar()
 
-  const { dispatch } = useData()
+  const { dispatch  } = useData()
 
   const [loading, setLoading] = useState(false)
 
@@ -38,15 +40,143 @@ const Create: React.FC = () => {
   }, [goBack, enqueueSnackbar, dispatch])
 
   return (
-    <Container>
+    <>
       <AppBar search={false} />
 
-      <Card 
-        loading={loading}
-        onConfirm={handleCreate}
-        type='create'
-      />
-    </Container>
+      <Container maxWidth='lg' style={{ marginTop: 100 }} >
+        <Grid container spacing={3} >
+          <Grid item lg={12} md={12} sm={12} >
+            <Typography variant='h1' >
+              Novo serviço
+            </Typography>
+          </Grid>
+
+          <Grid item lg={4} md={4} sm={4} >
+            <TextField 
+              label='Cliente'
+              variant='outlined'
+              select
+              fullWidth
+            >
+              {customers.map((customer, index) => (
+                <MenuItem key={index} value={customer.name} >{customer.name}</MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+          
+          <Grid item lg={4} md={4} sm={4} >
+            <TextField 
+              label='Endereço'
+              variant='outlined'
+              select
+              fullWidth
+            >
+              {customers[0].address.map((address, index) => (
+                <MenuItem key={index} value={address.CEP}>
+                  {address.street} - {address.number} - {address.neighborhood}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+
+          <Grid item lg={4} md={4} sm={4} >
+            <TextField 
+              label='Motorista'
+              variant='outlined'
+              select
+              fullWidth
+            >
+             {drivers.map((driver, index) => (
+              <MenuItem key={index} value={driver.name}> {driver.name} </MenuItem>
+            ))}
+            </TextField>
+          </Grid>
+
+          <Grid item lg={4} md={4} sm={4} >
+            <TextField 
+              label='Equipamento'
+              variant='outlined'
+              select
+              fullWidth
+            >
+             {equipments.map((equipment, index) => (
+              <MenuItem key={index} value={equipment}> {equipment} </MenuItem>
+            ))}
+            </TextField>
+          </Grid>
+
+          <Grid item lg={4} md={4} sm={4} >
+            <TextField 
+              label='Caminhão'
+              variant='outlined'
+              select
+              fullWidth
+            >
+             {trucks.map((truck, index) => (
+                <MenuItem key={index} value={truck.plate}> {truck.plate} </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+
+          <Grid item lg={4} md={4} sm={4} >
+            <TextField 
+              label='Serviço'
+              variant='outlined'
+              select
+              fullWidth
+            >
+              {workTypes.map((type, index) => (
+                <MenuItem key={index} value={type}> {type} </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+
+          <Grid item lg={4} md={4} sm={4} >
+            <TextField 
+              label='Quantidade'
+              variant='outlined'
+              type='number'
+              fullWidth
+              inputProps={{
+                min: 1,
+                max: 100
+              }}
+            />
+          </Grid>
+
+          <Grid item lg={4} md={4} sm={4} >
+            <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <KeyboardDatePicker
+                style={{ margin: 0 }}
+                value={new Date()}
+                onChange={() => {}}
+                autoOk
+                disableToolbar
+                fullWidth
+                placeholder="DD/MM/AAAA"
+                format="dd/MM/yyyy"
+                invalidDateMessage="Formato inválido"
+                inputVariant="outlined"
+                variant="inline"
+                color='primary'
+                views={ ['year', 'month', 'date'] }
+                margin="normal"
+                name='endDate'
+                label='Data da retirada'
+              />
+            </MuiPickersUtilsProvider>
+          </Grid>
+        </Grid>
+
+        <Grid container spacing={3} justify='flex-end' >
+          <Grid item lg={4} md={4} sm={4} >
+            <Button loading={loading} color='primary' >
+              Criar
+            </Button>
+          </Grid>
+        </Grid>
+      </Container>
+    </>
   )
 }
 

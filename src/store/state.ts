@@ -11,5 +11,16 @@ export const INITIAL_STATE: IState = {
   works: mockedWorks,
   trucks: mockedTrucks,
   drivers: mockedDrivers,
-  customers: mockedCustomers
+  customers: mockedCustomers,
+  work: {
+    id: 0,
+    customer: '',
+    address: '',
+    driver: '',
+    truck: '',
+    equipment: '',
+    work: '',
+    quantity: 1,
+    endDate: new Date()
+  } 
 }

@@ -4,7 +4,6 @@ import AppBar  from 'components/AppBar'
 import { useHistory } from 'react-router'
 
 import { Container } from './styles'
-import Card from '../components/Card'
 
 const Detail: React.FC = () => {
   const { goBack } = useHistory()
@@ -14,8 +13,6 @@ const Detail: React.FC = () => {
   const [loading, setLoading] = useState(false)
 
   const handleEdit = useCallback(async (fields) => {
-
-    console.log('Data', fields)
 
     setLoading(true)
 
@@ -58,12 +55,7 @@ const Detail: React.FC = () => {
     <Container>
       <AppBar search={false} />
 
-      <Card 
-        type='update'
-        onConfirm={handleEdit}
-        onDelete={handleDelete}
-        loading={loading}
-      />
+      {/* Edition Form */}
     </Container>
   )
 }

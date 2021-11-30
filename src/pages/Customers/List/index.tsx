@@ -4,8 +4,8 @@ import FloatingButton from 'components/FloatingButton'
 import { useHistory } from 'react-router'
 import Button from '@material-ui/core/Button'
 import { useData } from 'hooks/useData'
+import Table from 'components/Table/Customers/List'
 
-import Table from '../components/Table/List'
 import { Container, Content } from './styles'
 
 const List: React.FC = () => {
