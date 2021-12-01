@@ -392,7 +392,7 @@ const Table: React.FC<TableProps> = ({ title, customers }) => {
           rowsPerPage={rowsPerPage}
           labelRowsPerPage='Quantidade por Página'
           page={page}
-          onChangePage={handleChangePage}
+          onPageChange={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />
       </Paper>

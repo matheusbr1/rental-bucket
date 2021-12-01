@@ -1,4 +1,4 @@
-export interface IState {
+export interface IStore {
   works: IWork[]
   trucks: ITruck[]
   drivers: IDriver[]
@@ -9,6 +9,12 @@ export interface IState {
 export interface ReducerAction {
   type: string
   payload?: any
+}
+
+export interface IState {
+  id: number
+  sigla: string
+  nome: string
 }
 
 export interface IAddress { 

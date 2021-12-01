@@ -1,4 +1,4 @@
-import { IState } from 'interfaces'
+import { IStore } from 'interfaces'
 
 import {  
   drivers as mockedDrivers,  
@@ -7,7 +7,7 @@ import {
   customers as mockedCustomers 
 } from 'mocks'
 
-export const INITIAL_STATE: IState = {
+export const INITIAL_STATE: IStore = {
   works: mockedWorks,
   trucks: mockedTrucks,
   drivers: mockedDrivers,

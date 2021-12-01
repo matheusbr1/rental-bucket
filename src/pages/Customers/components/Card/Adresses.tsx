@@ -9,8 +9,9 @@ import * as yup from 'yup'
 import getValidationErrors from 'utils/getValidationFormErrors'
 import Title from 'components/Title'
 import axios from 'axios'
-import { IAddress } from 'interfaces'
+import { IAddress, IState } from 'interfaces'
 import { addressSchema } from 'validations/addressSchema'
+import { getStates } from 'fetchs/getStates'
 
 interface AdressesProps {
   adresses: IAddress[]
@@ -24,12 +25,6 @@ interface AddressProps {
   bairro: string 
 }
 
-interface IState {
-  id: number
-  sigla: string
-  nome: string
-}
-
 interface ICity {
   id: number
   nome: string
@@ -41,7 +36,7 @@ const Adresses: React.FC<AdressesProps> = ({ adresses, setAdresses }) => {
 
   useEffect(() => console.log('Endereços Cadastrados', adresses), [adresses])
 
-  const [states, setStates] = useState([])
+  const [states, setStates] = useState<IState[]>([])
   const [citys, setCitys] = useState([])
 
   const [street, setStreet] = useState('')
@@ -54,18 +49,10 @@ const Adresses: React.FC<AdressesProps> = ({ adresses, setAdresses }) => {
 
   // Getting States
   useEffect(() => {
-    axios
-      .get('https://servicodados.ibge.gov.br/api/v1/localidades/estados')
-      .then(response => {
-
-      if (!response.data) {
-        return 
-      }
-
-      const states = response.data.map((state: IState) => state.sigla)
-
+    (async () => {
+      const states = await getStates()
       setStates(states)
-    })
+    })()
   }, [])
 
   // Getting Citys
@@ -208,7 +195,7 @@ const Adresses: React.FC<AdressesProps> = ({ adresses, setAdresses }) => {
             onChange={e => setState(e.target.value)}
           >
             {states.map((state, index) => (
-              <MenuItem value={state} key={index} > {state} </MenuItem>
+              <MenuItem value={state.sigla} key={index} > {state} </MenuItem>
             ))}
           </TextField>
 

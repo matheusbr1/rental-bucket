@@ -1,8 +1,8 @@
-import { IState, ReducerAction } from 'interfaces'
+import { IStore, ReducerAction } from 'interfaces'
 import { Actions } from './actions'
 import { INITIAL_STATE } from './state'
 
-export function reducer (state: IState, action: ReducerAction): IState {
+export function reducer (state: IStore, action: ReducerAction): IStore {
   console.log(action)
   
   switch (action.type) {

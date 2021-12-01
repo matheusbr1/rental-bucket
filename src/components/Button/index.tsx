@@ -7,7 +7,7 @@ interface Props extends ButtonProps {
 
 const StyledButton = styled(MuiButton)(({ theme }) => ({
   width: '100%',
-  height: 50,
+  height: 55,
   color: theme.palette.common.white,
   fontSize: '1rem',
   '& .MuiCircularProgress-colorPrimary': {

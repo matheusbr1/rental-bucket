@@ -1,12 +1,12 @@
 import React, { createContext, useContext, useEffect, useReducer } from 'react'
-import { ReducerAction, IState } from 'interfaces'
+import { ReducerAction, IStore } from 'interfaces'
 import { api } from 'services/api'
 import { reducer } from 'store/reducer'
 import { INITIAL_STATE } from 'store/state'
 import { Actions } from 'store/actions'
 
 interface IDataContext {
-  appData: IState
+  appData: IStore
   dispatch: React.Dispatch<ReducerAction>
 }
 
