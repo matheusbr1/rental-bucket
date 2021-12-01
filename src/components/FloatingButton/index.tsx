@@ -26,14 +26,17 @@ const FloatingButton: React.FC<Props> = (
 ) => {
   return (
     <Container variant={variant} style={containerStyle ?? {}} >
-      <div>
-        <Fab color="default" style={{ margin: 5 }} onClick={onClick} disabled={disabled} type={type}>
-          {
-          loading ? (
-            <CircularProgress variant='indeterminate' size={30}/>
-          ) : variationIcons[variant]}
-        </Fab>
-      </div>
+      <Fab 
+        color="default" 
+        style={{ margin: 5 }} 
+        onClick={onClick} 
+        disabled={disabled} 
+        type={type}
+      >
+        {loading ? (
+          <CircularProgress variant='indeterminate' size={30}/>
+        ) : variationIcons[variant]}
+      </Fab>
     </Container>
   )
 }

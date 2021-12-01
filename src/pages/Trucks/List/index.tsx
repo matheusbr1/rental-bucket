@@ -1,12 +1,10 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import AppBar  from 'components/AppBar'
 import Table from 'components/Table/Trucks'
 import FloatingButton from 'components/FloatingButton'
 import { useHistory } from 'react-router'
-import Button from '@material-ui/core/Button'
 import { useData } from 'hooks/useData'
-
-import { Container, Content } from './styles'
+import { Box, Container } from '@material-ui/core'
 
 const List: React.FC = () => {
   const history = useHistory()
@@ -15,37 +13,15 @@ const List: React.FC = () => {
 
   const { trucks } = appData
 
-  const handleCreate = useCallback(() => {
-    history.push('trucks/create')
-  }, [history])
-
-  const handleNatigateToWorks = useCallback(() => {
-    history.push('works')
-  }, [history])
-
   return (
-    <Container>
+    <Container style={{ marginTop: 64 }} >
       <AppBar />
       
-      <Content>
+      <Box width='100%' m='20px 0' display='flex' justifyContent='center'>
         <Table title='Caminhões' trucks={trucks} />
         
-        <div className='floating-buttons' >
-          <Button 
-          
-          onClick={handleNatigateToWorks}
-
-          style={{
-            height: 50,
-            borderRadius: 10,
-            padding: 20
-          }}>
-            Retornar para Serviços
-          </Button>
-          
-          <FloatingButton onClick={handleCreate} />
-        </div>
-      </Content>
+        <FloatingButton onClick={() => history.push('trucks/create')} />
+      </Box>
     </Container>
   )
 }

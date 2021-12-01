@@ -41,4 +41,9 @@ export const Container = styled.div<FloatingButtonProps>`
   .MuiCircularProgress-colorPrimary {
     color: #FFF;
   }
+
+  display: flex;
+  position: fixed;
+  bottom: 15px;
+  right: 30px;
 `

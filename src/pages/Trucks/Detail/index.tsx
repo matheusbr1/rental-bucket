@@ -1,10 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useCallback, useState } from 'react'
 import { useSnackbar } from 'notistack'
 import { useHistory } from 'react-router'
 import AppBar  from 'components/AppBar'
-
-import Card from '../components/Card'
-import { Container } from './styles'
+import { Container } from '@material-ui/core'
 
 const Detail: React.FC = () => {
   const { goBack } = useHistory()
@@ -46,15 +45,8 @@ const Detail: React.FC = () => {
   }, [enqueueSnackbar, goBack])
 
   return (
-    <Container>
+    <Container style={{ marginTop: 64 }} >
       <AppBar search={false} />
-
-      <Card 
-        type='update'
-        loading={loading}
-        onConfirm={handleEdit}
-        onDelete={handleDelete}
-      />
     </Container>
   )
 }

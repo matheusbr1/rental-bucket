@@ -1,27 +1,29 @@
 import React, { useCallback, useState } from 'react'
 import clsx from 'clsx'
 import { createStyles, lighten, makeStyles, Theme } from '@material-ui/core/styles'
-import MaterialTable from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableContainer from '@material-ui/core/TableContainer'
-import TableHead from '@material-ui/core/TableHead'
-import TablePagination from '@material-ui/core/TablePagination'
-import TableRow from '@material-ui/core/TableRow'
-import TableSortLabel from '@material-ui/core/TableSortLabel'
-import Toolbar from '@material-ui/core/Toolbar'
-import Typography from '@material-ui/core/Typography'
-import Paper from '@material-ui/core/Paper'
-import Checkbox from '@material-ui/core/Checkbox'
-import IconButton from '@material-ui/core/IconButton'
-import Tooltip from '@material-ui/core/Tooltip'
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
 import OpenIcon from '@material-ui/icons/Launch'
 import { ICustomer } from 'interfaces'
 import { useHistory } from 'react-router'
 
-import { Container } from './styles'
+import { 
+  Table as MaterialTable,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TableSortLabel,
+  Toolbar,
+  Typography,
+  Paper,
+  Checkbox,
+  IconButton,
+  Tooltip,
+  Box,
+  TablePagination
+} from '@material-ui/core'
 
 interface TableProps {
   title: string 
@@ -145,9 +147,10 @@ const useToolbarStyles = makeStyles((theme: Theme) =>
             color: theme.palette.text.primary,
             backgroundColor: theme.palette.secondary.dark,
           },
-    title: {
-      flex: '1 1 100%',
-    },
+      title: {
+        flex: '1 1 100%',
+        fontWeight: 500
+      }
   }),
 );
 
@@ -159,6 +162,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
+      margin: '25px 0'
     },
     paper: {
       width: '100%',
@@ -239,7 +243,7 @@ const Table: React.FC<TableProps> = ({ title, customers }) => {
             {numSelected} selected
           </Typography>
         ) : (
-          <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
+          <Typography className={classes.title} variant="h3" id="tableTitle" component="div">
             {title}
           </Typography>
         )}
@@ -332,7 +336,7 @@ const Table: React.FC<TableProps> = ({ title, customers }) => {
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage)
 
   return (
-    <Container className={classes.root}>
+    <Box className={classes.root}>
       <Paper className={classes.paper}>
         <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
@@ -396,7 +400,7 @@ const Table: React.FC<TableProps> = ({ title, customers }) => {
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />
       </Paper>
-    </Container>
+    </Box>
   )
 }
 

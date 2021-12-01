@@ -17,27 +17,25 @@ const Create: React.FC = () => {
 
   const { enqueueSnackbar } = useSnackbar()
 
-  const { register, handleSubmit, formState } = useForm()
+  const { register, handleSubmit } = useForm()
 
   const { dispatch  } = useData()
 
   const [loading, setLoading] = useState(false)
 
   const handleCreate = useCallback(async (fields) => {
-    console.log(fields)
-
     setLoading(true)
 
     try {
       await new Promise(resolve => setTimeout(resolve, 3000))
 
-      // dispatch({ type: Actions.CREATE_WORK, payload: fields })
+      dispatch({ type: Actions.CREATE_WORK, payload: fields })
 
       enqueueSnackbar('Serviço criado com sucesso!', {
         variant: 'success'
       })
 
-      // goBack()
+      goBack()
     } catch (error) {
       enqueueSnackbar('Erro ao criar serviço, tente novamente!', {
         variant: 'error'
@@ -51,7 +49,7 @@ const Create: React.FC = () => {
     <>
       <AppBar search={false} />
 
-      <Container maxWidth='lg' style={{ marginTop: 100 }} >
+      <Container style={{ marginTop: 100 }} >
         <form onSubmit={handleSubmit(handleCreate)} >
           <Grid container spacing={3} justify='flex-end' >
             <Grid item lg={12} md={12} sm={12} >
@@ -60,7 +58,7 @@ const Create: React.FC = () => {
               </Typography>
             </Grid>
 
-            <Grid item lg={4} md={4} sm={4} >
+            <Grid item lg={4} md={4} sm={6} xs={12} >
               <TextField 
                 select
                 fullWidth
@@ -74,7 +72,7 @@ const Create: React.FC = () => {
               </TextField>
             </Grid>
             
-            <Grid item lg={4} md={4} sm={4} >
+            <Grid item lg={4} md={4} sm={6} xs={12} >
               <TextField 
                 select
                 fullWidth
@@ -90,7 +88,7 @@ const Create: React.FC = () => {
               </TextField>
             </Grid>
 
-            <Grid item lg={4} md={4} sm={4} >
+            <Grid item lg={4} md={4} sm={6} xs={12} >
               <TextField 
                 select
                 fullWidth
@@ -104,7 +102,7 @@ const Create: React.FC = () => {
               </TextField>
             </Grid>
 
-            <Grid item lg={4} md={4} sm={4} >
+            <Grid item lg={4} md={4} sm={6} xs={12} >
               <TextField 
                 select
                 fullWidth
@@ -118,7 +116,7 @@ const Create: React.FC = () => {
               </TextField>
             </Grid>
 
-            <Grid item lg={4} md={4} sm={4} >
+            <Grid item lg={4} md={4} sm={6} xs={12} >
               <TextField 
                 select
                 fullWidth
@@ -132,7 +130,7 @@ const Create: React.FC = () => {
               </TextField>
             </Grid>
 
-            <Grid item lg={4} md={4} sm={4} >
+            <Grid item lg={4} md={4} sm={6} xs={12} >
               <TextField 
                 select
                 fullWidth
@@ -146,7 +144,7 @@ const Create: React.FC = () => {
               </TextField>
             </Grid>
 
-            <Grid item lg={4} md={4} sm={4} >
+            <Grid item lg={4} md={4} sm={6} xs={12} >
               <TextField 
                 label='Quantidade'
                 variant='outlined'
@@ -160,7 +158,7 @@ const Create: React.FC = () => {
               />
             </Grid>
 
-            <Grid item lg={4} md={4} sm={4} >
+            <Grid item lg={4} md={4} sm={6} xs={12} >
               <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker
                   style={{ margin: 0 }}
@@ -177,13 +175,15 @@ const Create: React.FC = () => {
                   margin="normal"
                   label='Data da retirada'
                   {...register('endDate')}
-                  value={Moment().add(7, 'days').toDate()}
+                  value={Moment(new Date()).add(7, 'days').toDate()}
                   onChange={register('endDate').onChange as any}
                 />
               </MuiPickersUtilsProvider>
             </Grid>
 
-            <Grid item lg={4} md={4} sm={4} >
+            <Grid item lg={4} md={4} sm={6} xs={12} />
+
+            <Grid item lg={4} md={4} sm={6} xs={12} >
               <Button loading={loading} color='primary' type='submit' >
                 Criar
               </Button>

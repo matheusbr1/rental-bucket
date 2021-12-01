@@ -1,11 +1,10 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import AppBar  from 'components/AppBar'
 import Table from 'components/Table/Works'
 import FloatingButton from 'components/FloatingButton'
 import { useHistory } from 'react-router'
 import { useData } from 'hooks/useData'
-
-import { Container, Content } from './styles'
+import { Container, Box } from '@material-ui/core'
 
 const List: React.FC = () => {
 
@@ -15,23 +14,14 @@ const List: React.FC = () => {
 
   const { works } = appData
 
-  const handleCreate = useCallback(() => {
-      history.push('works/create')
-  }, [history])
-
   return (
-    <Container>
+    <Container style={{ marginTop: 64 }} >
       <AppBar />
-      <Content>
-        <Table 
-          title='Serviços'
-          works={works}
-        />
-        
-        <div className='floating-buttons' >
-          <FloatingButton onClick={handleCreate} />
-        </div>
-      </Content>
+      
+      <Box width='100%' m='20px 0' display='flex' justifyContent='center'>
+        <Table  title='Serviços' works={works} />
+        <FloatingButton onClick={() => history.push('works/create')} />
+      </Box>
     </Container>
   )
 }
