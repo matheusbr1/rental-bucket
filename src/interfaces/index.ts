@@ -17,6 +17,11 @@ export interface IState {
   nome: string
 }
 
+export interface ICity {
+  id: number
+  name: string
+}
+
 export interface IAddress { 
   CEP: string
   street: string

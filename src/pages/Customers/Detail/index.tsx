@@ -1,10 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useCallback, useState } from 'react'
 import AppBar  from 'components/AppBar'
 import { useSnackbar } from 'notistack'
 import { useHistory } from 'react-router'
-
-import { Container } from './styles'
-import Card from '../components/Card'
+import { Container } from '@material-ui/core'
 
 const Create: React.FC = () => {
 
@@ -58,16 +57,8 @@ const Create: React.FC = () => {
   }, [enqueueSnackbar])
 
   return (
-    <Container>
+    <Container style={{ marginTop: 64 }} >
       <AppBar search={false} />
-
-      <Card 
-        type='update'
-        onConfirm={handleEdit}
-        onDelete={handleDelete}
-        loading={loading}
-      />
-      
     </Container>
   )
 }

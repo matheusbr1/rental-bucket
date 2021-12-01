@@ -3,7 +3,7 @@ import AppBar  from 'components/AppBar'
 import FloatingButton from 'components/FloatingButton'
 import { useHistory } from 'react-router'
 import { useData } from 'hooks/useData'
-import Table from 'components/Table/Customers/List'
+import Table from 'components/Table/Customers'
 import { Box, Container } from '@material-ui/core'
 
 const List: React.FC = () => {
