@@ -68,7 +68,7 @@ const Create: React.FC = () => {
   }, [goBack, enqueueSnackbar, dispatch])
 
   return (
-    <Container style={{ marginTop: 100 }} >
+    <Container maxWidth='md' style={{ marginTop: 100 }} >
       <AppBar search={false} />
 
       <Grid container spacing={3} justify='flex-end' >

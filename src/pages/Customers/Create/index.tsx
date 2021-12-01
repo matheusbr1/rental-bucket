@@ -11,6 +11,7 @@ import axios from 'axios'
 import { getCitys } from 'fetchs/getCitys'
 import { getStates } from 'fetchs/getStates'
 import { 
+  Box,
   Container, 
   Divider, 
   FormControlLabel, 
@@ -101,7 +102,7 @@ const Create: React.FC = () => {
   }, [goBack, enqueueSnackbar, dispatch])
 
   return (
-    <Container style={{ marginTop: 100 }} >
+    <Container maxWidth='md' style={{ marginTop: 100 }} >
       <AppBar search={false} />
 
       <Grid container spacing={3} justify='flex-end' >
@@ -232,7 +233,7 @@ const Create: React.FC = () => {
           </Typography>
         </Grid>
 
-        <Grid item lg={6} md={6} sm={6} xs={12} >
+        <Grid item lg={4} md={4} sm={4} xs={12} >
           <TextField 
             fullWidth
             label='Celular'
@@ -240,7 +241,7 @@ const Create: React.FC = () => {
           />
         </Grid>
 
-        <Grid item lg={6} md={6} sm={6} xs={12} >
+        <Grid item lg={4} md={4} sm={4} xs={12} >
           <TextField 
             fullWidth
             label='E-mail'
@@ -248,18 +249,10 @@ const Create: React.FC = () => {
           />
         </Grid>
 
-        <Grid item lg={6} md={6} sm={6} xs={12} >
+        <Grid item lg={4} md={4} sm={4} xs={12} >
           <TextField 
             fullWidth
             label='Telefone'
-            variant='outlined'
-          />
-        </Grid>
-
-        <Grid item lg={6} md={6} sm={6} xs={12} >
-          <TextField 
-            fullWidth
-            label='Telefone Recado'
             variant='outlined'
           />
         </Grid>
@@ -268,10 +261,12 @@ const Create: React.FC = () => {
           <Divider style={{ margin: '2rem 0' }} />
         </Grid>
 
-        <Grid item lg={6} md={6} sm={6} xs={12} >
-          <Button loading={loading} color='primary' type='submit' >
-            Criar
-          </Button>
+        <Grid item lg={4} md={4} sm={4} xs={12} >
+          <Box mb='2rem' >
+            <Button loading={loading} color='primary' type='submit' >
+              Criar
+            </Button>
+          </Box>
         </Grid>
       </Grid>
     </Container>

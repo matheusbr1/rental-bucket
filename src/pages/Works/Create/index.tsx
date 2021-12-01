@@ -49,7 +49,7 @@ const Create: React.FC = () => {
     <>
       <AppBar search={false} />
 
-      <Container style={{ marginTop: 100 }} >
+      <Container maxWidth='md' style={{ marginTop: 100 }} >
         <form onSubmit={handleSubmit(handleCreate)} >
           <Grid container spacing={3} justify='flex-end' >
             <Grid item lg={12} md={12} sm={12} >
