@@ -1,11 +1,11 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import clsx from 'clsx'
 import { createStyles, lighten, makeStyles, Theme } from '@material-ui/core/styles'
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
 import OpenIcon from '@material-ui/icons/Launch'
+import { ICustomer } from 'interfaces'
 import { useHistory } from 'react-router'
-import { ITruck } from 'interfaces'
 
 import { 
   Table as MaterialTable,
@@ -26,16 +26,14 @@ import {
 } from '@material-ui/core'
 
 interface TableProps {
-  title: string
-  trucks: ITruck[]
+  title: string 
+  customers: ICustomer[]
 }
 
 interface Data {
   id: number
-  plate: string
-  brand: string
-  model: string
-  equipment: string
+  name: string
+  contact: any
 }
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -77,10 +75,8 @@ interface HeadCell {
 }
 
 const headCells: HeadCell[] = [
-  { id: 'plate', numeric: false, disablePadding: true, label: 'Placa' },
-  { id: 'brand', numeric: false, disablePadding: false, label: 'Marca' },
-  { id: 'model', numeric: false, disablePadding: false, label: 'Modelo' },
-  { id: 'equipment', numeric: false, disablePadding: false, label: 'Equipamento' },
+  { id: 'name', numeric: false, disablePadding: true, label: 'Cliente' },
+  { id: 'contact', numeric: false, disablePadding: false, label: 'Contato' },
 ]
 
 interface EnhancedTableProps {
@@ -151,10 +147,10 @@ const useToolbarStyles = makeStyles((theme: Theme) =>
             color: theme.palette.text.primary,
             backgroundColor: theme.palette.secondary.dark,
           },
-    title: {
-      flex: '1 1 100%',
-      fontWeight: 500
-    },
+      title: {
+        flex: '1 1 100%',
+        fontWeight: 500
+      }
   }),
 );
 
@@ -171,6 +167,7 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       width: '100%',
       marginBottom: theme.spacing(2),
+      padding: theme.spacing(2),
     },
     table: {
       minWidth: 750,
@@ -189,31 +186,34 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 )
 
-const Table: React.FC<TableProps> = ({ title, trucks }) => {
+const Table: React.FC<TableProps> = ({ title, customers }) => {
   const classes = useStyles()
   const [order, setOrder] = React.useState<Order>('asc')
-  const [orderBy, setOrderBy] = React.useState<keyof Data>('plate')
+  const [orderBy, setOrderBy] = React.useState<keyof Data>('name')
   const [selected, setSelected] = React.useState<string[]>([])
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
 
   function createData(
     id: number,
-    plate: string,
-    brand: string,
-    model: string,
-    equipment: string
+    name: string,
+    contact: any,
   ): Data {
-    return { id, plate, brand, model, equipment }
+    return { id, name, contact }
   }
   
-  const rows = trucks.map(truck => createData(
-    truck.id,
-    truck.plate, 
-    truck.brand, 
-    truck.model, 
-    truck.equipment
-  ))
+  const rows = customers.map(customer => {
+    const contact = customer.contact
+
+    return createData(
+      customer.id,
+      customer.name, 
+      contact?.email || contact?.cellphone || contact?.telephone
+    )
+  })
+
+  const [selectedList, setSelectedList] = useState<number[]>([])
+  const [currentSeleted, setCurrentSelected] = useState<number>()
 
   const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
     const classes = useToolbarStyles()
@@ -222,12 +222,16 @@ const Table: React.FC<TableProps> = ({ title, trucks }) => {
     const history = useHistory()
   
     const handleEdit = useCallback(() => {
-      history.push('/truck/1')
+      history.push(`/customer/${currentSeleted}`)
     }, [history])
   
     const handleOpen = useCallback(() => {
-      history.push('/truck/1')
+      history.push(`/customer/${currentSeleted}`)
     }, [history])
+
+    const handleDelete = useCallback(() => {
+      console.log('Deletar: ', selectedList)
+    },[])
   
     return (
       <Toolbar
@@ -236,21 +240,11 @@ const Table: React.FC<TableProps> = ({ title, trucks }) => {
         })}
       >
         {numSelected > 0 ? (
-          <Typography 
-            className={classes.title} 
-            color="inherit" 
-            variant="subtitle1" 
-            component="div"
-          >
+          <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
             {numSelected} selected
           </Typography>
         ) : (
-          <Typography 
-            className={classes.title} 
-            variant="h3" 
-            id="tableTitle" 
-            component="div"
-          >
+          <Typography className={classes.title} variant="h3" id="tableTitle" component="div">
             {title}
           </Typography>
         )}
@@ -270,7 +264,7 @@ const Table: React.FC<TableProps> = ({ title, trucks }) => {
         )}
         {numSelected > 0 && (
           <Tooltip title="Deletar">
-            <IconButton>
+            <IconButton onClick={handleDelete} >
               <DeleteIcon />
             </IconButton>
           </Tooltip>
@@ -287,16 +281,31 @@ const Table: React.FC<TableProps> = ({ title, trucks }) => {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.plate)
+      const newSelecteds = rows.map((n) => n.name)
       setSelected(newSelecteds)
       return
     }
     setSelected([])
   }
 
-  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
+  const handleClick = (event: React.MouseEvent<unknown>, name: string, id: number) => {
     const selectedIndex = selected.indexOf(name)
     let newSelected: string[] = []
+
+    setCurrentSelected(id)
+
+    setSelectedList((otherSelecteds: number[]) => {
+      const isSelected = otherSelecteds.filter(clientID => clientID === id)[0]
+
+      if (isSelected) {
+        return otherSelecteds.filter(clientID => clientID !== id)
+      } else {
+        return [
+          ...otherSelecteds,
+          id
+        ]
+      }
+    })    
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, name)
@@ -351,31 +360,25 @@ const Table: React.FC<TableProps> = ({ title, trucks }) => {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.plate);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+                  const isItemSelected = isSelected(row.name as any);
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.plate)}
+                      onClick={(event) => handleClick(event, row.name as any, Number(row.id))}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.plate}
+                      key={row.name}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ 'aria-labelledby': labelId }}
-                        />
+                        <Checkbox checked={isItemSelected} />
                       </TableCell>
-                      <TableCell component="th" id={labelId} scope="row" padding="none">
-                        {row.plate}
+                      <TableCell component="th" scope="row" padding="none">
+                        {row.name}
                       </TableCell>
-                      <TableCell align="left">{row.brand}</TableCell>
-                      <TableCell align="left">{row.model}</TableCell>
-                      <TableCell align="left">{row.equipment}</TableCell>
+                      <TableCell align="left">{row.contact}</TableCell>
                     </TableRow>
                   );
                 })}

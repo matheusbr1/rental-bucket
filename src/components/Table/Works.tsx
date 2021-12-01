@@ -169,10 +169,11 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
-      margin: '25px 0'
+      margin: '25px 0',
     },
     paper: {
       width: '100%',
+      padding: theme.spacing(2),
       marginBottom: theme.spacing(2),
     },
     table: {

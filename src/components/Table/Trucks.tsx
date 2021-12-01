@@ -1,11 +1,11 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback } from 'react'
 import clsx from 'clsx'
 import { createStyles, lighten, makeStyles, Theme } from '@material-ui/core/styles'
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
 import OpenIcon from '@material-ui/icons/Launch'
 import { useHistory } from 'react-router'
-import { IDriver } from 'interfaces'
+import { ITruck } from 'interfaces'
 
 import { 
   Table as MaterialTable,
@@ -27,13 +27,15 @@ import {
 
 interface TableProps {
   title: string
-  drivers: IDriver[]
+  trucks: ITruck[]
 }
 
 interface Data {
   id: number
-  name: string
-  contact: string
+  plate: string
+  brand: string
+  model: string
+  equipment: string
 }
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -75,8 +77,10 @@ interface HeadCell {
 }
 
 const headCells: HeadCell[] = [
-  { id: 'name', numeric: false, disablePadding: true, label: 'Nome' },
-  { id: 'contact', numeric: false, disablePadding: false, label: 'Contato' },
+  { id: 'plate', numeric: false, disablePadding: true, label: 'Placa' },
+  { id: 'brand', numeric: false, disablePadding: false, label: 'Marca' },
+  { id: 'model', numeric: false, disablePadding: false, label: 'Modelo' },
+  { id: 'equipment', numeric: false, disablePadding: false, label: 'Equipamento' },
 ]
 
 interface EnhancedTableProps {
@@ -166,6 +170,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     paper: {
       width: '100%',
+      padding: theme.spacing(2),
       marginBottom: theme.spacing(2),
     },
     table: {
@@ -185,48 +190,45 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 )
 
-const Table: React.FC<TableProps> = ({ title, drivers }) => {
+const Table: React.FC<TableProps> = ({ title, trucks }) => {
   const classes = useStyles()
   const [order, setOrder] = React.useState<Order>('asc')
-  const [orderBy, setOrderBy] = React.useState<keyof Data>('name')
+  const [orderBy, setOrderBy] = React.useState<keyof Data>('plate')
   const [selected, setSelected] = React.useState<string[]>([])
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
 
   function createData(
     id: number,
-    name: string,
-    contact: string,
+    plate: string,
+    brand: string,
+    model: string,
+    equipment: string
   ): Data {
-    return { id, name, contact }
+    return { id, plate, brand, model, equipment }
   }
   
-  const rows = drivers.map(driver => createData(
-    driver.id,
-    driver.name, 
-    driver.contact.cellphone ?? driver.contact.telephone
+  const rows = trucks.map(truck => createData(
+    truck.id,
+    truck.plate, 
+    truck.brand, 
+    truck.model, 
+    truck.equipment
   ))
-
-  const [selectedList, setSelectedList] = useState<number[]>([])
-  const [currentSeleted, setCurrentSelected] = useState<number>()
 
   const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
     const classes = useToolbarStyles()
     const { numSelected } = props;
   
     const history = useHistory()
-
+  
     const handleEdit = useCallback(() => {
-      history.push(`/driver/${currentSeleted}`)
+      history.push('/truck/1')
     }, [history])
   
     const handleOpen = useCallback(() => {
-      history.push(`/driver/${currentSeleted}`)
+      history.push('/truck/1')
     }, [history])
-
-    const handleDelete = useCallback(() => {
-      console.log('Deletar: ', selectedList)
-    },[])
   
     return (
       <Toolbar
@@ -235,31 +237,41 @@ const Table: React.FC<TableProps> = ({ title, drivers }) => {
         })}
       >
         {numSelected > 0 ? (
-          <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
+          <Typography 
+            className={classes.title} 
+            color="inherit" 
+            variant="subtitle1" 
+            component="div"
+          >
             {numSelected} selected
           </Typography>
         ) : (
-          <Typography className={classes.title} variant="h3" id="tableTitle" component="div">
+          <Typography 
+            className={classes.title} 
+            variant="h3" 
+            id="tableTitle" 
+            component="div"
+          >
             {title}
           </Typography>
         )}
         {numSelected === 1 && (
           <Tooltip title="Abrir">
-            <IconButton onClick={handleOpen}>
+            <IconButton onClick={handleOpen} >
               <OpenIcon />
             </IconButton>
           </Tooltip>
         )}
         {numSelected === 1 && (
           <Tooltip title="Editar">
-            <IconButton onClick={handleEdit}>
+            <IconButton onClick={handleEdit} >
               <EditIcon />
             </IconButton>
           </Tooltip>
         )}
         {numSelected > 0 && (
           <Tooltip title="Deletar">
-            <IconButton onClick={handleDelete}>
+            <IconButton>
               <DeleteIcon />
             </IconButton>
           </Tooltip>
@@ -276,31 +288,16 @@ const Table: React.FC<TableProps> = ({ title, drivers }) => {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name)
+      const newSelecteds = rows.map((n) => n.plate)
       setSelected(newSelecteds)
       return
     }
     setSelected([])
   }
 
-  const handleClick = (event: React.MouseEvent<unknown>, name: string, id: number) => {
+  const handleClick = (event: React.MouseEvent<unknown>, name: string) => {
     const selectedIndex = selected.indexOf(name)
     let newSelected: string[] = []
-
-    setCurrentSelected(id)
-
-    setSelectedList((otherSelecteds: number[]) => {
-      const isSelected = otherSelecteds.filter(driverID => driverID === id)[0]
-
-      if (isSelected) {
-        return otherSelecteds.filter(driverID => driverID !== id)
-      } else {
-        return [
-          ...otherSelecteds,
-          id
-        ]
-      }
-    })    
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, name)
@@ -355,27 +352,33 @@ const Table: React.FC<TableProps> = ({ title, drivers }) => {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
+                  const isItemSelected = isSelected(row.plate);
+                  const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.name, row.id)}
+                      onClick={(event) => handleClick(event, row.plate)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.name}
+                      key={row.plate}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
-                        <Checkbox checked={isItemSelected} />
+                        <Checkbox
+                          checked={isItemSelected}
+                          inputProps={{ 'aria-labelledby': labelId }}
+                        />
                       </TableCell>
-                      <TableCell component="th"  scope="row" padding="none">
-                        {row.name}
+                      <TableCell component="th" id={labelId} scope="row" padding="none">
+                        {row.plate}
                       </TableCell>
-                      <TableCell align="left">{row.contact}</TableCell>
+                      <TableCell align="left">{row.brand}</TableCell>
+                      <TableCell align="left">{row.model}</TableCell>
+                      <TableCell align="left">{row.equipment}</TableCell>
                     </TableRow>
-                  )
+                  );
                 })}
               {emptyRows > 0 && (
                 <TableRow style={{ height: 53 * emptyRows }}>
@@ -385,7 +388,6 @@ const Table: React.FC<TableProps> = ({ title, drivers }) => {
             </TableBody>
           </MaterialTable>
         </TableContainer>
-        
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"

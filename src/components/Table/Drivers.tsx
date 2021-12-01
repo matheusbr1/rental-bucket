@@ -4,8 +4,8 @@ import { createStyles, lighten, makeStyles, Theme } from '@material-ui/core/styl
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
 import OpenIcon from '@material-ui/icons/Launch'
-import { ICustomer } from 'interfaces'
 import { useHistory } from 'react-router'
+import { IDriver } from 'interfaces'
 
 import { 
   Table as MaterialTable,
@@ -26,14 +26,14 @@ import {
 } from '@material-ui/core'
 
 interface TableProps {
-  title: string 
-  customers: ICustomer[]
+  title: string
+  drivers: IDriver[]
 }
 
 interface Data {
   id: number
   name: string
-  contact: any
+  contact: string
 }
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -75,7 +75,7 @@ interface HeadCell {
 }
 
 const headCells: HeadCell[] = [
-  { id: 'name', numeric: false, disablePadding: true, label: 'Cliente' },
+  { id: 'name', numeric: false, disablePadding: true, label: 'Nome' },
   { id: 'contact', numeric: false, disablePadding: false, label: 'Contato' },
 ]
 
@@ -147,10 +147,10 @@ const useToolbarStyles = makeStyles((theme: Theme) =>
             color: theme.palette.text.primary,
             backgroundColor: theme.palette.secondary.dark,
           },
-      title: {
-        flex: '1 1 100%',
-        fontWeight: 500
-      }
+    title: {
+      flex: '1 1 100%',
+      fontWeight: 500
+    },
   }),
 );
 
@@ -162,10 +162,11 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
-      margin: '25px 0'
+      margin: '25px'
     },
     paper: {
       width: '100%',
+      padding: theme.spacing(2),
       marginBottom: theme.spacing(2),
     },
     table: {
@@ -185,7 +186,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 )
 
-const Table: React.FC<TableProps> = ({ title, customers }) => {
+const Table: React.FC<TableProps> = ({ title, drivers }) => {
   const classes = useStyles()
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<keyof Data>('name')
@@ -196,20 +197,16 @@ const Table: React.FC<TableProps> = ({ title, customers }) => {
   function createData(
     id: number,
     name: string,
-    contact: any,
+    contact: string,
   ): Data {
     return { id, name, contact }
   }
   
-  const rows = customers.map(customer => {
-    const contact = customer.contact
-
-    return createData(
-      customer.id,
-      customer.name, 
-      contact?.email || contact?.cellphone || contact?.telephone
-    )
-  })
+  const rows = drivers.map(driver => createData(
+    driver.id,
+    driver.name, 
+    driver.contact.cellphone ?? driver.contact.telephone
+  ))
 
   const [selectedList, setSelectedList] = useState<number[]>([])
   const [currentSeleted, setCurrentSelected] = useState<number>()
@@ -219,13 +216,13 @@ const Table: React.FC<TableProps> = ({ title, customers }) => {
     const { numSelected } = props;
   
     const history = useHistory()
-  
+
     const handleEdit = useCallback(() => {
-      history.push(`/customer/${currentSeleted}`)
+      history.push(`/driver/${currentSeleted}`)
     }, [history])
   
     const handleOpen = useCallback(() => {
-      history.push(`/customer/${currentSeleted}`)
+      history.push(`/driver/${currentSeleted}`)
     }, [history])
 
     const handleDelete = useCallback(() => {
@@ -249,21 +246,21 @@ const Table: React.FC<TableProps> = ({ title, customers }) => {
         )}
         {numSelected === 1 && (
           <Tooltip title="Abrir">
-            <IconButton onClick={handleOpen} >
+            <IconButton onClick={handleOpen}>
               <OpenIcon />
             </IconButton>
           </Tooltip>
         )}
         {numSelected === 1 && (
           <Tooltip title="Editar">
-            <IconButton onClick={handleEdit} >
+            <IconButton onClick={handleEdit}>
               <EditIcon />
             </IconButton>
           </Tooltip>
         )}
         {numSelected > 0 && (
           <Tooltip title="Deletar">
-            <IconButton onClick={handleDelete} >
+            <IconButton onClick={handleDelete}>
               <DeleteIcon />
             </IconButton>
           </Tooltip>
@@ -294,10 +291,10 @@ const Table: React.FC<TableProps> = ({ title, customers }) => {
     setCurrentSelected(id)
 
     setSelectedList((otherSelecteds: number[]) => {
-      const isSelected = otherSelecteds.filter(clientID => clientID === id)[0]
+      const isSelected = otherSelecteds.filter(driverID => driverID === id)[0]
 
       if (isSelected) {
-        return otherSelecteds.filter(clientID => clientID !== id)
+        return otherSelecteds.filter(driverID => driverID !== id)
       } else {
         return [
           ...otherSelecteds,
@@ -359,12 +356,12 @@ const Table: React.FC<TableProps> = ({ title, customers }) => {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.name as any);
+                  const isItemSelected = isSelected(row.name);
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.name as any, Number(row.id))}
+                      onClick={(event) => handleClick(event, row.name, row.id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -374,12 +371,12 @@ const Table: React.FC<TableProps> = ({ title, customers }) => {
                       <TableCell padding="checkbox">
                         <Checkbox checked={isItemSelected} />
                       </TableCell>
-                      <TableCell component="th" scope="row" padding="none">
+                      <TableCell component="th"  scope="row" padding="none">
                         {row.name}
                       </TableCell>
                       <TableCell align="left">{row.contact}</TableCell>
                     </TableRow>
-                  );
+                  )
                 })}
               {emptyRows > 0 && (
                 <TableRow style={{ height: 53 * emptyRows }}>
@@ -389,6 +386,7 @@ const Table: React.FC<TableProps> = ({ title, customers }) => {
             </TableBody>
           </MaterialTable>
         </TableContainer>
+        
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"

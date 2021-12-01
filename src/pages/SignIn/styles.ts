@@ -6,7 +6,6 @@ export const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #529A67;
 
   form {
     display: contents;
@@ -22,7 +21,6 @@ export const Content = styled.div`
   padding: 100px;
 
    h1 {
-     color: #fff;
      margin-bottom: 20px;
    }
  }
