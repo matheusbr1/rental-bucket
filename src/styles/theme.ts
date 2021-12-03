@@ -55,9 +55,6 @@ export const lightTheme = createTheme({
   ...themeOptions,
   palette: {
     type: 'light',
-    primary: {
-      main: '#529A67', 
-    },
   }
 })
 
@@ -65,9 +62,5 @@ export const darkTheme = createTheme({
   ...themeOptions,
   palette: {
     type: 'dark',
-    background: {
-      default: '#181B23',
-      paper: '#181B29',
-    },
   },
 })

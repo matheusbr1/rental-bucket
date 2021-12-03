@@ -1,59 +1,83 @@
-import React, { useCallback } from 'react'
-import { Container, Content } from './styles'
-import truckIlustration from 'assets/truckIlustration.svg'
-import googleLogo from 'assets/googleLogo.svg'
-import Button from 'components/Button'
-import { useGoogleLogin } from 'react-use-googlelogin'
+import React, { useCallback, useState } from 'react'
 import { useHistory } from 'react-router'
+import { createStyles } from '@material-ui/styles'
+import Button from 'components/Button'
+import { 
+  Container, 
+  Typography, 
+  Card, 
+  Box, 
+  makeStyles, 
+  TextField 
+} from '@material-ui/core'
+
+const useStyles = makeStyles((theme) => createStyles({
+  content: {
+    display: 'flex',
+    width:  '100%',
+    minHeight: '100vh',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  card: {
+    padding: theme.spacing(4),
+    maxWidth: 500,
+    '& h1': {
+      marginBottom: theme.spacing(1),
+    },
+    '& h3': {
+      marginBottom: theme.spacing(2),
+    },
+    '& > div': {
+      marginBottom: theme.spacing(2),
+    } 
+  }
+}))
 
 const SignIn: React.FC = () => {
-  const googleAuth = useGoogleLogin({
-    // clientId: process.env.REACT_APP_GOOGLE_CLIENT_ID as string
-    clientId: '745815052969-p903q9vcfpgb21vtc8egf7fg86ihu425.apps.googleusercontent.com'
-  })
-
   const history = useHistory()
 
+  const classes = useStyles()
+
+  const [isLoading, setIsLoading] = useState(false)
+
   const handleSignIn = useCallback(async () => {
-    const { signIn } = googleAuth
-
-    const user = await signIn()
-
-    console.log(user)
-
-    user && history.push('/works')
-  }, [googleAuth, history])
+    await new Promise(resolve => {
+      setIsLoading(true)
+      return setTimeout(() => history.push('/works'), 3000)
+    })
+  }, [history])
 
   return (
     <Container>
-      <Content>
-          
-        <img src={truckIlustration} alt='truck' />
-        
-        <main>
-          <h1>
-            Faça Login Para  <br /> 
-            Acessar a Plataforma 
-          </h1>
+      <Box className={classes.content} >
+        <Card className={classes.card} elevation={4} >
+          <Typography variant='h1' >
+            Login
+          </Typography>
 
-          <Button style={{
-              color: 'rgba(0, 0, 0, 0.54)',
-              background: '#fff',
-              padding: '0.7rem 2.5rem',
-              fontWeight: 'bold',
-              borderRadius: 8,
-              fontSize: 20
-            }}
-            onClick={handleSignIn}
-          >
-            <img src={googleLogo} alt="Google" style={{
-              marginRight: 10
-            }}/>
-            
-            Entrar com o Google
+          <Typography variant='h3' >
+            Faça login para acessar a plataforma
+          </Typography>
+
+          <TextField
+            fullWidth
+            label='E-mail'
+            variant='outlined'
+          />
+
+          <TextField
+            fullWidth
+            label='Senha'
+            type='password'
+            variant='outlined'
+          />
+
+          <Button color='primary' onClick={handleSignIn} loading={isLoading} >
+            Entrar
           </Button>
-        </main>
-      </Content>
+        </Card>
+      </Box>
     </Container>
   )
 }
