@@ -4,13 +4,13 @@ import AppBar  from 'components/AppBar'
 import { useSnackbar } from 'notistack'
 import { useData } from 'hooks/useData'
 import Moment from 'moment'
-import { Actions } from 'store/actions'
 import { Container, Grid, MenuItem, TextField, Typography, } from '@material-ui/core'
 import { customers, drivers, equipments, trucks, workTypes } from 'mocks'
 import Button from 'components/Button'
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 import DateFnsUtils from '@date-io/date-fns'
 import { useForm } from 'react-hook-form'
+import { createWork } from 'store/actionCreator'
 
 const Create: React.FC = () => {
   const { goBack } = useHistory()
@@ -29,7 +29,7 @@ const Create: React.FC = () => {
     try {
       await new Promise(resolve => setTimeout(resolve, 3000))
 
-      dispatch({ type: Actions.CREATE_WORK, payload: fields })
+      dispatch(createWork(fields))
 
       enqueueSnackbar('Serviço criado com sucesso!', {
         variant: 'success'

@@ -5,13 +5,13 @@ import AppBar  from 'components/AppBar'
 import { useSnackbar } from 'notistack'
 import { useData } from 'hooks/useData'
 import { api } from 'services/api'
-import { Actions } from 'store/actions'
 import { Box, Container, Divider, Grid, MenuItem, TextField, Typography } from '@material-ui/core'
 import Button from 'components/Button'
 import axios from 'axios'
 import { ICity, IState } from 'interfaces'
 import { getStates } from 'fetchs/getStates'
 import { getCitys } from 'fetchs/getCitys'
+import { createDriver } from 'store/actionCreator'
 
 interface AddressProps {
   logradouro: string 
@@ -78,7 +78,7 @@ const Create: React.FC = () => {
     try {
       await api.post('/drivers', fields)
 
-      dispatch({ type: Actions.CREATE_DRIVER, payload: fields })
+      dispatch(createDriver(fields))
 
       enqueueSnackbar('Motorista criado com sucesso!', {
         variant: 'success'

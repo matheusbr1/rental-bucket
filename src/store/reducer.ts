@@ -1,5 +1,5 @@
 import { IStore, ReducerAction } from 'interfaces'
-import { Actions } from './actions'
+import { Actions } from './actionTypes'
 import { INITIAL_STATE } from './state'
 
 export function reducer (state: IStore, action: ReducerAction): IStore {

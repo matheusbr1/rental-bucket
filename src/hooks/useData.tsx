@@ -3,7 +3,7 @@ import { ReducerAction, IStore } from 'interfaces'
 import { api } from 'services/api'
 import { reducer } from 'store/reducer'
 import { INITIAL_STATE } from 'store/state'
-import { Actions } from 'store/actions'
+import { setDrivers } from 'store/actionCreator'
 
 interface IDataContext {
   appData: IStore
@@ -17,9 +17,7 @@ const DataProvider: React.FC = ({ children }) => {
 
   // Getting data
   useEffect(() => {
-    api.get('/drivers').then(response => {
-      dispatch({ type: Actions.SET_DRIVERS, payload: response.data })
-    })
+    api.get('/drivers').then(response => setDrivers(response.data))
   }, [])
 
  return (

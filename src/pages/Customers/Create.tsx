@@ -4,12 +4,12 @@ import { useHistory } from 'react-router'
 import AppBar  from 'components/AppBar'
 import { useSnackbar } from 'notistack'
 import { useData } from 'hooks/useData'
-import { Actions } from 'store/actions'
 import { ICity, IState } from 'interfaces'
 import Button from 'components/Button'
 import axios from 'axios'
 import { getCitys } from 'fetchs/getCitys'
 import { getStates } from 'fetchs/getStates'
+import { createCustomer } from 'store/actionCreator'
 import { 
   Box,
   Container, 
@@ -84,7 +84,7 @@ const Create: React.FC = () => {
     try {
       // Requisição
 
-      dispatch({ type: Actions.CREATE_CUSTOMER, payload: fields })
+      dispatch(createCustomer(fields))
 
       enqueueSnackbar('Cliente criado com sucesso!', {
         variant: 'success'

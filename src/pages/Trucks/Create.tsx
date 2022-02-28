@@ -4,13 +4,13 @@ import { useHistory } from 'react-router'
 import AppBar  from 'components/AppBar'
 import { useSnackbar } from 'notistack'
 import { useData } from 'hooks/useData'
-import { Actions } from 'store/actions'
 import { Container, Grid, MenuItem, TextField, Typography, } from '@material-ui/core'
 import { truckEquipments, years } from 'mocks'
 import { IBrand, IModel, ITruck } from 'interfaces'
 import { getBrands } from 'fetchs/getBrands'
 import { getModels } from 'fetchs/getModels'
 import Button from 'components/Button'
+import { createTruck } from 'store/actionCreator'
 
 const Create: React.FC = () => {
   const { goBack } = useHistory()
@@ -52,7 +52,7 @@ const Create: React.FC = () => {
   }, [truck.brand])
 
   const handleCreate = useCallback((fields) => {
-    dispatch({ type: Actions.CREATE_TRUCK, payload: fields })
+    dispatch(createTruck(fields))
 
     setLoading(true)
 
