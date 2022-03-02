@@ -3,19 +3,19 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
 import AppBar  from 'components/AppBar'
 import { useSnackbar } from 'notistack'
-import { useData } from 'hooks/useData'
+import { useDispatch } from 'react-redux'
 import { Container, Grid, MenuItem, TextField, Typography, } from '@material-ui/core'
 import { truckEquipments, years } from 'mocks'
 import { IBrand, IModel, ITruck } from 'interfaces'
 import { getBrands } from 'fetchs/getBrands'
 import { getModels } from 'fetchs/getModels'
 import Button from 'components/Button'
-import { createTruck } from 'store/actionCreator'
+import { createTruck } from 'redux/actions/actionCreators'
 
 const Create: React.FC = () => {
   const { goBack } = useHistory()
 
-  const { dispatch } = useData()
+  const dispatch = useDispatch()
 
   const { enqueueSnackbar } = useSnackbar()
 

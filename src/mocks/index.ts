@@ -9,7 +9,7 @@ export const works: IWork[] = [
     endDate: new Date(),
     equipment: "Container de lixo",
     quantity: 1,
-    work: "Retirada",
+    type: "Retirada",
     truck: "DAD-8320",
   }
 ]

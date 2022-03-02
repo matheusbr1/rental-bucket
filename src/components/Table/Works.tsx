@@ -216,7 +216,7 @@ const Table: React.FC<TableProps> = ({ title, works }) => {
   const rows = works.map(work => createData(
     work.id,
     work.customer, 
-    work.work, 
+    work.type, 
     work.quantity,
     work.equipment, 
     work.endDate.toDateString(), 
@@ -396,7 +396,7 @@ const Table: React.FC<TableProps> = ({ title, works }) => {
                         <Checkbox checked={isItemSelected} />
                       </TableCell>
                       <TableCell component="th" scope="row" padding="none">
-                        {row.customer}s
+                        {row.customer}
                       </TableCell>
                       <TableCell align="left">{row.type}</TableCell>
                       <TableCell align="left">{row.quantity}</TableCell>

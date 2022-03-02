@@ -6,21 +6,24 @@ import { ThemeProvider, CssBaseline } from '@material-ui/core'
 import { useContext } from 'react'
 import { ThemeModeContext } from 'contexts/themeMode'
 import { lightTheme, darkTheme } from 'styles/theme'
+import { store } from "./redux/store";
+import { Provider } from "react-redux";
 
 function App() {
   const { theme } = useContext(ThemeModeContext)
-
   return (
-    <ThemeProvider theme={theme === 'dark' ? darkTheme : lightTheme} >
-      <SnackbarProvider>
-        <AppProvider>
-          <Routes />
-        </AppProvider>
-      </SnackbarProvider>
-      
-      <CssBaseline />
-      <GlobalStyle />
-    </ThemeProvider>
+    <Provider store={store} >
+      <ThemeProvider theme={theme === 'dark' ? darkTheme : lightTheme} >
+        <SnackbarProvider>
+          <AppProvider>
+            <Routes />
+          </AppProvider>
+        </SnackbarProvider>
+        
+        <CssBaseline />
+        <GlobalStyle />
+      </ThemeProvider>
+    </Provider>
   )
 }
 

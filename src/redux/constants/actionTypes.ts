@@ -1,11 +1,23 @@
-export enum Actions {
+export enum WorkActions {
   RESET_STATE = 'RESET_STATE',
   SET_WORKS = 'SET_WORKS',
   CREATE_WORK = 'CREATE_WORK',
+}
+
+export enum TruckActions {
+  RESET_STATE = 'RESET_STATE',
   SET_TRUCKS = 'SET_TRUCKS',
   CREATE_TRUCK = 'CREATE_TRUCK',
+}
+
+export enum DriverActions {
+  RESET_STATE = 'RESET_STATE',
   SET_DRIVERS = 'SET_DRIVERS',
   CREATE_DRIVER = 'CREATE_DRIVER',
+}
+
+export enum CustomerActions {
+  RESET_STATE = 'RESET_STATE',
   SET_CUSTOMERS = 'SET_CUSTOMERS',
   CREATE_CUSTOMER = 'CREATE_CUSTOMER',
 }

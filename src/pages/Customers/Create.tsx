@@ -3,13 +3,13 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
 import AppBar  from 'components/AppBar'
 import { useSnackbar } from 'notistack'
-import { useData } from 'hooks/useData'
 import { ICity, IState } from 'interfaces'
 import Button from 'components/Button'
 import axios from 'axios'
 import { getCitys } from 'fetchs/getCitys'
 import { getStates } from 'fetchs/getStates'
-import { createCustomer } from 'store/actionCreator'
+import { createCustomer } from 'redux/actions/actionCreators'
+import { useDispatch } from 'react-redux'
 import { 
   Box,
   Container, 
@@ -33,7 +33,7 @@ interface AddressProps {
 const Create: React.FC = () => {
   const { goBack } = useHistory()
 
-  const { dispatch  } = useData()
+  const dispatch = useDispatch()
 
   const { enqueueSnackbar } = useSnackbar()
 

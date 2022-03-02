@@ -1,27 +1,12 @@
-import React, { createContext, useContext, useEffect, useReducer } from 'react'
-import { ReducerAction, IStore } from 'interfaces'
-import { api } from 'services/api'
-import { reducer } from 'store/reducer'
-import { INITIAL_STATE } from 'store/state'
-import { setDrivers } from 'store/actionCreator'
+import React, { createContext, useContext } from 'react'
 
-interface IDataContext {
-  appData: IStore
-  dispatch: React.Dispatch<ReducerAction>
-}
+interface IDataContext { }
 
 const DataContext = createContext<IDataContext>({} as IDataContext)
 
 const DataProvider: React.FC = ({ children }) => {
-  const [appData, dispatch] = useReducer(reducer, INITIAL_STATE)
-
-  // Getting data
-  useEffect(() => {
-    api.get('/drivers').then(response => setDrivers(response.data))
-  }, [])
-
  return (
-    <DataContext.Provider value={{ appData, dispatch }}>
+    <DataContext.Provider value={{}}>
       {children}
     </DataContext.Provider>
  )

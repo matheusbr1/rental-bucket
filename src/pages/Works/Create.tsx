@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react'
 import { useHistory } from 'react-router'
 import AppBar  from 'components/AppBar'
 import { useSnackbar } from 'notistack'
-import { useData } from 'hooks/useData'
+import { useDispatch } from 'react-redux'
 import Moment from 'moment'
 import { Container, Grid, MenuItem, TextField, Typography, } from '@material-ui/core'
 import { customers, drivers, equipments, trucks, workTypes } from 'mocks'
@@ -10,7 +10,7 @@ import Button from 'components/Button'
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 import DateFnsUtils from '@date-io/date-fns'
 import { useForm } from 'react-hook-form'
-import { createWork } from 'store/actionCreator'
+import { createWork } from 'redux/actions/actionCreators'
 
 const Create: React.FC = () => {
   const { goBack } = useHistory()
@@ -19,7 +19,7 @@ const Create: React.FC = () => {
 
   const { register, handleSubmit } = useForm()
 
-  const { dispatch  } = useData()
+  const dispatch  = useDispatch()
 
   const [loading, setLoading] = useState(false)
 
@@ -64,7 +64,7 @@ const Create: React.FC = () => {
                 fullWidth
                 label='Cliente'
                 variant='outlined'
-                {...register('client')}
+                {...register('customer')}
               >
                 {customers.map((customer, index) => (
                   <MenuItem key={index} value={customer.name} >{customer.name}</MenuItem>
@@ -136,7 +136,7 @@ const Create: React.FC = () => {
                 fullWidth
                 label='Serviço'
                 variant='outlined'
-                {...register('service')}
+                {...register('type')}
               >
                 {workTypes.map((type, index) => (
                   <MenuItem key={index} value={type}> {type} </MenuItem>

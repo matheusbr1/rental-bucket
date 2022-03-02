@@ -1,9 +1,16 @@
-export interface IStore {
-  works: IWork[]
-  trucks: ITruck[]
-  drivers: IDriver[]
-  customers: ICustomer[]
-  work: IWork
+export interface IDefaultRootState  {
+  work: {
+    works: IWork[]
+  }
+  truck: {
+    trucks: ITruck[]
+  }
+  driver: {
+    drivers:  IDriver[]
+  }
+  customer: {
+    customers: ICustomer[]
+  }
 }
 
 export interface ReducerAction {
@@ -71,7 +78,7 @@ export interface IWork {
   endDate: Date
   equipment: string
   quantity: number
-  work: string
+  type: string
   truck: string
 }
 

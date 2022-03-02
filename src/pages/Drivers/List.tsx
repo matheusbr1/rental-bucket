@@ -3,16 +3,15 @@ import AppBar  from 'components/AppBar'
 import Table from 'components/Table/Drivers'
 import FloatingButton from 'components/FloatingButton'
 import { useHistory } from 'react-router'
-import { useData } from 'hooks/useData'
+import { useSelector } from 'react-redux'
 import { Box, Container } from '@material-ui/core'
+import { IDefaultRootState, IDriver } from 'interfaces'
 
 const List: React.FC = () => {
 
   const history = useHistory()
 
-  const { appData } = useData()
-
-  const { drivers } = appData
+  const drivers = useSelector<IDefaultRootState, IDriver[]>(state => state.driver.drivers)
 
   return (
     <Container style={{ marginTop: 64 }} >

@@ -3,15 +3,14 @@ import AppBar  from 'components/AppBar'
 import Table from 'components/Table/Trucks'
 import FloatingButton from 'components/FloatingButton'
 import { useHistory } from 'react-router'
-import { useData } from 'hooks/useData'
+import { useSelector } from 'react-redux'
 import { Box, Container } from '@material-ui/core'
+import { IDefaultRootState, ITruck } from 'interfaces'
 
 const List: React.FC = () => {
   const history = useHistory()
 
-  const { appData } = useData()
-
-  const { trucks } = appData
+  const trucks = useSelector<IDefaultRootState, ITruck[]>(state => state.truck.trucks)
 
   return (
     <Container style={{ marginTop: 64 }} >

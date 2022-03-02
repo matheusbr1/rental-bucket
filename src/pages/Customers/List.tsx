@@ -2,14 +2,13 @@ import React from 'react'
 import AppBar  from 'components/AppBar'
 import FloatingButton from 'components/FloatingButton'
 import { useHistory } from 'react-router'
-import { useData } from 'hooks/useData'
+import { useSelector } from 'react-redux'
 import Table from 'components/Table/Customers'
 import { Box, Container } from '@material-ui/core'
+import { ICustomer, IDefaultRootState } from 'interfaces'
 
 const List: React.FC = () => {
-  const { appData } = useData()
-
-  const { customers } = appData
+  const customers = useSelector<IDefaultRootState, ICustomer[]>(state => state.customer.customers)
   
   const history = useHistory()
 
