@@ -4,7 +4,5 @@ import { IState } from 'interfaces'
 export async function getStates(): Promise<IState[]> {
   const { data } = await axios.get('https://servicodados.ibge.gov.br/api/v1/localidades/estados')
 
-  const states = data.map((state: IState) => state.sigla)
-
-  return states
+  return data
 } 

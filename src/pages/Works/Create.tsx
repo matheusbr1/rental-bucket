@@ -4,20 +4,20 @@ import AppBar  from 'components/AppBar'
 import { useSnackbar } from 'notistack'
 import { useDispatch } from 'react-redux'
 import Moment from 'moment'
-import { Container, Grid, MenuItem, TextField, Typography, } from '@material-ui/core'
+import { Container, Grid, Typography, } from '@material-ui/core'
 import { customers, drivers, equipments, trucks, workTypes } from 'mocks'
 import Button from 'components/Button'
-import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
-import DateFnsUtils from '@date-io/date-fns'
-import { useForm } from 'react-hook-form'
 import { createWork } from 'redux/actions/actionCreators'
+import { Formik, Form, Field } from 'formik'
+import { IAddress, ICustomer, IDriver, ITruck } from 'interfaces'
+import FormikTextField from 'components/FormikTextField'
+import FormikDateInput from 'components/FormikDateInput'
+import FormikAutoComplete from 'components/FormikAutoComplete'
 
 const Create: React.FC = () => {
   const { goBack } = useHistory()
 
   const { enqueueSnackbar } = useSnackbar()
-
-  const { register, handleSubmit } = useForm()
 
   const dispatch  = useDispatch()
 
@@ -50,146 +50,122 @@ const Create: React.FC = () => {
       <AppBar search={false} />
 
       <Container maxWidth='md' style={{ marginTop: 100 }} >
-        <form onSubmit={handleSubmit(handleCreate)} >
-          <Grid container spacing={3} justify='flex-end' >
-            <Grid item lg={12} md={12} sm={12} >
-              <Typography variant='h1' >
-                Novo serviço
-              </Typography>
-            </Grid>
+        <Formik
+          onSubmit={handleCreate}
+          enableReinitialize
+          validateOnChange
+          initialValues={{
+            customer: null,
+            driver: null,
+            truck: null,
+            equipment: null,
+            type: null,
+            quantity: null,
+            endDate: Moment(new Date()).add(7, 'days').toDate()
+          }}
+        >
+          {({ errors, touched }) => (
+            <Form>
+              <Grid container spacing={3} justify='flex-end' >
+                <Grid item lg={12} md={12} sm={12} >
+                  <Typography variant='h1' >
+                    Novo serviço
+                  </Typography>
+                </Grid>
 
-            <Grid item lg={4} md={4} sm={6} xs={12} >
-              <TextField 
-                select
-                fullWidth
-                label='Cliente'
-                variant='outlined'
-                {...register('customer')}
-              >
-                {customers.map((customer, index) => (
-                  <MenuItem key={index} value={customer.name} >{customer.name}</MenuItem>
-                ))}
-              </TextField>
-            </Grid>
-            
-            <Grid item lg={4} md={4} sm={6} xs={12} >
-              <TextField 
-                select
-                fullWidth
-                label='Endereço'
-                variant='outlined'
-                {...register('address')}
-              >
-                {customers[0].address.map((address, index) => (
-                  <MenuItem key={index} value={address.CEP}>
-                    {address.street} - {address.number} - {address.neighborhood}
-                  </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
+                <Grid item lg={4} md={4} sm={6} xs={12} >
+                  <FormikAutoComplete 
+                    name="customer"
+                    options={customers}
+                    error={errors.customer}
+                    touched={touched.customer}
+                    label='Cliente'
+                    getOptionLabel={(option: ICustomer) => option.name}
+                  />
+                </Grid>
+                
+                <Grid item lg={4} md={4} sm={6} xs={12} >
+                  <FormikAutoComplete 
+                    name="address"
+                    options={customers[0].address}
+                    error={errors.customer}
+                    touched={touched.customer}
+                    label='Endereço'
+                    getOptionLabel={(option: IAddress) => 
+                      `${option.street} - ${option.number} - ${option.neighborhood}`
+                    }
+                  />
+                </Grid>
 
-            <Grid item lg={4} md={4} sm={6} xs={12} >
-              <TextField 
-                select
-                fullWidth
-                label='Motorista'
-                variant='outlined'
-                {...register('driver')}
-              >
-              {drivers.map((driver, index) => (
-                <MenuItem key={index} value={driver.name}> {driver.name} </MenuItem>
-              ))}
-              </TextField>
-            </Grid>
+                <Grid item lg={4} md={4} sm={6} xs={12} >
+                  <FormikAutoComplete 
+                    name="driver"
+                    options={drivers}
+                    error={errors.driver}
+                    touched={touched.driver}
+                    label='Motorista'
+                    getOptionLabel={(option: IDriver) => option.name}
+                  />
+                </Grid>
 
-            <Grid item lg={4} md={4} sm={6} xs={12} >
-              <TextField 
-                select
-                fullWidth
-                label='Equipamento'
-                variant='outlined'
-                {...register('equipment')}
-              >
-              {equipments.map((equipment, index) => (
-                <MenuItem key={index} value={equipment}> {equipment} </MenuItem>
-              ))}
-              </TextField>
-            </Grid>
+                <Grid item lg={4} md={4} sm={6} xs={12} >
+                  <FormikAutoComplete 
+                    name="equipment"
+                    options={equipments}
+                    error={errors.equipment}
+                    touched={touched.equipment}
+                    label='Equipamento'
+                  />
+                </Grid>
 
-            <Grid item lg={4} md={4} sm={6} xs={12} >
-              <TextField 
-                select
-                fullWidth
-                label='Caminhão'
-                variant='outlined'
-                {...register('truck')}
-              >
-              {trucks.map((truck, index) => (
-                  <MenuItem key={index} value={truck.plate}> {truck.plate} </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
+                <Grid item lg={4} md={4} sm={6} xs={12} >
+                  <FormikAutoComplete 
+                    name="truck"
+                    options={trucks}
+                    error={errors.truck}
+                    touched={touched.truck}
+                    label='Caminhão'
+                    getOptionLabel={(option: ITruck) => option.plate}
+                  />
+                </Grid>
 
-            <Grid item lg={4} md={4} sm={6} xs={12} >
-              <TextField 
-                select
-                fullWidth
-                label='Serviço'
-                variant='outlined'
-                {...register('type')}
-              >
-                {workTypes.map((type, index) => (
-                  <MenuItem key={index} value={type}> {type} </MenuItem>
-                ))}
-              </TextField>
-            </Grid>
+                <Grid item lg={4} md={4} sm={6} xs={12} >
+                  <FormikAutoComplete 
+                    name="type"
+                    options={workTypes}
+                    error={errors.type}
+                    touched={touched.type}
+                    label='Serviço'
+                  />
+                </Grid>
 
-            <Grid item lg={4} md={4} sm={6} xs={12} >
-              <TextField 
-                label='Quantidade'
-                variant='outlined'
-                type='number'
-                fullWidth
-                inputProps={{
-                  min: 1,
-                  max: 100
-                }}
-                {...register('quantity')}
-              />
-            </Grid>
+                <Grid item lg={4} md={4} sm={6} xs={12} >
+                  <Field
+                    component={FormikTextField}
+                    fullWidth
+                    label='Quantidade'
+                    id='quantity'
+                    name='quantity'
+                    type='number'
+                    inputProps={{ min: 1, max: 100 }}
+                  />
+                </Grid>
 
-            <Grid item lg={4} md={4} sm={6} xs={12} >
-              <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDatePicker
-                  style={{ margin: 0 }}
-                  autoOk
-                  disableToolbar
-                  fullWidth
-                  placeholder="DD/MM/AAAA"
-                  format="dd/MM/yyyy"
-                  invalidDateMessage="Formato inválido"
-                  inputVariant="outlined"
-                  variant="inline"
-                  color='primary'
-                  views={ ['year', 'month', 'date'] }
-                  margin="normal"
-                  label='Data da retirada'
-                  {...register('endDate')}
-                  value={Moment(new Date()).add(7, 'days').toDate()}
-                  onChange={register('endDate').onChange as any}
-                />
-              </MuiPickersUtilsProvider>
-            </Grid>
+                <Grid item lg={4} md={4} sm={6} xs={12} >
+                  <FormikDateInput label="Data da retirada" name="endDate" />
+                </Grid>
 
-            <Grid item lg={4} md={4} sm={6} xs={12} />
+                <Grid item lg={4} md={4} sm={6} xs={12} />
 
-            <Grid item lg={4} md={4} sm={6} xs={12} >
-              <Button loading={loading} color='primary' type='submit' >
-                Criar
-              </Button>
-            </Grid>
-          </Grid>
-        </form>
+                <Grid item lg={4} md={4} sm={6} xs={12} >
+                  <Button loading={loading} color='primary' type='submit' >
+                    Criar
+                  </Button>
+                </Grid>
+              </Grid>
+            </Form>
+          )}
+        </Formik>
       </Container>
     </>
   )

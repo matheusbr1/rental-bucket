@@ -59,7 +59,6 @@ export function workReducer (
         works: state.works.concat({
           id: state.works.length + 1,
           ...action.payload,
-          endDate: new Date(),
         })
       }
 
