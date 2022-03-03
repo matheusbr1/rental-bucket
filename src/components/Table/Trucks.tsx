@@ -33,8 +33,6 @@ interface TableProps {
 interface Data {
   id: number
   plate: string
-  brand: string
-  model: string
   equipment: string
 }
 
@@ -78,8 +76,6 @@ interface HeadCell {
 
 const headCells: HeadCell[] = [
   { id: 'plate', numeric: false, disablePadding: true, label: 'Placa' },
-  { id: 'brand', numeric: false, disablePadding: false, label: 'Marca' },
-  { id: 'model', numeric: false, disablePadding: false, label: 'Modelo' },
   { id: 'equipment', numeric: false, disablePadding: false, label: 'Equipamento' },
 ]
 
@@ -201,18 +197,14 @@ const Table: React.FC<TableProps> = ({ title, trucks }) => {
   function createData(
     id: number,
     plate: string,
-    brand: string,
-    model: string,
     equipment: string
   ): Data {
-    return { id, plate, brand, model, equipment }
+    return { id, plate, equipment }
   }
   
   const rows = trucks.map(truck => createData(
     truck.id,
     truck.plate, 
-    truck.brand, 
-    truck.model, 
     truck.equipment
   ))
 
@@ -374,8 +366,6 @@ const Table: React.FC<TableProps> = ({ title, trucks }) => {
                       <TableCell component="th" id={labelId} scope="row" padding="none">
                         {row.plate}
                       </TableCell>
-                      <TableCell align="left">{row.brand}</TableCell>
-                      <TableCell align="left">{row.model}</TableCell>
                       <TableCell align="left">{row.equipment}</TableCell>
                     </TableRow>
                   );

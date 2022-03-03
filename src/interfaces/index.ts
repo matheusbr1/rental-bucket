@@ -92,8 +92,8 @@ export interface IModel {
 
 export interface ITruck {
   id: number
-  brand: IBrand | any
-  model: IModel | any
+  brand: IBrand | null
+  model: IModel | null
   plate: string
   equipment: string
   renavam: string

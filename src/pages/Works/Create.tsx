@@ -5,7 +5,7 @@ import { useSnackbar } from 'notistack'
 import { useDispatch, useSelector } from 'react-redux'
 import Moment from 'moment'
 import { Container, Grid, Typography, } from '@material-ui/core'
-import { customers, equipments, trucks, workTypes } from 'mocks'
+import { customers, equipments, workTypes } from 'mocks'
 import Button from 'components/Button'
 import { createWork } from 'redux/actions/actionCreators'
 import { Formik, Form, Field } from 'formik'
@@ -18,6 +18,7 @@ const Create: React.FC = () => {
   const { goBack } = useHistory()
 
   const drivers = useSelector<IDefaultRootState, IDriver[]>(state => state.driver.drivers)
+  const trucks = useSelector<IDefaultRootState, ITruck[]>(state => state.truck.trucks)
 
   const { enqueueSnackbar } = useSnackbar()
 

@@ -21,6 +21,10 @@ export function createDriver(driver: IDriver) {
 }
 
 // Truck
+export function setTrucks(trucks: ITruck[]) {
+  return { type: TruckActions.SET_TRUCKS, payload: trucks }
+}
+
 export function createTruck(truck: ITruck) {
   return { type: TruckActions.CREATE_TRUCK, payload: truck }
 }

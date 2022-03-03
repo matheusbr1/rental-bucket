@@ -1,16 +1,20 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useCallback, useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
 import AppBar  from 'components/AppBar'
 import { useSnackbar } from 'notistack'
 import { useDispatch } from 'react-redux'
-import { Container, Grid, MenuItem, TextField, Typography, } from '@material-ui/core'
+import { Container, Grid, Typography, } from '@material-ui/core'
 import { truckEquipments, years } from 'mocks'
-import { IBrand, IModel, ITruck } from 'interfaces'
+import { IBrand, IModel } from 'interfaces'
 import { getBrands } from 'fetchs/getBrands'
 import { getModels } from 'fetchs/getModels'
 import Button from 'components/Button'
 import { createTruck } from 'redux/actions/actionCreators'
+import { Formik, Form, Field } from 'formik'
+import FormikTextField from 'components/FormikTextField'
+import FormikAutoComplete from 'components/FormikAutoComplete'
+import Loading from 'components/Loading'
+import { api } from 'services/api'
 
 const Create: React.FC = () => {
   const { goBack } = useHistory()
@@ -20,11 +24,8 @@ const Create: React.FC = () => {
   const { enqueueSnackbar } = useSnackbar()
 
   const [loading, setLoading] = useState(false)
-
-  const [truck, setTruck] = useState<ITruck>({} as ITruck)
   
   const [brands, setBrands] = useState<IBrand[]>([])
-  
   const [models, setModels] = useState<IModel[]>([])
 
   // Getting brands
@@ -34,147 +35,154 @@ const Create: React.FC = () => {
         const brands = await getBrands()
         setBrands(brands)
        } catch (error) {
-        // Show a toast
+        enqueueSnackbar('Não foi possível obter as marcas!', {
+          variant: 'error'
+        })
        }
     })()
-  }, [])
+  }, [enqueueSnackbar])
 
-  // Getting models
-  useEffect(() => {
-    (async () => {
-      try {
-        const models = await getModels(truck.brand.id)
-        setModels(models)
-      } catch (error) {
-        // Show a toast
-      }
-    })()
-  }, [truck.brand])
+  const handleCreate = useCallback(async (fields) => {
+    try {
+      setLoading(true)
 
-  const handleCreate = useCallback((fields) => {
-    dispatch(createTruck(fields))
+      await api.post('trucks', {
+        ...fields,
+        brandId: fields.brand?.id,
+        modelId: fields.model?.id,
+        typeId: 1,
+        plate: fields.plate, 
+        renavam: fields.renavam, 
+        year: fields.year
+      })
 
-    setLoading(true)
-
-    setTimeout(() => {
-      goBack()
+      dispatch(createTruck(fields))
 
       enqueueSnackbar('Caminhão cadastrado com sucesso!', {
         variant: 'success'
       })
 
+      goBack()
+    } catch (error) {
+      enqueueSnackbar('Erro ao criar caminhão, tente novamente!!', {
+        variant: 'error'
+      })
+    } finally {
       setLoading(false)
-    }, 2000)
+    }
   }, [goBack, enqueueSnackbar, dispatch])
+
+  const handleBrandBlur = useCallback(async (brand: IBrand | null) => {
+    if (!!brand) {
+      const models = await getModels(brand.id)
+      setModels(models)
+    }
+  }, [])
 
   return (
     <Container maxWidth='md' style={{ marginTop: 100 }} >
       <AppBar search={false} />
 
-      <Grid container spacing={3} justify='flex-end' >
-        <Grid item lg={12} md={12} sm={12} >
-          <Typography variant='h1' >
-            Novo Caminhão
-          </Typography>
-        </Grid>
+      <Formik
+        onSubmit={handleCreate}
+        enableReinitialize
+        validateOnChange
+        initialValues={{
+          brand: null,
+          model: null,
+          equipment: '',
+          year: {
+            manufacture: '',
+            model: ''
+          },
+        }}
+      >
+        {({ errors, touched, values, isSubmitting }) => (
+          <Form>
+            {loading && <Loading />}
 
-        <Grid item lg={4} md={4} sm={6} xs={12} >
-          <TextField 
-            select
-            fullWidth
-            label='Marcas'
-            variant='outlined'
-          >
-            {brands.map((customer, index) => (
-              <MenuItem key={index} value={customer.name} >{customer.name}</MenuItem>
-            ))}
-          </TextField>
-        </Grid>
+            <Grid container spacing={3} justify='flex-end' >
+              <Grid item lg={12} md={12} sm={12} >
+                <Typography variant='h1' >
+                  Novo Caminhão
+                </Typography>
+              </Grid>
 
-        <Grid item lg={4} md={4} sm={6} xs={12} >
-          <TextField
-            select
-            fullWidth
-            name='model'
-            label='Modelo'
-            variant="outlined" 
-          >
-            {models.map((model: any) => (
-              <MenuItem  value={model} key={model.id}>  {model.name} </MenuItem>
-            ))}
-          </TextField>
-        </Grid>
+              <Grid item lg={4} md={4} sm={6} xs={12} >
+                <FormikAutoComplete 
+                  name="brand"
+                  options={brands}
+                  error={errors.brand}
+                  touched={touched.brand}
+                  label='Marca'
+                  getOptionLabel={(option: IBrand) => option.name}
+                  onBlur={() => handleBrandBlur(values.brand)}
+                />
+              </Grid>
 
-        <Grid item lg={4} md={4} sm={6} xs={12} >
-          <TextField
-            fullWidth
-            name='Placa' 
-            label='Placa'
-            variant="outlined" 
-          />
-        </Grid>
+              <Grid item lg={4} md={4} sm={6} xs={12} >
+                <FormikAutoComplete 
+                  name="model"
+                  options={models}
+                  error={errors.model}
+                  disabled={!values.brand || isSubmitting}
+                  touched={touched.model}
+                  label='Modelo'
+                  getOptionLabel={(option: IModel) => option.name}
+                />
+              </Grid>
 
-        <Grid item lg={4} md={4} sm={6} xs={12} >
-          <TextField
-            select
-            fullWidth
-            name='manufacture'
-            label='Ano de Fabricação'
-            variant="outlined" 
-          >
-            {years.map(year => (
-              <MenuItem  value={year} key={year}>  {year} </MenuItem>
-            ))}
-          </TextField>
-        </Grid>
-      
-        <Grid item lg={4} md={4} sm={6} xs={12} >
-          <TextField
-            select
-            fullWidth
-            name='model'
-            label='Ano do Modelo'
-            variant="outlined" 
-          >
-            {years.map(year => (
-              <MenuItem  value={year} key={year}>  {year} </MenuItem>
-            ))}
-          </TextField>
-        </Grid>
+              <Grid item lg={4} md={4} sm={6} xs={12} >
+                <Field component={FormikTextField} label='Placa' name='plate' />
+              </Grid>
 
-        <Grid item lg={4} md={4} sm={6} xs={12} >
-          <TextField
-            select
-            fullWidth
-            name='equipment'
-            label='Equipamento'
-            variant="outlined" 
-          >
-            {truckEquipments.map(equipment => (
-              <MenuItem  value={equipment} key={equipment}>  {equipment} </MenuItem>
-            ))}
-          </TextField>
-        </Grid>
+              <Grid item lg={4} md={4} sm={6} xs={12} >
+                <FormikAutoComplete 
+                  name="year.manufacture"
+                  options={years}
+                  error={errors.year?.manufacture}
+                  touched={touched.year?.manufacture}
+                  label='Ano de Fabricação'
+                />
+              </Grid>
+            
+              <Grid item lg={4} md={4} sm={6} xs={12} >
+                <FormikAutoComplete 
+                  name="year.model"
+                  options={years}
+                  error={errors.year?.model}
+                  touched={touched.year?.model}
+                  label='Ano do Modelo'
+                />
+              </Grid>
 
-        <Grid item lg={4} md={4} sm={6} xs={12} >
-          <TextField
-            fullWidth
-            name='renavam' 
-            label='Renavan'
-            variant="outlined" 
-          />
-        </Grid>
+              <Grid item lg={4} md={4} sm={6} xs={12} >
+                <FormikAutoComplete 
+                  name="equipment"
+                  options={truckEquipments}
+                  error={errors.equipment}
+                  touched={touched.equipment}
+                  label='Equipamento'
+                />
+              </Grid>
 
-        <Grid item lg={4} md={4} sm={6} xs={12} />
-        
-        <Grid item lg={4} md={4} sm={6} xs={12} />
+              <Grid item lg={4} md={4} sm={6} xs={12} >
+                <Field component={FormikTextField} label='Renavan' name='renavam' />
+              </Grid>
 
-        <Grid item lg={4} md={4} sm={6} xs={12} >
-          <Button loading={loading} color='primary' type='submit' >
-            Criar
-          </Button>
-        </Grid>
-      </Grid>
+              <Grid item lg={4} md={4} sm={6} xs={12} />
+              
+              <Grid item lg={4} md={4} sm={6} xs={12} />
+
+              <Grid item lg={4} md={4} sm={6} xs={12} >
+                <Button loading={loading} color='primary' type='submit' >
+                  Criar
+                </Button>
+              </Grid>
+            </Grid>
+          </Form>
+        )}
+      </Formik>
     </Container>
   )
 }

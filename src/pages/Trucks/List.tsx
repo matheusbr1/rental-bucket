@@ -1,14 +1,21 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import AppBar  from 'components/AppBar'
 import Table from 'components/Table/Trucks'
 import FloatingButton from 'components/FloatingButton'
 import { useHistory } from 'react-router'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Box, Container } from '@material-ui/core'
 import { IDefaultRootState, ITruck } from 'interfaces'
+import { api } from 'services/api'
+import { setTrucks } from 'redux/actions/actionCreators'
 
 const List: React.FC = () => {
   const history = useHistory()
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    api.get('trucks').then(response => dispatch(setTrucks(response.data)))
+  }, [dispatch])
 
   const trucks = useSelector<IDefaultRootState, ITruck[]>(state => state.truck.trucks)
 

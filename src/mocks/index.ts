@@ -1,4 +1,4 @@
-import { ICustomer, ITruck, IWork } from "interfaces"
+import { ICustomer, IWork } from "interfaces"
 
 export const works: IWork[] = [
   {
@@ -44,21 +44,6 @@ export const customers: ICustomer[] = [
         complement: ''
       }
     ]
-  }
-]
-
-export const trucks: ITruck[] = [
-  {
-    id: 1,
-    brand: 'Ford',
-    model: 'F-1000 XLT 4x4 Diesel Turbo',
-    renavam: '36783908793',
-    plate: 'FKF-7151',
-    equipment: 'Poliguindaste',
-    year: {
-      manufacture: '1996',
-      model: '1996'
-    },
   }
 ]
 
