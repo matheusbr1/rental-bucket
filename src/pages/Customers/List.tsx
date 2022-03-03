@@ -1,16 +1,23 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import AppBar  from 'components/AppBar'
 import FloatingButton from 'components/FloatingButton'
 import { useHistory } from 'react-router'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Table from 'components/Table/Customers'
 import { Box, Container } from '@material-ui/core'
 import { ICustomer, IDefaultRootState } from 'interfaces'
+import { api } from 'services/api'
+import { setCustomers } from 'redux/actions/actionCreators'
 
 const List: React.FC = () => {
-  const customers = useSelector<IDefaultRootState, ICustomer[]>(state => state.customer.customers)
-  
   const history = useHistory()
+  const dispatch  = useDispatch()
+
+  useEffect(() => {
+    api.get('customers').then(response => dispatch(setCustomers(response.data)))
+  }, [dispatch])
+
+  const customers = useSelector<IDefaultRootState, ICustomer[]>(state => state.customer.customers)
 
   return (
     <Container style={{ marginTop: 64 }} >

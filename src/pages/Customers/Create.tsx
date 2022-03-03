@@ -1,27 +1,30 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useCallback, useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
 import AppBar  from 'components/AppBar'
 import { useSnackbar } from 'notistack'
-import { ICity, IState } from 'interfaces'
+import { IAddress, ICity, IState } from 'interfaces'
 import Button from 'components/Button'
 import axios from 'axios'
 import { getCitys } from 'fetchs/getCitys'
 import { getStates } from 'fetchs/getStates'
 import { createCustomer } from 'redux/actions/actionCreators'
 import { useDispatch } from 'react-redux'
+import { Formik, Form, Field } from 'formik'
+import FormikTextField from 'components/FormikTextField'
+import FormikAutoComplete from 'components/FormikAutoComplete'
+import Loading from 'components/Loading'
+import { api } from 'services/api'
 import { 
   Box,
   Container, 
   Divider, 
   FormControlLabel, 
   Grid, 
-  MenuItem, 
   Radio, 
   RadioGroup, 
-  TextField, 
   Typography 
 } from '@material-ui/core'
+
 
 interface AddressProps {
   logradouro: string 
@@ -39,8 +42,6 @@ const Create: React.FC = () => {
 
   const [loading, setLoading] = useState(false)
   const [states, setStates] = useState<IState[]>([])
-  const [state, setState] = useState<IState>()
-  const [city, setCity] = useState<ICity>()
   const [citys, setCitys] = useState<ICity[]>([])
 
   // Getting States
@@ -51,38 +52,54 @@ const Create: React.FC = () => {
     })()
   }, [])
 
-  // Getting Citys
-  useEffect(() => {
-    if (!state) {
-      return
-    }
+  const handleGetAdress = useCallback(async (CEP: string): Promise<Partial<IAddress> | undefined> => {
+    try {
+      setLoading(true)
 
-    (async () => {
-      const citys = await getCitys(state.sigla)
-      setCitys(citys)
-    })()
-  }, [state])
+      let address = { CEP } as Partial<IAddress>
+  
+      const { data } = await axios.get(`https://viacep.com.br/ws/${CEP}/json`)
 
-  const handleGetAdress = useCallback(e => {
-    const cep = e.target.value
-
-    axios
-      .get(`https://viacep.com.br/ws/${cep}/json`)
-      .then(response => {
-
-      if (!response.data) {
-        return
+      if (data.erro) {
+        throw new Error('Unable to fetch zip code')
       }
+  
+      if (!data) {
+        return address
+      }
+  
+      const { logradouro, uf, localidade, bairro }: AddressProps = data
+          
+      address = {
+        neighborhood: bairro,
+        street: logradouro,
+        state: states.find(state => state.sigla === uf)
+      }
+  
+      const citys = await getCitys(uf)
+  
+      setCitys(citys)
+  
+      address.city = citys.find(city => city.name === localidade)
+  
+      return address
+    } catch {
+      enqueueSnackbar('Erro ao buscar endereço, tente novamente!', {
+        variant: 'error'
+      })
+    } finally {
+      setLoading(false)
+    }
+  }, [states, enqueueSnackbar])
 
-      const { logradouro, uf, localidade, bairro }: AddressProps = response.data
-    })
-  },[])
-
-  const handleCreate = useCallback((fields) => {
+  const handleCreate = useCallback(async (fields) => {
     setLoading(true)
 
     try {
-      // Requisição
+      await api.post('customers', {
+        ...fields,
+        personType: 'F'
+      })
 
       dispatch(createCustomer(fields))
 
@@ -105,170 +122,159 @@ const Create: React.FC = () => {
     <Container maxWidth='md' style={{ marginTop: 100 }} >
       <AppBar search={false} />
 
-      <Grid container spacing={3} justify='flex-end' >
-        <Grid item lg={12} md={12} sm={12} >
-          <Typography variant='h1' >
-            Novo Cliente
-          </Typography>
-        </Grid>
+      <Formik
+          onSubmit={handleCreate}
+          enableReinitialize
+          validateOnChange
+          initialValues={{
+            address: {
+              CEP: '',
+              street: '',
+              neighborhood: '',
+              state: null,
+              city: null
+            }
+          }}
+        >
+          {({ values, errors, touched, setFieldValue }) => (
+            <Form>
+              {loading && <Loading />}
 
-        <Grid item lg={12} md={12} sm={12} xs={12} >
-          <RadioGroup name='person' id="person" row >
-            <FormControlLabel
-              value="F"
-              defaultChecked
-              label="Pessoa Física"
-              control={<Radio />}
-            />
+              <Grid container spacing={3} justify='flex-end' >
+                <Grid item lg={12} md={12} sm={12} >
+                  <Typography variant='h1' >
+                    Novo Cliente
+                  </Typography>
+                </Grid>
 
-            <FormControlLabel
-              value="J"
-              label="Pessoa Jurídica"
-              control={<Radio />}
-            />
-          </RadioGroup>
-        </Grid>
+                <Grid item lg={12} md={12} sm={12} xs={12} >
+                  <RadioGroup name='person' id="person" row >
+                    <FormControlLabel
+                      value="F"
+                      defaultChecked
+                      label="Pessoa Física"
+                      control={<Radio />}
+                    />
 
-        <Grid item lg={6} md={6} sm={6} xs={12} >
-          <TextField 
-            fullWidth
-            label='CPF'
-            variant='outlined'
-          />
-        </Grid>
+                    <FormControlLabel
+                      value="J"
+                      label="Pessoa Jurídica"
+                      control={<Radio />}
+                    />
+                  </RadioGroup>
+                </Grid>
 
-        <Grid item lg={6} md={6} sm={6} xs={12} >
-          <TextField 
-            fullWidth
-            label='Nome'
-            variant='outlined'
-          />
-        </Grid>
+                <Grid item lg={6} md={6} sm={6} xs={12} >
+                  <Field component={FormikTextField} label='Nome' name='name' />
+                </Grid>
 
-        <Grid item lg={12} md={12} sm={12} xs={12} >
-          <Divider style={{ margin: '2rem 0' }} />
-        </Grid>
+                <Grid item lg={6} md={6} sm={6} xs={12} >
+                  <Field component={FormikTextField} label='CPF' name='CPF' />
+                </Grid>
 
-        <Grid item lg={12} md={12} sm={12} xs={12} >
-          <Typography variant='h3' >
-            Endereço
-          </Typography>
-        </Grid>
+                <Grid item lg={12} md={12} sm={12} xs={12} >
+                  <Divider style={{ margin: '2rem 0' }} />
+                </Grid>
 
-        <Grid item lg={2} md={2} sm={4} xs={12} >
-          <TextField 
-            fullWidth
-            label='CEP'
-            variant='outlined'
-          />
-        </Grid>
+                <Grid item lg={12} md={12} sm={12} xs={12} >
+                  <Typography variant='h3' >
+                    Endereço
+                  </Typography>
+                </Grid>
 
-        <Grid item lg={10} md={10} sm={8} xs={12} >
-          <TextField 
-            fullWidth
-            label='Logradouro'
-            variant='outlined'
-          />
-        </Grid>
+                <Grid item lg={2} md={2} sm={4} xs={12} >
+                  <Field 
+                    component={FormikTextField} 
+                    label='CEP' 
+                    name='address.CEP'
+                    onBlur={async () => {
+                      const address = await handleGetAdress(values.address.CEP)
+                      setFieldValue('address', { ...values.address, ...address })
+                    }}
+                  />
+                </Grid>
 
-        <Grid item lg={2} md={2} sm={4} xs={12} >
-          <TextField 
-            fullWidth
-            label='Número'
-            variant='outlined'
-          />
-        </Grid>
+                <Grid item lg={10} md={10} sm={8} xs={12} >
+                  <Field component={FormikTextField} label='Logradouro' name='address.street' />
+                </Grid>
 
-        <Grid item lg={10} md={10} sm={8} xs={12} >
-          <TextField 
-            fullWidth
-            label='Bairro'
-            variant='outlined'
-          />
-        </Grid>
+                <Grid item lg={2} md={2} sm={4} xs={12} >
+                  <Field 
+                    component={FormikTextField} 
+                    label='Número' 
+                    name='address.number'
+                    type='number'
+                    inputProps={{ min: 0 }}
+                  />
+                </Grid>
 
-        <Grid item lg={2} md={2} sm={4} xs={12} >
-          <TextField
-            select
-            fullWidth
-            name='state' 
-            label='UF'
-            variant="outlined" 
-          >
-            {states.map(state => (
-              <MenuItem value={state.sigla} key={state.sigla} > {state.sigla} </MenuItem>
-            ))}
-          </TextField>
-        </Grid>
+                <Grid item lg={10} md={10} sm={8} xs={12} >
+                  <Field component={FormikTextField} label='Bairro' name='address.neighborhood' />
+                </Grid>
 
-        <Grid item lg={5} md={5} sm={4} xs={12} >
-          <TextField
-            select
-            fullWidth
-            name='city' 
-            label='Cidade'
-            variant="outlined" 
-          >
-            {citys.map(city => (
-              <MenuItem value={city.name} key={city.name} > {city.name} </MenuItem>
-            ))}
-          </TextField>
-        </Grid>
+                <Grid item lg={2} md={2} sm={4} xs={12} >
+                  <FormikAutoComplete 
+                    name="address.state"
+                    options={states}
+                    error={errors.address?.state}
+                    touched={touched.address?.state}
+                    label='UF'
+                    getOptionLabel={(option: IState) => option.sigla}
+                  />
+                </Grid>
 
-        <Grid item lg={5} md={5} sm={4} xs={12} >
-          <TextField 
-            fullWidth
-            label='Complemento'
-            variant='outlined'
-          />
-        </Grid>
+                <Grid item lg={5} md={5} sm={4} xs={12} >
+                  <FormikAutoComplete 
+                    name="address.city"
+                    options={citys}
+                    error={errors.address?.city}
+                    touched={touched.address?.city}
+                    label='Cidade'
+                    getOptionLabel={(option: ICity) => option.name}
+                  />
+                </Grid>
 
-        <Grid item lg={12} md={12} sm={12} xs={12} >
-          <Divider style={{ margin: '2rem 0' }} />
-        </Grid>
+                <Grid item lg={5} md={5} sm={4} xs={12} >
+                  <Field component={FormikTextField} label='Complemento' name='address.complement' />
+                </Grid>
 
-        <Grid item lg={12} md={12} sm={12} xs={12} >
-          <Typography variant='h3' >
-            Contato
-          </Typography>
-        </Grid>
+                <Grid item lg={12} md={12} sm={12} xs={12} >
+                  <Divider style={{ margin: '2rem 0' }} />
+                </Grid>
 
-        <Grid item lg={4} md={4} sm={4} xs={12} >
-          <TextField 
-            fullWidth
-            label='Celular'
-            variant='outlined'
-          />
-        </Grid>
+                <Grid item lg={12} md={12} sm={12} xs={12} >
+                  <Typography variant='h3' >
+                    Contato
+                  </Typography>
+                </Grid>
 
-        <Grid item lg={4} md={4} sm={4} xs={12} >
-          <TextField 
-            fullWidth
-            label='E-mail'
-            variant='outlined'
-          />
-        </Grid>
+                <Grid item lg={4} md={4} sm={4} xs={12} >
+                  <Field component={FormikTextField} label='Celular' name='contact.cellphone' />
+                </Grid>
 
-        <Grid item lg={4} md={4} sm={4} xs={12} >
-          <TextField 
-            fullWidth
-            label='Telefone'
-            variant='outlined'
-          />
-        </Grid>
+                <Grid item lg={4} md={4} sm={4} xs={12} >
+                  <Field component={FormikTextField} label='E-mail' name='contact.email' />
+                </Grid>
 
-        <Grid item lg={12} md={12} sm={12} xs={12} >
-          <Divider style={{ margin: '2rem 0' }} />
-        </Grid>
+                <Grid item lg={4} md={4} sm={4} xs={12} >
+                  <Field component={FormikTextField} label='Telefone' name='contact.phone' />
+                </Grid>
 
-        <Grid item lg={4} md={4} sm={4} xs={12} >
-          <Box mb='2rem' >
-            <Button loading={loading} color='primary' type='submit' >
-              Criar
-            </Button>
-          </Box>
-        </Grid>
-      </Grid>
+                <Grid item lg={12} md={12} sm={12} xs={12} >
+                  <Divider style={{ margin: '2rem 0' }} />
+                </Grid>
+
+                <Grid item lg={4} md={4} sm={4} xs={12} >
+                  <Box mb='2rem' >
+                    <Button loading={loading} color='primary' type='submit' >
+                      Criar
+                    </Button>
+                  </Box>
+                </Grid>
+              </Grid>
+            </Form>
+          )}
+        </Formik>
     </Container>
   )
 }

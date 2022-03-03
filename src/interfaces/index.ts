@@ -43,14 +43,17 @@ export interface IContact {
   email: string
 }
 
+type PersonType = 'F' | 'J'
+
 export interface ICustomer {
+  personType: PersonType
   id: number
   CPF?: string
   CNPJ?: string
   name: string
   stateRegistration?: string
   contact: IContact
-  address: IAddress[]
+  address: IAddress
 }
 
 export interface IDriver {

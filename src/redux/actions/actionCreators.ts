@@ -6,6 +6,10 @@ export function createCustomer(customer: ICustomer) {
   return { type: CustomerActions.CREATE_CUSTOMER, payload: customer }
 }
 
+export function setCustomers(customers: ICustomer[]) {
+  return { type: CustomerActions.SET_CUSTOMERS, payload: customers }
+}
+
 // Work
 export function createWork(work: IWork) {
   return { type: WorkActions.CREATE_WORK, payload: work }

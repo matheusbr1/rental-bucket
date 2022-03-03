@@ -1,28 +1,42 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
 import AppBar  from 'components/AppBar'
 import { useSnackbar } from 'notistack'
 import { useDispatch, useSelector } from 'react-redux'
 import Moment from 'moment'
 import { Container, Grid, Typography, } from '@material-ui/core'
-import { customers, equipments, workTypes } from 'mocks'
+import { equipments, workTypes } from 'mocks'
 import Button from 'components/Button'
-import { createWork } from 'redux/actions/actionCreators'
+import { createWork, setCustomers, setDrivers, setTrucks } from 'redux/actions/actionCreators'
 import { Formik, Form, Field } from 'formik'
-import { IAddress, ICustomer, IDefaultRootState, IDriver, ITruck } from 'interfaces'
+import { ICustomer, IDefaultRootState, IDriver, ITruck } from 'interfaces'
 import FormikTextField from 'components/FormikTextField'
 import FormikDateInput from 'components/FormikDateInput'
 import FormikAutoComplete from 'components/FormikAutoComplete'
+import { api } from 'services/api'
 
 const Create: React.FC = () => {
   const { goBack } = useHistory()
 
-  const drivers = useSelector<IDefaultRootState, IDriver[]>(state => state.driver.drivers)
-  const trucks = useSelector<IDefaultRootState, ITruck[]>(state => state.truck.trucks)
-
   const { enqueueSnackbar } = useSnackbar()
 
   const dispatch  = useDispatch()
+  
+  useEffect(() => {
+    api.get('/drivers').then(response =>dispatch(setDrivers(response.data)))
+  }, [dispatch])
+
+  useEffect(() => {
+    api.get('trucks').then(response => dispatch(setTrucks(response.data)))
+  }, [dispatch])
+
+  useEffect(() => {
+    api.get('customers').then(response => dispatch(setCustomers(response.data)))
+  }, [dispatch])
+
+  const drivers = useSelector<IDefaultRootState, IDriver[]>(state => state.driver.drivers)
+  const trucks = useSelector<IDefaultRootState, ITruck[]>(state => state.truck.trucks)
+  const customers = useSelector<IDefaultRootState, ICustomer[]>(state => state.customer.customers)
 
   const [loading, setLoading] = useState(false)
 
@@ -90,19 +104,6 @@ const Create: React.FC = () => {
                     touched={touched.customer}
                     label='Cliente'
                     getOptionLabel={(option: ICustomer) => option.name}
-                  />
-                </Grid>
-                
-                <Grid item lg={4} md={4} sm={6} xs={12} >
-                  <FormikAutoComplete 
-                    name="address"
-                    options={customers[0].address}
-                    error={errors.customer}
-                    touched={touched.customer}
-                    label='Endereço'
-                    getOptionLabel={(option: IAddress) => 
-                      `${option.street} - ${option.number} - ${option.neighborhood}`
-                    }
                   />
                 </Grid>
 

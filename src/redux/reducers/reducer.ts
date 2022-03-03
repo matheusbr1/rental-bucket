@@ -1,7 +1,7 @@
 import { ReducerAction } from 'interfaces'
 import { CustomerActions, DriverActions, TruckActions, WorkActions } from '../constants/actionTypes'
 
-import { works as mockedWorks, customers as mockedCustomers  } from 'mocks'
+import { works as mockedWorks } from 'mocks'
 
 const initialTruckState = {
   trucks: []
@@ -100,7 +100,7 @@ export function driverReducer (
 }
 
 const initialCustomerState = {
-  customers: mockedCustomers
+  customers: []
 }
 
 type ICustomerInitialState = typeof initialCustomerState

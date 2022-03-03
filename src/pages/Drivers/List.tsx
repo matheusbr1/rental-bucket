@@ -14,9 +14,7 @@ const List: React.FC = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    api.get('/drivers').then(response => {
-      dispatch(setDrivers(response.data))
-    })
+    api.get('/drivers').then(response =>dispatch(setDrivers(response.data)))
   }, [dispatch])
 
   const drivers = useSelector<IDefaultRootState, IDriver[]>(state => state.driver.drivers)
