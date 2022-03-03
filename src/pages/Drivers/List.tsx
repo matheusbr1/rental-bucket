@@ -1,15 +1,23 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import AppBar  from 'components/AppBar'
 import Table from 'components/Table/Drivers'
 import FloatingButton from 'components/FloatingButton'
 import { useHistory } from 'react-router'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Box, Container } from '@material-ui/core'
 import { IDefaultRootState, IDriver } from 'interfaces'
+import { api } from 'services/api'
+import { setDrivers } from 'redux/actions/actionCreators'
 
 const List: React.FC = () => {
-
   const history = useHistory()
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    api.get('/drivers').then(response => {
+      dispatch(setDrivers(response.data))
+    })
+  }, [dispatch])
 
   const drivers = useSelector<IDefaultRootState, IDriver[]>(state => state.driver.drivers)
 
@@ -19,6 +27,7 @@ const List: React.FC = () => {
       
       <Box width='100%' m='20px 0' display='flex' justifyContent='center'>
         <Table  title='Motoristas' drivers={drivers} />
+        
         <FloatingButton onClick={() => history.push('drivers/create')} />
       </Box>
     </Container>

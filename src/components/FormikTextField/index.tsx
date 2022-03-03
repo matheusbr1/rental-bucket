@@ -3,7 +3,7 @@ import { TextField, TextFieldProps } from 'formik-mui'
 
 const FormikTextField: React.FC<TextFieldProps> = ({ ...rest }) => {
   return (
-    <TextField variant='outlined' {...rest} />
+    <TextField variant='outlined' fullWidth {...rest} />
   )
 }
 

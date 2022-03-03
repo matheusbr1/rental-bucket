@@ -19,13 +19,11 @@ export interface ReducerAction {
 }
 
 export interface IState {
-  id: number
   sigla: string
   nome: string
 }
 
 export interface ICity {
-  id: number
   name: string
 }
 
@@ -34,8 +32,8 @@ export interface IAddress {
   street: string
   number: string
   neighborhood: string
-  state: string
-  city: string
+  state: IState | null
+  city: ICity | null
   complement?: string
 }
 

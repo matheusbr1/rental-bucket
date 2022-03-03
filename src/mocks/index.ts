@@ -1,4 +1,4 @@
-import { ICustomer, IDriver, ITruck, IWork } from "interfaces"
+import { ICustomer, ITruck, IWork } from "interfaces"
 
 export const works: IWork[] = [
   {
@@ -30,8 +30,8 @@ export const customers: ICustomer[] = [
         street: 'Rua João Rodrigues de Moura', 
         number: '321',  
         neighborhood: 'Jardim Piracuama',
-        state: 'SP', 
-        city: 'São Paulo',
+        state: null, 
+        city: null,
         complement: ''
       },
       { 
@@ -39,36 +39,11 @@ export const customers: ICustomer[] = [
         street: 'Rua Doutor João José de Carvalho', 
         number: '12',  
         neighborhood: 'Vila Sônia',
-        state: 'SP', 
-        city: 'São Paulo',
+        state: null, 
+        city: null,
         complement: ''
       }
     ]
-  }
-]
-
-export const drivers: IDriver[] = [
-  {
-    id: 1,
-    name: 'Theo Thomas Leonardo das Neves',
-    CPF: '337.117.348-80',
-    RG: '20.498.441-5',
-    CNH: '123123',
-    birthday: '23/06/1972',
-    address: { 
-      CEP: '05396-010', 
-      street: 'Rua Antenor de Freitas', 
-      number: '393',  
-      neighborhood: 'Parque dos Príncipes',
-      state: 'SP', 
-      city: 'Osasco',
-      complement: ''
-    },
-    contact: {
-      telephone: '(11) 2644-3809',
-      cellphone: '(11) 99141-9747',
-      email: 'theoThomas@gmail.com'
-    }
   }
 ]
 

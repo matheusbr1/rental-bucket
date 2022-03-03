@@ -210,7 +210,7 @@ const Create: React.FC = () => {
             variant="outlined" 
           >
             {citys.map(city => (
-              <MenuItem value={city.name} key={city.id} > {city.name} </MenuItem>
+              <MenuItem value={city.name} key={city.name} > {city.name} </MenuItem>
             ))}
           </TextField>
         </Grid>

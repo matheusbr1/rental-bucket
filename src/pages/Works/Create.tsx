@@ -2,20 +2,22 @@ import React, { useCallback, useState } from 'react'
 import { useHistory } from 'react-router'
 import AppBar  from 'components/AppBar'
 import { useSnackbar } from 'notistack'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Moment from 'moment'
 import { Container, Grid, Typography, } from '@material-ui/core'
-import { customers, drivers, equipments, trucks, workTypes } from 'mocks'
+import { customers, equipments, trucks, workTypes } from 'mocks'
 import Button from 'components/Button'
 import { createWork } from 'redux/actions/actionCreators'
 import { Formik, Form, Field } from 'formik'
-import { IAddress, ICustomer, IDriver, ITruck } from 'interfaces'
+import { IAddress, ICustomer, IDefaultRootState, IDriver, ITruck } from 'interfaces'
 import FormikTextField from 'components/FormikTextField'
 import FormikDateInput from 'components/FormikDateInput'
 import FormikAutoComplete from 'components/FormikAutoComplete'
 
 const Create: React.FC = () => {
   const { goBack } = useHistory()
+
+  const drivers = useSelector<IDefaultRootState, IDriver[]>(state => state.driver.drivers)
 
   const { enqueueSnackbar } = useSnackbar()
 
@@ -29,7 +31,13 @@ const Create: React.FC = () => {
     try {
       await new Promise(resolve => setTimeout(resolve, 3000))
 
-      dispatch(createWork(fields))
+      dispatch(createWork({
+        ...fields,
+        customer: fields.customer.name,
+        address: fields.customer.address[0].cep,
+        driver: fields.driver.name,
+        truck: fields.truck.plate
+      }))
 
       enqueueSnackbar('Serviço criado com sucesso!', {
         variant: 'success'
@@ -142,7 +150,6 @@ const Create: React.FC = () => {
                 <Grid item lg={4} md={4} sm={6} xs={12} >
                   <Field
                     component={FormikTextField}
-                    fullWidth
                     label='Quantidade'
                     id='quantity'
                     name='quantity'

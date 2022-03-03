@@ -18,7 +18,6 @@ const List: React.FC = () => {
       
       <Box width='100%' m='20px 0' display='flex' justifyContent='center'>
         <Table title='Clientes' customers={customers} />
-        
         <FloatingButton onClick={() => history.push('customers/create')} />
       </Box>
     </Container>
