@@ -207,7 +207,7 @@ const Table: React.FC<TableProps> = ({ title, works }) => {
     type: string,
     quantity: number,
     equipment: string,
-    deadline: string,
+    deadline: string,   
     status: string,
   ): Data {
     return { id, customer, type, quantity, equipment, deadline, status }
@@ -215,7 +215,7 @@ const Table: React.FC<TableProps> = ({ title, works }) => {
   
   const rows = works.map(work => createData(
     work.id,
-    work.customer, 
+    work.customer.name, 
     work.type, 
     work.quantity,
     work.equipment, 

@@ -48,8 +48,7 @@ type PersonType = 'F' | 'J'
 export interface ICustomer {
   personType: PersonType
   id: number
-  CPF?: string
-  CNPJ?: string
+  CPF_CNPJ: string
   name: string
   stateRegistration?: string
   contact: IContact
@@ -73,14 +72,13 @@ export interface IDriver {
 
 export interface IWork {
   id: number
-  address: string
-  customer: string
-  driver: string
+  customer: ICustomer
+  driver: IDriver
   endDate: Date
   equipment: string
   quantity: number
   type: string
-  truck: string
+  truck: ITruck
 }
 
 export interface IBrand {

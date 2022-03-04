@@ -14,6 +14,7 @@ import FormikTextField from 'components/FormikTextField'
 import FormikDateInput from 'components/FormikDateInput'
 import FormikAutoComplete from 'components/FormikAutoComplete'
 import { api } from 'services/api'
+import { removeMask } from 'utils/formatters'
 
 const Create: React.FC = () => {
   const { goBack } = useHistory()
@@ -43,16 +44,18 @@ const Create: React.FC = () => {
   const handleCreate = useCallback(async (fields) => {
     setLoading(true)
 
-    try {
-      await new Promise(resolve => setTimeout(resolve, 3000))
+    try { 
+      await api.post('works', {
+        customer_CPF_CNPJ: fields.customer.CPF_CNPJ,
+        driver_CPF: fields.driver.CPF,
+        truck: fields.truck.plate,
+        equipment: fields.equipment,
+        quantity: fields.quantity,
+        type: fields.type,
+        endDate: fields.endDate
+      })
 
-      dispatch(createWork({
-        ...fields,
-        customer: fields.customer.name,
-        address: fields.customer.address[0].cep,
-        driver: fields.driver.name,
-        truck: fields.truck.plate
-      }))
+      dispatch(createWork(fields))
 
       enqueueSnackbar('Serviço criado com sucesso!', {
         variant: 'success'
@@ -60,6 +63,8 @@ const Create: React.FC = () => {
 
       goBack()
     } catch (error) {
+      console.log(error)
+
       enqueueSnackbar('Erro ao criar serviço, tente novamente!', {
         variant: 'error'
       })

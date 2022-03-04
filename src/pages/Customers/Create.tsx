@@ -169,7 +169,7 @@ const Create: React.FC = () => {
                 </Grid>
 
                 <Grid item lg={6} md={6} sm={6} xs={12} >
-                  <Field component={FormikTextField} label='CPF' name='CPF' />
+                  <Field component={FormikTextField} label='CPF_CNPJ' name='CPF' />
                 </Grid>
 
                 <Grid item lg={12} md={12} sm={12} xs={12} >
