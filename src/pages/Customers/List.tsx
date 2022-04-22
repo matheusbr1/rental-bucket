@@ -8,6 +8,7 @@ import { Box, Container } from '@material-ui/core'
 import { ICustomer, IDefaultRootState } from 'interfaces'
 import { api } from 'services/api'
 import { setCustomers } from 'redux/actions/actionCreators'
+import { EmptyTableMessage } from 'components/EmptyTableMessage'
 
 const List: React.FC = () => {
   const history = useHistory()
@@ -23,8 +24,20 @@ const List: React.FC = () => {
     <Container style={{ marginTop: 64 }} >
       <AppBar />
       
-      <Box width='100%' m='20px 0' display='flex' justifyContent='center'>
-        <Table title='Clientes' customers={customers} />
+      <Box 
+        width='100%' 
+        m='20px 0' 
+        minHeight='calc(100vh - 64px)' 
+        display='flex' 
+        justifyContent='center' 
+        alignItems='center'
+      >
+        {customers.length ? (
+          <Table title='Clientes' customers={customers} />
+        ) : (
+          <EmptyTableMessage tableName='clientes' />
+        )}
+
         <FloatingButton onClick={() => history.push('customers/create')} />
       </Box>
     </Container>

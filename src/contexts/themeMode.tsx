@@ -20,6 +20,7 @@ const ThemeModeProvider: React.FC = ({ children }) => {
 
   const hadleToggleTheme = () => {
     const toggledTheme: Theme = theme === 'dark' ? 'light' : 'dark'
+    
     setTheme(toggledTheme)
     
     localStorage.setItem('@rentalBucket:theme', String(toggledTheme))

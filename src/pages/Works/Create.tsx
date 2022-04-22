@@ -14,7 +14,6 @@ import FormikTextField from 'components/FormikTextField'
 import FormikDateInput from 'components/FormikDateInput'
 import FormikAutoComplete from 'components/FormikAutoComplete'
 import { api } from 'services/api'
-import { removeMask } from 'utils/formatters'
 
 const Create: React.FC = () => {
   const { goBack } = useHistory()

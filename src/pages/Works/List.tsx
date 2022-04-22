@@ -6,6 +6,7 @@ import { useHistory } from 'react-router'
 import { useSelector } from 'react-redux'
 import { Container, Box } from '@material-ui/core'
 import { IDefaultRootState, IWork } from 'interfaces'
+import { EmptyTableMessage } from 'components/EmptyTableMessage'
 
 const List: React.FC = () => {
 
@@ -17,8 +18,20 @@ const List: React.FC = () => {
     <Container style={{ marginTop: 64 }} >
       <AppBar />
       
-      <Box width='100%' m='20px 0' display='flex' justifyContent='center'>
-        <Table  title='Serviços' works={works} />
+      <Box 
+        width='100%' 
+        m='20px 0' 
+        minHeight='calc(100vh - 64px)' 
+        display='flex' 
+        justifyContent='center' 
+        alignItems='center'
+      >
+        {works.length ? (
+          <Table  title='Serviços' works={works} />
+        ) : (
+          <EmptyTableMessage tableName='serviços' />
+        )}
+
         <FloatingButton onClick={() => history.push('works/create')} />
       </Box>
     </Container>

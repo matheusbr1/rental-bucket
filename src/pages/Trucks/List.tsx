@@ -8,6 +8,7 @@ import { Box, Container } from '@material-ui/core'
 import { IDefaultRootState, ITruck } from 'interfaces'
 import { api } from 'services/api'
 import { setTrucks } from 'redux/actions/actionCreators'
+import { EmptyTableMessage } from 'components/EmptyTableMessage'
 
 const List: React.FC = () => {
   const history = useHistory()
@@ -23,8 +24,19 @@ const List: React.FC = () => {
     <Container style={{ marginTop: 64 }} >
       <AppBar />
       
-      <Box width='100%' m='20px 0' display='flex' justifyContent='center'>
-        <Table title='Caminhões' trucks={trucks} />
+      <Box 
+        width='100%' 
+        m='20px 0' 
+        minHeight='calc(100vh - 64px)' 
+        display='flex' 
+        justifyContent='center' 
+        alignItems='center'
+      >
+        {trucks.length ? (
+          <Table title='Caminhões' trucks={trucks} />
+        ) : (
+          <EmptyTableMessage tableName='caminhões' />
+        )}
         
         <FloatingButton onClick={() => history.push('trucks/create')} />
       </Box>
