@@ -14,10 +14,12 @@ import DriverDetail from './pages/Drivers/Detail'
 import Trucks from './pages/Trucks/List'
 import CreateTruck from './pages/Trucks/Create'
 import TruckDetail from './pages/Trucks/Detail'
+import SignUp from 'pages/SignUp'
 
 const Routes: React.FC = () => (
   <BrowserRouter>
     <Route path='/' exact component={SignIn} />
+    <Route path='/signup' exact component={SignUp} />
     <Route path='/works' exact component={Works}  />
     <Route path='/work/:id' component={WorkDetail} />
     <Route path='/works/create' component={CreateWork}  />
