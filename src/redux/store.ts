@@ -1,5 +1,18 @@
 import { createStore } from 'redux'
-import { reducers } from './reducers'
+import { combineReducers } from 'redux'
+import { customerReducer } from './customer/customer.reducer'
+import { driverReducer } from './driver/driver.reducer'
+import { truckReducer } from './truck/truck.reducer'
+import { workReducer } from './work/work.reducer'
+
+const reducers = combineReducers({
+  customer: customerReducer,
+  driver: driverReducer,
+  truck: truckReducer,
+  work: workReducer
+})
+
+export { reducers }
 
 const store = createStore(
   reducers,

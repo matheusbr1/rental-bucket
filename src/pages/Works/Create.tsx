@@ -7,13 +7,16 @@ import Moment from 'moment'
 import { Container, Grid, Typography, } from '@material-ui/core'
 import { equipments, workTypes } from 'mocks'
 import Button from 'components/Button'
-import { createWork, setCustomers, setDrivers, setTrucks } from 'redux/actions/actionCreators'
 import { Formik, Form, Field } from 'formik'
 import { ICustomer, IDefaultRootState, IDriver, ITruck } from 'interfaces'
 import FormikTextField from 'components/FormikTextField'
 import FormikDateInput from 'components/FormikDateInput'
 import FormikAutoComplete from 'components/FormikAutoComplete'
 import { api } from 'services/api'
+import { setDrivers } from 'redux/driver/driver.actions'
+import { setTrucks } from 'redux/truck/truck.actions'
+import { setCustomers } from 'redux/customer/customer.actions'
+import { createWork } from 'redux/work/work.actions'
 
 const Create: React.FC = () => {
   const { goBack } = useHistory()

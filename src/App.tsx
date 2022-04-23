@@ -8,6 +8,7 @@ import { ThemeModeContext } from 'contexts/themeMode'
 import { lightTheme, darkTheme } from 'styles/theme'
 import { store } from "./redux/store";
 import { Provider } from "react-redux";
+import 'services/interceptors/auth'
 
 function App() {
   const { theme } = useContext(ThemeModeContext)

@@ -7,7 +7,7 @@ import Table from 'components/Table/Customers'
 import { Box, Container } from '@material-ui/core'
 import { ICustomer, IDefaultRootState } from 'interfaces'
 import { api } from 'services/api'
-import { setCustomers } from 'redux/actions/actionCreators'
+import { setCustomers } from 'redux/customer/customer.actions'
 import { EmptyTableMessage } from 'components/EmptyTableMessage'
 
 const List: React.FC = () => {

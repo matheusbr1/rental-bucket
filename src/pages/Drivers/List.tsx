@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Box, Container } from '@material-ui/core'
 import { IDefaultRootState, IDriver } from 'interfaces'
 import { api } from 'services/api'
-import { setDrivers } from 'redux/actions/actionCreators'
+import { setDrivers } from 'redux/driver/driver.actions'
 import { EmptyTableMessage } from 'components/EmptyTableMessage'
 
 const List: React.FC = () => {

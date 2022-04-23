@@ -1,15 +1,21 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback } from 'react'
 import { useHistory } from 'react-router'
 import { createStyles } from '@material-ui/styles'
 import Button from 'components/Button'
+import { api } from 'services/api'
+import { useSnackbar } from 'notistack'
+import { useCookies } from 'react-cookie'
+import { Field, Form, Formik } from 'formik'
+import FormikTextField from 'components/FormikTextField'
 import { 
   Container, 
   Typography, 
   Card, 
   Box, 
-  makeStyles, 
-  TextField 
+  makeStyles,
+  Grid, 
 } from '@material-ui/core'
+import { signInSchema } from 'validations/signInSchema'
 
 const useStyles = makeStyles((theme) => createStyles({
   content: {
@@ -34,19 +40,31 @@ const useStyles = makeStyles((theme) => createStyles({
   }
 }))
 
+interface ISignInFields {
+  email: string
+  password: string
+}
+
 const SignIn: React.FC = () => {
   const history = useHistory()
 
+  const { enqueueSnackbar: snackbar } = useSnackbar()
+
+  const [, setCookie] = useCookies(['rentalbucket.token']);
+
   const classes = useStyles()
 
-  const [isLoading, setIsLoading] = useState(false)
+  const handleSignIn = useCallback(async ({ email, password }: ISignInFields) => {
+    try {
+      const { data } = await api.post('/sessions', { email, password })
 
-  const handleSignIn = useCallback(async () => {
-    await new Promise(resolve => {
-      setIsLoading(true)
-      return setTimeout(() => history.push('/works'), 3000)
-    })
-  }, [history])
+      setCookie('rentalbucket.token', data.token)
+
+      history.push('/works')
+    } catch (error) {
+      snackbar('Erro ao fazer login, tente novamente!', { variant: 'error' })
+    }
+  }, [history, snackbar, setCookie])
 
   return (
     <Container>
@@ -60,22 +78,51 @@ const SignIn: React.FC = () => {
             Faça login para acessar a plataforma
           </Typography>
 
-          <TextField
-            fullWidth
-            label='E-mail'
-            variant='outlined'
-          />
+          <Formik
+            onSubmit={handleSignIn}
+            enableReinitialize
+            validateOnChange
+            validationSchema={signInSchema}
+            initialValues={{
+              email: '',
+              password: ''
+            }}
+          >
+            {({ isSubmitting }) => (
+              <Form>
+                <Grid container spacing={3} >
+                  <Grid item xs={12} md={12} xl={12} >
+                    <Field
+                      component={FormikTextField}
+                      label='E-mail'
+                      id='email'
+                      name='email'
+                    />
+                  </Grid>
 
-          <TextField
-            fullWidth
-            label='Senha'
-            type='password'
-            variant='outlined'
-          />
-
-          <Button color='primary' onClick={handleSignIn} loading={isLoading} >
-            Entrar
-          </Button>
+                  <Grid item xs={12} md={12} xl={12} >
+                    <Field
+                      component={FormikTextField}
+                      label='Senha'
+                      id='password'
+                      name='password'
+                      type='password'
+                    />
+                  </Grid>
+                  
+                  <Grid item xs={12} md={12} xl={12} >
+                    <Button 
+                      color='primary' 
+                      type='submit'
+                      loading={isSubmitting} 
+                    >
+                      Entrar
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Form>
+            )}
+          </Formik>
         </Card>
       </Box>
     </Container>
