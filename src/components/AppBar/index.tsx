@@ -15,6 +15,8 @@ import { useHistory } from 'react-router'
 import clsx from  'clsx'
 import { ThemeModeContext } from 'contexts/themeMode'
 import { Brightness2, WbSunny } from '@material-ui/icons';
+import { useDispatch } from 'react-redux'
+import { signOut } from 'redux/user/user.actions'
 
 interface AppBarProps {
   search?: boolean
@@ -25,9 +27,13 @@ const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
 
   const history = useHistory()
 
+  const dispatch = useDispatch()
+
   const handleSignOut = useCallback(async () => {
+    dispatch(signOut())
+
     history.push('/')
-  }, [history])
+  }, [history, dispatch])
 
   const useStyles = makeStyles((theme: Theme) => createStyles({
       container: {

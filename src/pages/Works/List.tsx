@@ -21,7 +21,7 @@ const List: React.FC = () => {
       <Box 
         width='100%' 
         m='20px 0' 
-        minHeight='calc(100vh - 64px)' 
+        minHeight='calc(100vh - 84px)' 
         display='flex' 
         justifyContent='center' 
         alignItems='center'

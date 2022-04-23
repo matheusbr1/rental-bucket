@@ -1,3 +1,5 @@
+type PersonType = 'F' | 'J'
+
 export interface IDefaultRootState  {
   work: {
     works: IWork[]
@@ -16,6 +18,11 @@ export interface IDefaultRootState  {
 export interface ReducerAction {
   type: string
   payload?: any
+}
+
+export interface ISignInFields {
+  email: string
+  password: string
 }
 
 export interface IState {
@@ -43,7 +50,7 @@ export interface IContact {
   email: string
 }
 
-type PersonType = 'F' | 'J'
+
 
 export interface ICustomer {
   personType: PersonType

@@ -4,9 +4,12 @@ import { createStyles } from '@material-ui/styles'
 import Button from 'components/Button'
 import { api } from 'services/api'
 import { useSnackbar } from 'notistack'
-import { useCookies } from 'react-cookie'
+import { useDispatch } from 'react-redux'
 import { Field, Form, Formik } from 'formik'
 import FormikTextField from 'components/FormikTextField'
+import { signInSchema } from 'validations/signInSchema'
+import { ISignInFields } from 'interfaces'
+import { signIn } from 'redux/user/user.actions'
 import { 
   Container, 
   Typography, 
@@ -15,7 +18,6 @@ import {
   makeStyles,
   Grid, 
 } from '@material-ui/core'
-import { signInSchema } from 'validations/signInSchema'
 
 const useStyles = makeStyles((theme) => createStyles({
   content: {
@@ -40,17 +42,13 @@ const useStyles = makeStyles((theme) => createStyles({
   }
 }))
 
-interface ISignInFields {
-  email: string
-  password: string
-}
 
 const SignIn: React.FC = () => {
   const history = useHistory()
 
-  const { enqueueSnackbar: snackbar } = useSnackbar()
+  const dispatch = useDispatch()
 
-  const [, setCookie] = useCookies(['rentalbucket.token']);
+  const { enqueueSnackbar: snackbar } = useSnackbar()
 
   const classes = useStyles()
 
@@ -58,13 +56,13 @@ const SignIn: React.FC = () => {
     try {
       const { data } = await api.post('/sessions', { email, password })
 
-      setCookie('rentalbucket.token', data.token)
+      dispatch(signIn(data.user, data.token))
 
       history.push('/works')
     } catch (error) {
       snackbar('Erro ao fazer login, tente novamente!', { variant: 'error' })
     }
-  }, [history, snackbar, setCookie])
+  }, [history, snackbar, dispatch])
 
   return (
     <Container>
