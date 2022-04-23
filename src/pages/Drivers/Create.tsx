@@ -136,7 +136,7 @@ const Create: React.FC = () => {
             {loading && <Loading />}
 
             <Grid container spacing={3} justify='flex-end' >
-              <Grid item lg={12} md={12} sm={12} >
+              <Grid item lg={12} md={12} sm={12} style={{ width: '100%' }} >
                 <Typography variant='h1' >
                   Novo Motorista
                 </Typography>

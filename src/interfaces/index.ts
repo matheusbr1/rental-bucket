@@ -1,18 +1,17 @@
+import { ICustomerInitialState } from "redux/customer/customer.reducer"
+import { IDriverInitialState } from "redux/driver/driver.reducer"
+import { ITruckInitialState } from "redux/truck/truck.reducer"
+import { IUserInitialState } from "redux/user/user.reducer"
+import { IWorkInitialState } from "redux/work/work.reducer"
+
 type PersonType = 'F' | 'J'
 
 export interface IDefaultRootState  {
-  work: {
-    works: IWork[]
-  }
-  truck: {
-    trucks: ITruck[]
-  }
-  driver: {
-    drivers:  IDriver[]
-  }
-  customer: {
-    customers: ICustomer[]
-  }
+  work: IWorkInitialState
+  truck: ITruckInitialState
+  driver: IDriverInitialState
+  customer: ICustomerInitialState,
+  user: IUserInitialState
 }
 
 export interface ReducerAction {

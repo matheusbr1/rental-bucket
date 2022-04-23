@@ -5,7 +5,7 @@ const initialCustomerState = {
   customers: []
 }
 
-type ICustomerInitialState = typeof initialCustomerState
+export type ICustomerInitialState = typeof initialCustomerState
 
 export function customerReducer (
   state: ICustomerInitialState = initialCustomerState, 

@@ -1,5 +1,7 @@
 import React from 'react'
-import { BrowserRouter, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { IDefaultRootState } from 'interfaces'
 
 import SignIn from './pages/SignIn'
 import Works from './pages/Works/List'
@@ -16,23 +18,49 @@ import CreateTruck from './pages/Trucks/Create'
 import TruckDetail from './pages/Trucks/Detail'
 import SignUp from 'pages/SignUp'
 
+interface PrivateRouteProps {
+  component: React.FC<any>
+  path: string
+  exact?: boolean
+}
+
+export const PrivateRoute = ({ component: Component, exact, ...rest }: PrivateRouteProps) => {
+  const isAuthenticated = useSelector((state: IDefaultRootState) => state.user.isAuthenticated)
+
+  return (
+    <Route exact={exact} {...rest} render={props => (
+      isAuthenticated ? (
+        <Component {...props} />
+      ) : (
+        <Redirect to={{
+          pathname: '/',
+          state: { from: props.location }
+        }} />
+      )
+    )} />
+  )
+}
+
 const Routes: React.FC = () => (
-  <BrowserRouter>
-    <Route path='/' exact component={SignIn} />
-    <Route path='/signup' exact component={SignUp} />
-    <Route path='/works' exact component={Works}  />
-    <Route path='/work/:id' component={WorkDetail} />
-    <Route path='/works/create' component={CreateWork}  />
-    <Route path='/customers' exact component={Customers}  />
-    <Route path='/customer/:id' component={CostumerDetail} />
-    <Route path='/customers/create' component={CreateCostumer}  />
-    <Route path='/drivers' exact component={Drivers}  />
-    <Route path='/driver/:id' component={DriverDetail} />
-    <Route path='/drivers/create' component={CreateDriver}  />
-    <Route path='/trucks' exact component={Trucks}  />
-    <Route path='/truck/:id' component={TruckDetail} />
-    <Route path='/trucks/create' component={CreateTruck}  />
-  </BrowserRouter>
+  <Router>
+    <Switch>
+      <Route path='/' exact component={SignIn} />
+      <Route path='/signup' exact component={SignUp} />
+      
+      <PrivateRoute path='/works' exact component={Works}  />
+      <PrivateRoute path='/work/:id' component={WorkDetail} />
+      <PrivateRoute path='/works/create' component={CreateWork}  />
+      <PrivateRoute path='/customers' exact component={Customers}  />
+      <PrivateRoute path='/customer/:id' component={CostumerDetail} />
+      <PrivateRoute path='/customers/create' component={CreateCostumer}  />
+      <PrivateRoute path='/drivers' exact component={Drivers}  />
+      <PrivateRoute path='/driver/:id' component={DriverDetail} />
+      <PrivateRoute path='/drivers/create' component={CreateDriver}  />
+      <PrivateRoute path='/trucks' exact component={Trucks}  />
+      <PrivateRoute path='/truck/:id' component={TruckDetail} />
+      <PrivateRoute path='/trucks/create' component={CreateTruck}  />
+    </Switch>
+  </Router>
 )
 
 export default Routes

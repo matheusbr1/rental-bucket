@@ -5,7 +5,7 @@ const initialDriverState = {
   drivers: []
 }
 
-type IDriverInitialState = typeof initialDriverState
+export type IDriverInitialState = typeof initialDriverState
 
 export function driverReducer (
   state: IDriverInitialState = initialDriverState, 

@@ -1,29 +1,43 @@
 import { ReducerAction } from 'interfaces'
 import { UserActions } from './user.actions'
 
-const initialUserState = {
-  user: {
+const persistedState = sessionStorage.getItem('@rentalbucket:user')
+
+const initialUserState = persistedState ? JSON.parse(persistedState) : {
+  data: {
     name: '',
     email: ''
   },
   isAuthenticated: false
 }
 
-type IUserInitialState = typeof initialUserState
+export type IUserInitialState = typeof initialUserState
 
-export function truckReducer (
+export function userReducer (
   state: IUserInitialState = initialUserState, 
   action: ReducerAction
 ): IUserInitialState {
   switch (action.type) {
     case UserActions.SIGN_IN:
-      return { 
-        user: action.payload,
+      const updatedState = { 
+        data: action.payload,
         isAuthenticated: true
       }
 
+      sessionStorage.setItem('@rentalbucket:user', JSON.stringify(updatedState))
+
+      return updatedState
+
     case UserActions.SIGN_OUT: 
-      return initialUserState
+      sessionStorage.removeItem('@rentalbucket:user')
+
+      return {
+        data: {
+          name: '',
+          email: ''
+        },
+        isAuthenticated: false
+      }
    
     default:
       return state

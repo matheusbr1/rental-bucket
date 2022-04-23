@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react'
+import React, { useCallback } from 'react'
 import Bar from "@material-ui/core/AppBar"
 import Toolbar from "@material-ui/core/Toolbar"
 import IconButton from "@material-ui/core/IconButton"
@@ -13,8 +13,6 @@ import Box from "@material-ui/core/Box"
 import { fade, makeStyles, Theme, createStyles } from "@material-ui/core/styles"
 import { useHistory } from 'react-router'
 import clsx from  'clsx'
-import { ThemeModeContext } from 'contexts/themeMode'
-import { Brightness2, WbSunny } from '@material-ui/icons';
 import { useDispatch } from 'react-redux'
 import { signOut } from 'redux/user/user.actions'
 
@@ -23,8 +21,6 @@ interface AppBarProps {
 }
 
 const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
-  const { theme, hadleToggleTheme } = useContext(ThemeModeContext)
-
   const history = useHistory()
 
   const dispatch = useDispatch()
@@ -217,18 +213,7 @@ const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
 
           <div className={classes.grow} />
 
-          <IconButton
-            aria-label="account of current user"
-            aria-controls="menu-appbar"
-            aria-haspopup="true"
-            onClick={hadleToggleTheme}
-            color="inherit"
-          >
-            {theme === 'dark' ?  <WbSunny /> : <Brightness2 />}
-          </IconButton>
-
           <div className={classes.sectionDesktop}>
-
             <IconButton
               aria-label="account of current user"
               aria-controls={menuId}

@@ -4,12 +4,14 @@ import { customerReducer } from './customer/customer.reducer'
 import { driverReducer } from './driver/driver.reducer'
 import { truckReducer } from './truck/truck.reducer'
 import { workReducer } from './work/work.reducer'
+import { userReducer } from './user/user.reducer'
 
 const reducers = combineReducers({
   customer: customerReducer,
   driver: driverReducer,
   truck: truckReducer,
-  work: workReducer
+  work: workReducer,
+  user: userReducer,
 })
 
 export { reducers }

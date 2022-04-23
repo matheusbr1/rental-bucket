@@ -5,7 +5,7 @@ const initialTruckState = {
   trucks: []
 }
 
-type ITruckInitialState = typeof initialTruckState
+export type ITruckInitialState = typeof initialTruckState
 
 export function truckReducer (
   state: ITruckInitialState = initialTruckState, 

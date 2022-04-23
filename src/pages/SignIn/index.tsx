@@ -20,7 +20,6 @@ import {
   Grid, 
 } from '@material-ui/core'
 
-
 const useStyles = makeStyles((theme) => createStyles({
   content: {
     display: 'flex',

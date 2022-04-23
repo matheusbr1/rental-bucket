@@ -1,6 +1,6 @@
-import { createTheme, ThemeOptions } from '@material-ui/core'
+import { createTheme } from '@material-ui/core'
 
-const themeOptions: ThemeOptions = {
+const theme = createTheme({
   typography: {
     fontFamily: 'Roboto',
     h1: {
@@ -49,18 +49,24 @@ const themeOptions: ThemeOptions = {
       fontWeight: 'bold'
     }
   },
-}
-
-export const lightTheme = createTheme({
-  ...themeOptions,
-  palette: {
-    type: 'light',
+  overrides: {
+    MuiCssBaseline: {
+      "@global": {
+        "&::-webkit-scrollbar-track": {
+          backgroundColor: '#F4F4F4'
+        },
+      
+        "::-webkit-scrollbar": {
+          width: '6px',
+          background: '#F4F4F4'
+        },
+      
+        "::-webkit-scrollbar-thumb": {
+          background: '#dad7d7'
+        }
+      }
+    }
   }
 })
 
-export const darkTheme = createTheme({
-  ...themeOptions,
-  palette: {
-    type: 'dark',
-  },
-})
+export { theme }

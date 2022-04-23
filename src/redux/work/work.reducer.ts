@@ -5,7 +5,7 @@ const initialWorkState = {
   works: []
 }
 
-type IWorkInitialState = typeof initialWorkState
+export type IWorkInitialState = typeof initialWorkState
 
 export function workReducer (
   state: IWorkInitialState = initialWorkState, 
