@@ -1,0 +1,47 @@
+import React, { useEffect } from 'react'
+import AppBar  from 'components/AppBar'
+import FloatingButton from 'components/FloatingButton'
+import { useHistory } from 'react-router'
+import { useDispatch, useSelector } from 'react-redux'
+import Table from 'components/Table/Customers'
+import { Box, Container } from '@material-ui/core'
+import { ICustomer, IDefaultRootState } from 'interfaces'
+import { api } from 'services/api'
+import { setCustomers } from 'redux/customer/customer.actions'
+import { EmptyTableMessage } from 'components/EmptyTableMessage'
+
+const List: React.FC = () => {
+  const history = useHistory()
+  const dispatch  = useDispatch()
+
+  useEffect(() => {
+    api.get('customers').then(response => dispatch(setCustomers(response.data)))
+  }, [dispatch])
+
+  const customers = useSelector<IDefaultRootState, ICustomer[]>(state => state.customer.customers)
+
+  return (
+    <Container style={{ marginTop: 64 }} >
+      <AppBar />
+      
+      <Box 
+        width='100%' 
+        m='20px 0' 
+        minHeight='calc(100vh - 64px)' 
+        display='flex' 
+        justifyContent='center' 
+        alignItems='center'
+      >
+        {customers.length ? (
+          <Table title='Clientes' customers={customers} />
+        ) : (
+          <EmptyTableMessage tableName='clientes' />
+        )}
+
+        <FloatingButton onClick={() => history.push('customers/create')} />
+      </Box>
+    </Container>
+  )
+}
+
+export default List

@@ -1,100 +1,130 @@
-import React, { useCallback, useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import React, { useCallback } from 'react'
+import { useHistory } from 'react-router'
+import { createStyles } from '@material-ui/styles'
+import Button from 'components/Button'
+import { api } from 'services/api'
 import { useSnackbar } from 'notistack'
-import { Checkbox } from '@material-ui/core'
+import { useCookies } from 'react-cookie'
+import { Field, Form, Formik } from 'formik'
+import FormikTextField from 'components/FormikTextField'
+import { 
+  Container, 
+  Typography, 
+  Card, 
+  Box, 
+  makeStyles,
+  Grid, 
+} from '@material-ui/core'
+import { signInSchema } from 'validations/signInSchema'
 
-import TextField from '../../components/TextField'
-import Button from '../../components/Button'
+const useStyles = makeStyles((theme) => createStyles({
+  content: {
+    display: 'flex',
+    width:  '100%',
+    minHeight: '100vh',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  card: {
+    padding: theme.spacing(4),
+    maxWidth: 500,
+    '& h1': {
+      marginBottom: theme.spacing(1),
+    },
+    '& h3': {
+      marginBottom: theme.spacing(2),
+    },
+    '& > div': {
+      marginBottom: theme.spacing(2),
+    } 
+  }
+}))
 
-import { Container, Content, Header, Inputs } from './styles'
+interface ISignInFields {
+  email: string
+  password: string
+}
 
 const SignIn: React.FC = () => {
-
   const history = useHistory()
 
-  const { enqueueSnackbar } = useSnackbar()
+  const { enqueueSnackbar: snackbar } = useSnackbar()
 
-  const [isRemeberInputsActive, setIsRememberInputsActive] = useState(false)
+  const [, setCookie] = useCookies(['rentalbucket.token']);
 
-  const handleRememberInputs = useCallback(() => {
-    setIsRememberInputsActive(state => !state)
-  }, [])
+  const classes = useStyles()
 
-  const [loading, setLoading] = useState(false)
+  const handleSignIn = useCallback(async ({ email, password }: ISignInFields) => {
+    try {
+      const { data } = await api.post('/sessions', { email, password })
 
-  const handleSignIn = useCallback(() => {
+      setCookie('rentalbucket.token', data.token)
 
-    setLoading(true)
-
-    setTimeout(() => {
-      history.push('/services')
-
-      setLoading(false)
-    }, 2000)
-  }, [history])  
-
-  const handleForgotPassword = useCallback(() => {
-    
-    enqueueSnackbar('Entre em contato com o administrador!', {
-      variant: 'info'
-    })
-
-  }, [enqueueSnackbar])
+      history.push('/works')
+    } catch (error) {
+      snackbar('Erro ao fazer login, tente novamente!', { variant: 'error' })
+    }
+  }, [history, snackbar, setCookie])
 
   return (
     <Container>
-      
-      <Content>
-        
-        <Header>
-          <h1>Login</h1>
-          <span>Acesse para continuar</span>
-        </Header>
+      <Box className={classes.content} >
+        <Card className={classes.card} elevation={4} >
+          <Typography variant='h1' >
+            Login
+          </Typography>
 
-        <Inputs>
+          <Typography variant='h3' >
+            Faça login para acessar a plataforma
+          </Typography>
 
-          <TextField
-            variant="outlined"
-            label="E-mail" 
-            inputProps={{ 
-              defaultValue: 'matheusbaron10@gmail.com' 
-            }} 
-          />
+          <Formik
+            onSubmit={handleSignIn}
+            enableReinitialize
+            validateOnChange
+            validationSchema={signInSchema}
+            initialValues={{
+              email: '',
+              password: ''
+            }}
+          >
+            {({ isSubmitting }) => (
+              <Form>
+                <Grid container spacing={3} >
+                  <Grid item xs={12} md={12} xl={12} >
+                    <Field
+                      component={FormikTextField}
+                      label='E-mail'
+                      id='email'
+                      name='email'
+                    />
+                  </Grid>
 
-          <TextField
-            variant="outlined"
-            label="Senha" 
-            inputProps={{ 
-              defaultValue: '12345',
-              type: 'password'
-            }} 
-          />
-
-          <div className='options-line' >
-            <div className='remember-me' >
-             
-              <Checkbox
-                checked={isRemeberInputsActive}
-                onChange={handleRememberInputs}
-                style={{  
-                  color: '#529A67'
-                }}
-              />
-
-              <p>Lembrar-me</p>
-            </div>
-
-            <Link to="/" onClick={handleForgotPassword} > Esqueci minha Senha </Link>
-          </div>
-        
-        </Inputs>
-
-        <Button onClick={handleSignIn} loading={loading} >
-          Entrar
-        </Button>
-
-      </Content>
-
+                  <Grid item xs={12} md={12} xl={12} >
+                    <Field
+                      component={FormikTextField}
+                      label='Senha'
+                      id='password'
+                      name='password'
+                      type='password'
+                    />
+                  </Grid>
+                  
+                  <Grid item xs={12} md={12} xl={12} >
+                    <Button 
+                      color='primary' 
+                      type='submit'
+                      loading={isSubmitting} 
+                    >
+                      Entrar
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Form>
+            )}
+          </Formik>
+        </Card>
+      </Box>
     </Container>
   )
 }

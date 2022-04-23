@@ -1,37 +1,34 @@
 import React from 'react'
-import { CircularProgress, Fab } from '@material-ui/core'
-
+import { Box, CircularProgress, Fab, FabProps } from '@material-ui/core'
 import { Edit, Add, Delete, KeyboardArrowLeft, Check  } from '@material-ui/icons'
 
-import { Container } from './styles'
-
-interface Props {
-  onClick(e: React.MouseEvent<HTMLButtonElement>): void
-  variant?: 'add' | 'confirm' | 'delete' | 'edit' | 'return'
-  disabled?: boolean
+interface Props extends Omit<FabProps, 'children'> {
+  iconVariant?: 'add' | 'confirm' | 'delete' | 'edit' | 'return'
   loading?: boolean
 }
 
 const variationIcons = {
   add: <Add />,
-  confirm: <Check />,
   delete: <Delete />,
+  return: <KeyboardArrowLeft />,
   edit: <Edit />,
-  return: <KeyboardArrowLeft />
+  confirm: <Check />,
 }
 
-const FloatingButton: React.FC<Props> = ({ onClick, loading, variant = 'add', disabled }) => {
+const FloatingButton: React.FC<Props> = ({ loading, iconVariant = 'add', ...rest }) => {
   return (
-    <Container variant={variant}>
-      <div>
-        <Fab color="default" style={{ margin: 5 }} onClick={onClick} disabled={disabled}>
-          {
-          loading ? (
-            <CircularProgress variant='indeterminate' size={30}/>
-          ) : variationIcons[variant]}
-        </Fab>
-      </div>
-    </Container>
+    <Box
+      display='flex'
+      position='fixed'
+      bottom={15}
+      right={30}
+    >
+      <Fab  color="primary" {...rest} >
+        {loading ? (
+          <CircularProgress variant='indeterminate' size={30}/>
+        ) : variationIcons[iconVariant]}
+      </Fab>
+    </Box>
   )
 }
 

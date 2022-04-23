@@ -1,37 +1,43 @@
-import React, { useCallback } from 'react'
-
+import React, { useCallback, useContext } from 'react'
 import Bar from "@material-ui/core/AppBar"
 import Toolbar from "@material-ui/core/Toolbar"
 import IconButton from "@material-ui/core/IconButton"
 import Typography from "@material-ui/core/Typography"
 import InputBase from "@material-ui/core/InputBase"
-import Badge from "@material-ui/core/Badge"
 import MenuItem from "@material-ui/core/MenuItem"
 import Menu from "@material-ui/core/Menu"
-import ReportIcon from "@material-ui/icons/Assessment"
 import SearchIcon from "@material-ui/icons/Search"
-import NotificationsIcon from "@material-ui/icons/Notifications"
 import MoreIcon from "@material-ui/icons/MoreVert"
 import LogoutIcon from "@material-ui/icons/ExitToApp"
+import Box from "@material-ui/core/Box"
 import { fade, makeStyles, Theme, createStyles } from "@material-ui/core/styles"
-
-import { Container } from './styles'
 import { useHistory } from 'react-router'
+import clsx from  'clsx'
+import { ThemeModeContext } from 'contexts/themeMode'
+import { Brightness2, WbSunny } from '@material-ui/icons';
 
 interface AppBarProps {
   search?: boolean
 }
 
 const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
+  const { theme, hadleToggleTheme } = useContext(ThemeModeContext)
 
   const history = useHistory()
 
-  const handleSignOut = useCallback(() => {
+  const handleSignOut = useCallback(async () => {
     history.push('/')
   }, [history])
 
-  const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
+  const useStyles = makeStyles((theme: Theme) => createStyles({
+      container: {
+        width: '100%',
+        position: 'fixed',
+        zIndex: 10,
+        top: 0,
+        left: 0,
+        right: 0,
+      },
       grow: {
         flexGrow: 1
       },
@@ -97,7 +103,9 @@ const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
   )
 
   const classes = useStyles();
+  
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  
   const [
     mobileMoreAnchorEl,
     setMobileMoreAnchorEl
@@ -124,6 +132,7 @@ const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
   }
 
   const menuId = "primary-search-account-menu"
+  
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
@@ -134,10 +143,10 @@ const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={() => history.push('/clients')}>Clientes</MenuItem>
+      <MenuItem onClick={() => history.push('/customers')}>Clientes</MenuItem>
       <MenuItem onClick={() => history.push('/drivers')}>Motoristas</MenuItem>
       <MenuItem onClick={() => history.push('/trucks')}>Caminhões</MenuItem>
-      <MenuItem onClick={() => history.push('/services')}>Serviços</MenuItem>
+      <MenuItem onClick={() => history.push('/works')}>Serviços</MenuItem>
     </Menu>
   )
 
@@ -153,11 +162,11 @@ const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
       onClose={handleMobileMenuClose}
     >
 
-      <MenuItem  onClick={() => history.push('/services')}>
+      <MenuItem  onClick={() => history.push('/works')}>
         <p>Serviços</p>
       </MenuItem>
 
-      <MenuItem  onClick={() => history.push('/clients')}>
+      <MenuItem  onClick={() => history.push('/customers')}>
         <p>Clientes</p>
       </MenuItem>
 
@@ -169,10 +178,6 @@ const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
         <p>Caminhões</p>
       </MenuItem>
 
-      <MenuItem  onClick={() => history.push('/reports')}>
-        <p>Relatórios</p>
-      </MenuItem>
-
       <MenuItem onClick={handleSignOut}>
         <p>Sair</p>
       </MenuItem>
@@ -180,11 +185,11 @@ const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
   )
 
   return (
-    <Container className={classes.grow}>
+    <Box className={clsx(classes.grow, classes.container)}>
       <Bar position="static">
         <Toolbar>
           
-          <Typography className={classes.title} variant="h6" noWrap>
+          <Typography className={classes.title} variant="h3" noWrap>
             Rental Bucket
           </Typography>
 
@@ -206,17 +211,17 @@ const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
 
           <div className={classes.grow} />
 
-          <div className={classes.sectionDesktop}>
-            
-            <IconButton aria-label="show 17 new notifications" color="inherit">
-              <Badge badgeContent={17} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
+          <IconButton
+            aria-label="account of current user"
+            aria-controls="menu-appbar"
+            aria-haspopup="true"
+            onClick={hadleToggleTheme}
+            color="inherit"
+          >
+            {theme === 'dark' ?  <WbSunny /> : <Brightness2 />}
+          </IconButton>
 
-            <IconButton color="inherit" onClick={() => history.push('/reports')} >
-              <ReportIcon />
-            </IconButton>
+          <div className={classes.sectionDesktop}>
 
             <IconButton
               aria-label="account of current user"
@@ -247,9 +252,11 @@ const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
           
         </Toolbar>
       </Bar>
+
       {renderMobileMenu}
       {renderMenu}
-    </Container>
+      
+    </Box>
   )
 }
 
