@@ -15,6 +15,7 @@ import { useHistory } from 'react-router'
 import clsx from  'clsx'
 import { useDispatch } from 'react-redux'
 import { signOut } from 'redux/user/user.actions'
+import { useCookies } from 'react-cookie'
 
 interface AppBarProps {
   search?: boolean
@@ -25,11 +26,15 @@ const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
 
   const dispatch = useDispatch()
 
+  const [, , removeCookies] = useCookies(['rentalbucket.token'])
+
   const handleSignOut = useCallback(async () => {
     dispatch(signOut())
 
+    removeCookies('rentalbucket.token')
+
     history.push('/')
-  }, [history, dispatch])
+  }, [dispatch, history, removeCookies])
 
   const useStyles = makeStyles((theme: Theme) => createStyles({
       container: {

@@ -11,7 +11,7 @@ function App() {
   return (
     <Provider store={store} >
       <ThemeProvider theme={theme} >
-        <SnackbarProvider>
+        <SnackbarProvider preventDuplicate >
           <AuthInterceptor>
             <AppProvider>
               <Routes />

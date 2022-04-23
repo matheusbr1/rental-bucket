@@ -3,13 +3,15 @@ import { UserActions } from './user.actions'
 
 const persistedState = sessionStorage.getItem('@rentalbucket:user')
 
-const initialUserState = persistedState ? JSON.parse(persistedState) : {
+const initialState = {
   data: {
     name: '',
     email: ''
   },
   isAuthenticated: false
 }
+
+const initialUserState = persistedState ? JSON.parse(persistedState) : initialState
 
 export type IUserInitialState = typeof initialUserState
 
@@ -31,13 +33,7 @@ export function userReducer (
     case UserActions.SIGN_OUT: 
       sessionStorage.removeItem('@rentalbucket:user')
 
-      return {
-        data: {
-          name: '',
-          email: ''
-        },
-        isAuthenticated: false
-      }
+      return initialState
    
     default:
       return state

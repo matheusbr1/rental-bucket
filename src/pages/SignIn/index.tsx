@@ -19,6 +19,7 @@ import {
   makeStyles,
   Grid, 
 } from '@material-ui/core'
+import { useCookies } from 'react-cookie'
 
 const useStyles = makeStyles((theme) => createStyles({
   content: {
@@ -51,19 +52,23 @@ const SignIn: React.FC = () => {
 
   const { enqueueSnackbar: snackbar } = useSnackbar()
 
+  const [, setCookies] = useCookies(['rentalbucket.token'])
+
   const classes = useStyles()
 
   const handleSignIn = useCallback(async ({ email, password }: ISignInFields) => {
     try {
       const { data } = await api.post('/sessions', { email, password })
 
-      dispatch(signIn(data.user, data.token))
+      dispatch(signIn(data.user))
+
+      setCookies('rentalbucket.token', String(data.token))
 
       history.push('/works')
     } catch (error) {
       snackbar('Erro ao fazer login, tente novamente!', { variant: 'error' })
     }
-  }, [history, snackbar, dispatch])
+  }, [dispatch, setCookies, history, snackbar])
 
   return (
     <Container>
