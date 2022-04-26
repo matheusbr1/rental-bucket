@@ -4,7 +4,6 @@ import { useHistory } from 'react-router'
 import AppBar  from 'components/AppBar'
 import { useSnackbar } from 'notistack'
 import { IAddress, ICity, IContact, IState, PersonType } from 'interfaces'
-import Button from 'components/Button'
 import axios from 'axios'
 import { getCitys } from 'fetchs/getCitys'
 import { getStates } from 'fetchs/getStates'
@@ -17,26 +16,23 @@ import Loading from 'components/Loading'
 import { api } from 'services/api'
 import { RadioGroup } from 'formik-mui'
 import { FormControlLabel, Radio } from '@mui/material'
-import {  Box, Container, Divider,  Grid,  Typography } from '@material-ui/core'
+import Button from 'components/Button'
+import { Box, Container, Divider, Grid, Typography } from '@material-ui/core'
+import { Contacts } from 'components/Contacts'
 interface AddressProps {
   logradouro: string 
   uf: string 
   localidade: string  
   bairro: string 
 }
-
 interface CustomerFields {
   person_type: PersonType
   CPF_CNPJ: string
   name?: string
   company_name?: string
   fantasy_name?: string
-  address: IAddress,
-  contact: {
-    phone: string 
-    cellphone: string 
-    email: string 
-  }
+  address: IAddress
+  contacts: IContact[]
 }
 
 const Create: React.FC = () => {
@@ -104,22 +100,7 @@ const Create: React.FC = () => {
     try {
       const { data: customer } = await api.post('customers', fields)
 
-      const contacts = [
-        { 
-          contact_type: 'email', 
-          contact: fields.contact.email 
-        },
-        {
-          contact_type: 'phone', 
-          contact: fields.contact.phone 
-        },
-        {
-          contact_type: 'cellphone', 
-          contact: fields.contact.cellphone 
-        }
-      ] as IContact[]
-
-      contacts.map(async ({ contact, contact_type }) => {
+      fields.contacts.map(async ({ contact, contact_type }) => {
         await api.post('customers/contact', {
           contact,
           contact_type,
@@ -136,10 +117,7 @@ const Create: React.FC = () => {
 
       const newCustomer = {} as any
 
-      Object.assign(newCustomer, {
-        ...fields, 
-        contacts
-      })
+      Object.assign(newCustomer, fields)
 
       delete newCustomer.contact
 
@@ -164,36 +142,32 @@ const Create: React.FC = () => {
       <AppBar search={false} />
 
       <Formik
-          onSubmit={handleCreate}
-          enableReinitialize
-          validateOnChange
-          initialValues={{
-            person_type: 'F',
-            CPF_CNPJ: '',
-            name: '',
-            company_name: '',
-            fantasy_name: '',
-            address: {
-              CEP: '',
-              street: '',
-              number: '',
-              complement: '',
-              neighborhood: '',
-              state: null,
-              city: null
-            },
-            contact: {
-              phone: '',
-              cellphone: '',
-              email: ''
-            }
-          }}
-        >
+        onSubmit={handleCreate}
+        enableReinitialize
+        validateOnChange
+        initialValues={{
+          person_type: 'F',
+          CPF_CNPJ: '',
+          name: '',
+          company_name: '',
+          fantasy_name: '',
+          address: {
+            CEP: '',
+            street: '',
+            number: '',
+            complement: '',
+            neighborhood: '',
+            state: null,
+            city: null
+          },
+          contacts: [] as IContact[]
+        }}
+      >
           {({ values, errors, touched, setFieldValue }) => (
             <Form>
               {loading && <Loading />}
 
-              <Grid container spacing={3} justifyContent='flex-end' >
+              <Grid container spacing={3} >
                 <Grid item lg={12} md={12} sm={12} style={{ width: '100%' }}>
                   <Typography variant='h1' >
                     Novo Cliente
@@ -222,7 +196,7 @@ const Create: React.FC = () => {
                 </Grid>
 
                 {values.person_type === 'F' ? (
-                  <>
+                  <React.Fragment>
                     <Grid item lg={6} md={6} sm={6} xs={12} >
                       <Field component={FormikTextField} label='Nome' name='name' />
                     </Grid>
@@ -230,9 +204,9 @@ const Create: React.FC = () => {
                     <Grid item lg={6} md={6} sm={6} xs={12} >
                       <Field component={FormikTextField} label='CPF' name='CPF_CNPJ' />
                     </Grid>
-                  </>
+                  </React.Fragment>
                 ) : (
-                  <>
+                  <React.Fragment>
                     <Grid item lg={6} md={6} sm={6} xs={12} >
                       <Field component={FormikTextField} label='Razão Social' name='company_name' />
                     </Grid>
@@ -246,7 +220,7 @@ const Create: React.FC = () => {
                     </Grid>
 
                     <Grid item lg={6} md={6} sm={6} xs={12} />
-                  </>
+                  </React.Fragment>
                 )}
 
                 <Grid item lg={12} md={12} sm={12} xs={12} >
@@ -254,7 +228,7 @@ const Create: React.FC = () => {
                 </Grid>
 
                 <Grid item lg={12} md={12} sm={12} xs={12} >
-                  <Typography variant='h3' >
+                  <Typography variant='h2' >
                     Endereço
                   </Typography>
                 </Grid>
@@ -319,34 +293,23 @@ const Create: React.FC = () => {
                   <Divider style={{ margin: '2rem 0' }} />
                 </Grid>
 
-                <Grid item lg={12} md={12} sm={12} xs={12} >
-                  <Typography variant='h3' >
-                    Contato
-                  </Typography>
-                </Grid>
-
-                <Grid item lg={4} md={4} sm={4} xs={12} >
-                  <Field component={FormikTextField} label='Celular' name='contact.cellphone' />
-                </Grid>
-
-                <Grid item lg={4} md={4} sm={4} xs={12} >
-                  <Field component={FormikTextField} label='E-mail' name='contact.email' />
-                </Grid>
-
-                <Grid item lg={4} md={4} sm={4} xs={12} >
-                  <Field component={FormikTextField} label='Telefone' name='contact.phone' />
-                </Grid>
+                <Contacts 
+                  contacts={values.contacts} 
+                  setContacts={(contacts: IContact[]) => setFieldValue('contacts', contacts)} 
+                />
 
                 <Grid item lg={12} md={12} sm={12} xs={12} >
                   <Divider style={{ margin: '2rem 0' }} />
                 </Grid>
 
-                <Grid item lg={4} md={4} sm={4} xs={12} >
-                  <Box mb='2rem' >
-                    <Button loading={loading} color='primary' type='submit' >
-                      Criar
-                    </Button>
-                  </Box>
+                <Grid container spacing={3} justifyContent='flex-end' >
+                  <Grid item lg={4} md={4} sm={4} xs={12} >
+                    <Box mb='2rem' >
+                      <Button loading={loading} color='primary' type='submit' >
+                        Criar
+                      </Button>
+                    </Box>
+                  </Grid>
                 </Grid>
               </Grid>
             </Form>

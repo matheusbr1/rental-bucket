@@ -48,11 +48,11 @@ export interface IAddress {
   complement?: string
 }
 
-export type contactType = 'phone' | 'cellphone' | 'email'
+export type ContactType = 'phone' | 'cellphone' | 'email'
 
 export interface IContact {
   contact: string
-  contact_type: contactType
+  contact_type: ContactType
 }
 
 export interface ICustomer {
