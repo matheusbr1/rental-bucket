@@ -160,7 +160,7 @@ const Create: React.FC = () => {
             state: null,
             city: null
           },
-          contacts: [] as IContact[]
+          contacts: []
         }}
       >
           {({ values, errors, touched, setFieldValue }) => (

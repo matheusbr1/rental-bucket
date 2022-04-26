@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux'
 import { api } from 'services/api'
 import Button from 'components/Button'
 import axios from 'axios'
-import { IAddress, ICity, IState } from 'interfaces'
+import { IAddress, ICity, IContact, IState } from 'interfaces'
 import { getStates } from 'fetchs/getStates'
 import { getCitys } from 'fetchs/getCitys'
 import { createDriver } from 'redux/driver/driver.actions'
@@ -22,6 +22,7 @@ import {
   Grid, 
   Typography 
 } from '@material-ui/core'
+import { Contacts } from 'components/Contacts'
 
 interface AddressProps {
   logradouro: string 
@@ -128,7 +129,8 @@ const Create: React.FC = () => {
             neighborhood: '',
             state: null,
             city: null
-          }
+          },
+          contacts: []
         }}
       >
         {({ errors, touched, values, setFieldValue }) => (
@@ -234,23 +236,10 @@ const Create: React.FC = () => {
                 <Divider style={{ margin: '2rem 0' }} />
               </Grid>
 
-              <Grid item lg={12} md={12} sm={12} xs={12} >
-                <Typography variant='h3' >
-                  Contato
-                </Typography>
-              </Grid>
-
-              <Grid item lg={4} md={4} sm={4} xs={12} >
-                <Field component={FormikTextField} label='Celular' name='contact.cellphone' />
-              </Grid>
-
-              <Grid item lg={4} md={4} sm={4} xs={12} >
-                <Field component={FormikTextField} label='E-mail' name='contact.email' />
-              </Grid>
-
-              <Grid item lg={4} md={4} sm={4} xs={12} >
-                <Field component={FormikTextField} label='Telefone' name='contact.phone' />
-              </Grid>
+              <Contacts 
+                contacts={values.contacts} 
+                setContacts={(contacts: IContact[]) => setFieldValue('contacts', contacts)} 
+              />
 
               <Grid item lg={12} md={12} sm={12} xs={12} >
                 <Divider style={{ margin: '2rem 0' }} />

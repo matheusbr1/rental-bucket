@@ -104,7 +104,7 @@ const Contacts: React.FC<ContactsProps> = ({ contacts, setContacts }) => {
       {!contacts.length && !isAddingContact && (
         <Grid item lg={12} md={12} sm={12} xs={12} >
           <Typography variant='h5' >
-            Adicione um contato ao cliente!
+            Adicione um contato!
           </Typography>
         </Grid>
       )}
