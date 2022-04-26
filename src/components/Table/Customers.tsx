@@ -197,18 +197,22 @@ const Table: React.FC<TableProps> = ({ title, customers }) => {
   function createData(
     id: number,
     name: string,
-    contact: any,
+    contact: string,
   ): Data {
     return { id, name, contact }
   }
   
   const rows = customers.map(customer => {
-    const contact = customer.contact
+    const contact = customer.contacts[0]
+
+    const customerName = customer.person_type === 'F' 
+      ? customer.name
+      : customer.fantasy_name
 
     return createData(
       customer.id,
-      customer.name, 
-      contact?.email || contact?.cellphone || contact?.telephone
+      customerName as string,
+      contact.contact
     )
   })
 

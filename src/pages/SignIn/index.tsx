@@ -11,6 +11,7 @@ import { signInSchema } from 'validations/signInSchema'
 import { ISignInFields } from 'interfaces'
 import { signIn } from 'redux/user/user.actions'
 import { Link } from 'react-router-dom'
+import { useCookies } from 'react-cookie'
 import { 
   Container, 
   Typography, 
@@ -19,7 +20,7 @@ import {
   makeStyles,
   Grid, 
 } from '@material-ui/core'
-import { useCookies } from 'react-cookie'
+
 
 const useStyles = makeStyles((theme) => createStyles({
   content: {

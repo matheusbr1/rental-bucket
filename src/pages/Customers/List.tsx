@@ -15,7 +15,10 @@ const List: React.FC = () => {
   const dispatch  = useDispatch()
 
   useEffect(() => {
-    api.get('customers').then(response => dispatch(setCustomers(response.data)))
+    api.get('customers')
+      .then(response => {
+        dispatch(setCustomers(response.data))
+      })
   }, [dispatch])
 
   const customers = useSelector<IDefaultRootState, ICustomer[]>(state => state.customer.customers)

@@ -213,15 +213,21 @@ const Table: React.FC<TableProps> = ({ title, works }) => {
     return { id, customer, type, quantity, equipment, deadline, status }
   }
   
-  const rows = works.map(work => createData(
-    work.id,
-    work.customer.name, 
-    work.type, 
-    work.quantity,
-    work.equipment, 
-    work.endDate.toDateString(), 
-    'Pendente'
-  ))
+  const rows = works.map(work => {
+    const customerName = work.customer.person_type === 'F'
+      ? work.customer.name
+      : work.customer.fantasy_name
+
+    return createData(
+      work.id,
+      customerName as string, 
+      work.type, 
+      work.quantity,
+      work.equipment, 
+      work.endDate.toDateString(), 
+      'Pendente'
+    )
+  })
 
   const [selectedList, setSelectedList] = useState<number[]>([])
   const [currentSeleted, setCurrentSelected] = useState<number>()

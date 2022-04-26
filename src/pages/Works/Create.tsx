@@ -110,7 +110,13 @@ const Create: React.FC = () => {
                     error={errors.customer}
                     touched={touched.customer}
                     label='Cliente'
-                    getOptionLabel={(option: ICustomer) => option.name}
+                    getOptionLabel={
+                      (customer: ICustomer) => (
+                        customer.person_type === 'F'
+                        ? customer.name
+                        : customer.fantasy_name
+                      ) as string
+                    }
                   />
                 </Grid>
 

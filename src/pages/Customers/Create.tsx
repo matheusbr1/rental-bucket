@@ -1,8 +1,9 @@
+/* eslint-disable no-unreachable */
 import React, { useCallback, useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
 import AppBar  from 'components/AppBar'
 import { useSnackbar } from 'notistack'
-import { IAddress, ICity, IState } from 'interfaces'
+import { IAddress, ICity, IContact, IState, PersonType } from 'interfaces'
 import Button from 'components/Button'
 import axios from 'axios'
 import { getCitys } from 'fetchs/getCitys'
@@ -14,18 +15,9 @@ import FormikTextField from 'components/FormikTextField'
 import FormikAutoComplete from 'components/FormikAutoComplete'
 import Loading from 'components/Loading'
 import { api } from 'services/api'
-import { 
-  Box,
-  Container, 
-  Divider, 
-  FormControlLabel, 
-  Grid, 
-  Radio, 
-  RadioGroup, 
-  Typography 
-} from '@material-ui/core'
-
-
+import { RadioGroup } from 'formik-mui'
+import { FormControlLabel, Radio } from '@mui/material'
+import {  Box, Container, Divider,  Grid,  Typography } from '@material-ui/core'
 interface AddressProps {
   logradouro: string 
   uf: string 
@@ -33,12 +25,26 @@ interface AddressProps {
   bairro: string 
 }
 
+interface CustomerFields {
+  person_type: PersonType
+  CPF_CNPJ: string
+  name?: string
+  company_name?: string
+  fantasy_name?: string
+  address: IAddress,
+  contact: {
+    phone: string 
+    cellphone: string 
+    email: string 
+  }
+}
+
 const Create: React.FC = () => {
   const { goBack } = useHistory()
 
   const dispatch = useDispatch()
 
-  const { enqueueSnackbar } = useSnackbar()
+  const { enqueueSnackbar: snackbar } = useSnackbar()
 
   const [loading, setLoading] = useState(false)
   const [states, setStates] = useState<IState[]>([])
@@ -84,39 +90,74 @@ const Create: React.FC = () => {
   
       return address
     } catch {
-      enqueueSnackbar('Erro ao buscar endereço, tente novamente!', {
+      snackbar('Erro ao buscar endereço, tente novamente!', {
         variant: 'error'
       })
     } finally {
       setLoading(false)
     }
-  }, [states, enqueueSnackbar])
+  }, [states, snackbar])
 
-  const handleCreate = useCallback(async (fields) => {
+  const handleCreate = useCallback(async (fields: CustomerFields) => {
     setLoading(true)
-
+    
     try {
-      await api.post('customers', {
-        ...fields,
-        personType: 'F'
+      const { data: customer } = await api.post('customers', fields)
+
+      const contacts = [
+        { 
+          contact_type: 'email', 
+          contact: fields.contact.email 
+        },
+        {
+          contact_type: 'phone', 
+          contact: fields.contact.phone 
+        },
+        {
+          contact_type: 'cellphone', 
+          contact: fields.contact.cellphone 
+        }
+      ] as IContact[]
+
+      contacts.map(async ({ contact, contact_type }) => {
+        await api.post('customers/contact', {
+          contact,
+          contact_type,
+          customer_id: customer.id
+        })
       })
 
-      dispatch(createCustomer(fields))
+      await api.post('customers/address', { 
+        ...fields.address,
+        state: fields.address.state?.sigla,
+        city: fields.address.city?.name,
+        customer_id: customer.id
+      })
 
-      enqueueSnackbar('Cliente criado com sucesso!', {
+      const newCustomer = {} as any
+
+      Object.assign(newCustomer, {
+        ...fields, 
+        contacts
+      })
+
+      delete newCustomer.contact
+
+      dispatch(createCustomer(newCustomer))
+
+      snackbar('Cliente criado com sucesso!', {
         variant: 'success'
       })
 
       goBack()
     } catch (error) {
-      enqueueSnackbar('Erro ao criar cliente, tente novamente!', {
+      snackbar('Erro ao criar cliente, tente novamente!', {
         variant: 'error'
       })
     } finally {
       setLoading(false)
     }
-
-  }, [goBack, enqueueSnackbar, dispatch])
+  }, [goBack, snackbar, dispatch])
 
   return (
     <Container maxWidth='md' style={{ marginTop: 100 }} >
@@ -127,12 +168,24 @@ const Create: React.FC = () => {
           enableReinitialize
           validateOnChange
           initialValues={{
+            person_type: 'F',
+            CPF_CNPJ: '',
+            name: '',
+            company_name: '',
+            fantasy_name: '',
             address: {
               CEP: '',
               street: '',
+              number: '',
+              complement: '',
               neighborhood: '',
               state: null,
               city: null
+            },
+            contact: {
+              phone: '',
+              cellphone: '',
+              email: ''
             }
           }}
         >
@@ -148,7 +201,11 @@ const Create: React.FC = () => {
                 </Grid>
 
                 <Grid item lg={12} md={12} sm={12} xs={12} >
-                  <RadioGroup name='person' id="person" row >
+                  <Field
+                    row
+                    component={RadioGroup}
+                    name='person_type'
+                  >
                     <FormControlLabel
                       value="F"
                       defaultChecked
@@ -161,16 +218,36 @@ const Create: React.FC = () => {
                       label="Pessoa Jurídica"
                       control={<Radio />}
                     />
-                  </RadioGroup>
+                  </Field>
                 </Grid>
 
-                <Grid item lg={6} md={6} sm={6} xs={12} >
-                  <Field component={FormikTextField} label='Nome' name='name' />
-                </Grid>
+                {values.person_type === 'F' ? (
+                  <>
+                    <Grid item lg={6} md={6} sm={6} xs={12} >
+                      <Field component={FormikTextField} label='Nome' name='name' />
+                    </Grid>
 
-                <Grid item lg={6} md={6} sm={6} xs={12} >
-                  <Field component={FormikTextField} label='CPF_CNPJ' name='CPF' />
-                </Grid>
+                    <Grid item lg={6} md={6} sm={6} xs={12} >
+                      <Field component={FormikTextField} label='CPF' name='CPF_CNPJ' />
+                    </Grid>
+                  </>
+                ) : (
+                  <>
+                    <Grid item lg={6} md={6} sm={6} xs={12} >
+                      <Field component={FormikTextField} label='Razão Social' name='company_name' />
+                    </Grid>
+
+                    <Grid item lg={6} md={6} sm={6} xs={12} >
+                      <Field component={FormikTextField} label='Nome Fantasia' name='fantasy_name' />
+                    </Grid>
+
+                    <Grid item lg={6} md={6} sm={6} xs={12} >
+                      <Field component={FormikTextField} label='CNPJ' name='CPF_CNPJ' />
+                    </Grid>
+
+                    <Grid item lg={6} md={6} sm={6} xs={12} />
+                  </>
+                )}
 
                 <Grid item lg={12} md={12} sm={12} xs={12} >
                   <Divider style={{ margin: '2rem 0' }} />

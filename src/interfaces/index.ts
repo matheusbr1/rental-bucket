@@ -4,7 +4,7 @@ import { ITruckInitialState } from "redux/truck/truck.reducer"
 import { IUserInitialState } from "redux/user/user.reducer"
 import { IWorkInitialState } from "redux/work/work.reducer"
 
-type PersonType = 'F' | 'J'
+export type PersonType = 'F' | 'J'
 
 export interface IDefaultRootState  {
   work: IWorkInitialState
@@ -48,22 +48,22 @@ export interface IAddress {
   complement?: string
 }
 
+export type contactType = 'phone' | 'cellphone' | 'email'
+
 export interface IContact {
-  telephone: string
-  cellphone: string
-  email: string
+  contact: string
+  contact_type: contactType
 }
 
-
-
 export interface ICustomer {
-  personType: PersonType
+  person_type: PersonType
   id: number
   CPF_CNPJ: string
-  name: string
-  stateRegistration?: string
-  contact: IContact
-  address: IAddress
+  name?: string
+  company_name?: string
+  fantasy_name?: string
+  contacts: IContact[]
+  adresses: IAddress[]
 }
 
 export interface IDriver {

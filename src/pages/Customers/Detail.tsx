@@ -9,7 +9,7 @@ const Create: React.FC = () => {
 
   const { goBack } = useHistory()
 
-  const { enqueueSnackbar } = useSnackbar()
+  const { enqueueSnackbar: snackbar } = useSnackbar()
 
   const [loading, setLoading] = useState(false)
 
@@ -22,39 +22,38 @@ const Create: React.FC = () => {
     try {
       // Requisição
 
-      enqueueSnackbar('Cliente editado com sucesso', {
+      snackbar('Cliente editado com sucesso', {
         variant: 'success'
       })
 
       goBack()
     } catch (error) {
-      enqueueSnackbar('Erro ao editar cliente, tente novamente!', {
+      snackbar('Erro ao editar cliente, tente novamente!', {
         variant: 'error'
       })
     } finally {
       setLoading(false)
     }
-  }, [enqueueSnackbar, goBack])
+  }, [snackbar, goBack])
 
   const handleDelete = useCallback(() => {
-
     setLoading(true)
 
     try {
       // Requisição
 
-      enqueueSnackbar('Cliente deletado com sucesso!', {
+      snackbar('Cliente deletado com sucesso!', {
         variant: 'success'
       })
     } catch (error) {
-      enqueueSnackbar('Erro ao deletar cliente, tente novamente!', {
+      snackbar('Erro ao deletar cliente, tente novamente!', {
         variant: 'error'
       })
     } finally {
       setLoading(false)
     }
 
-  }, [enqueueSnackbar])
+  }, [snackbar])
 
   return (
     <Container style={{ marginTop: 64 }} >
