@@ -11,7 +11,7 @@ import { EmptyTableMessage } from 'components/EmptyTableMessage'
 const List: React.FC = () => {
   const history = useHistory()
 
-  const works = useSelector<IDefaultRootState, IWork[]>(state => state.work.works)
+  const works = useSelector<IDefaultRootState, IWork[]>(state => state.works)
 
   return (
     <Container style={{ marginTop: 64 }} >

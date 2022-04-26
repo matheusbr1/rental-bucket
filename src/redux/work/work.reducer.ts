@@ -1,28 +1,21 @@
-import { ReducerAction } from 'interfaces'
+import { IWork, ReducerAction } from 'interfaces'
 import { WorkActions } from './work.actions'
 
-const initialWorkState = {
-  works: []
-}
-
-export type IWorkInitialState = typeof initialWorkState
+export type IWorkInitialState = IWork[]
 
 export function workReducer (
-  state: IWorkInitialState = initialWorkState, 
+  state: IWorkInitialState = [], 
   action: ReducerAction
 ): IWorkInitialState {
   switch (action.type) {
     case WorkActions.SET_WORKS:
-      return { ...state, works: action.payload }
+      return action.payload
 
     case WorkActions.CREATE_WORK:
-      return {
-        ...state,
-        works: state.works.concat({
-          id: state.works.length + 1,
-          ...action.payload,
-        })
-      }
+      return state.concat({
+        id: state.length + 1,
+        ...action.payload,
+      })
 
     case WorkActions.RESET_STATE:
       return state

@@ -7,10 +7,10 @@ import { IWorkInitialState } from "redux/work/work.reducer"
 export type PersonType = 'F' | 'J'
 
 export interface IDefaultRootState  {
-  work: IWorkInitialState
-  truck: ITruckInitialState
-  driver: IDriverInitialState
-  customer: ICustomerInitialState,
+  works: IWorkInitialState
+  trucks: ITruckInitialState
+  drivers: IDriverInitialState
+  customers: ICustomerInitialState,
   user: IUserInitialState
 }
 

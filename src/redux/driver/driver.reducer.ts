@@ -1,31 +1,21 @@
-import { ReducerAction } from 'interfaces'
+import { IDriver, ReducerAction } from 'interfaces'
 import { DriverActions } from './driver.actions'
 
-const initialDriverState = {
-  drivers: []
-}
-
-export type IDriverInitialState = typeof initialDriverState
+export type IDriverInitialState = IDriver[]
 
 export function driverReducer (
-  state: IDriverInitialState = initialDriverState, 
+  state: IDriverInitialState = [], 
   action: ReducerAction
 ): IDriverInitialState {
   switch (action.type) {
     case DriverActions.SET_DRIVERS:
-      return {
-        ...state,
-        drivers: action.payload
-      }
+      return action.payload
       
     case DriverActions.CREATE_DRIVER: 
-      return {
-        ...state,
-        drivers: state.drivers.concat({
-          id: state.drivers.length + 1,
-          ...action.payload
-        })
-      }
+      return state.concat({
+        id: state.length + 1,
+        ...action.payload
+      })
 
     case DriverActions.RESET_STATE:
       return state

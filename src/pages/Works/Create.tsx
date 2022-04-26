@@ -37,9 +37,9 @@ const Create: React.FC = () => {
     api.get('customers').then(response => dispatch(setCustomers(response.data)))
   }, [dispatch])
 
-  const drivers = useSelector<IDefaultRootState, IDriver[]>(state => state.driver.drivers)
-  const trucks = useSelector<IDefaultRootState, ITruck[]>(state => state.truck.trucks)
-  const customers = useSelector<IDefaultRootState, ICustomer[]>(state => state.customer.customers)
+  const drivers = useSelector<IDefaultRootState, IDriver[]>(state => state.drivers)
+  const trucks = useSelector<IDefaultRootState, ITruck[]>(state => state.trucks)
+  const customers = useSelector<IDefaultRootState, ICustomer[]>(state => state.customers)
 
   const [loading, setLoading] = useState(false)
 

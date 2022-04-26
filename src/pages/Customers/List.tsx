@@ -21,7 +21,7 @@ const List: React.FC = () => {
       })
   }, [dispatch])
 
-  const customers = useSelector<IDefaultRootState, ICustomer[]>(state => state.customer.customers)
+  const customers = useSelector<IDefaultRootState, ICustomer[]>(state => state.customers)
 
   return (
     <Container style={{ marginTop: 64 }} >

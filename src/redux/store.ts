@@ -7,10 +7,10 @@ import { workReducer } from './work/work.reducer'
 import { userReducer } from './user/user.reducer'
 
 const reducers = combineReducers({
-  customer: customerReducer,
-  driver: driverReducer,
-  truck: truckReducer,
-  work: workReducer,
+  customers: customerReducer,
+  drivers: driverReducer,
+  trucks: truckReducer,
+  works: workReducer,
   user: userReducer,
 })
 

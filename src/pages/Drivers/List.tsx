@@ -18,7 +18,7 @@ const List: React.FC = () => {
     api.get('/drivers').then(response =>dispatch(setDrivers(response.data)))
   }, [dispatch])
 
-  const drivers = useSelector<IDefaultRootState, IDriver[]>(state => state.driver.drivers)
+  const drivers = useSelector<IDefaultRootState, IDriver[]>(state => state.drivers)
 
   return (
     <Container style={{ marginTop: 64 }} >
