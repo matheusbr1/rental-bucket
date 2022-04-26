@@ -74,11 +74,7 @@ export interface IDriver {
   CNH: string
   birthday: string | Date
   address: IAddress
-  contact: {
-    telephone: string
-    cellphone: string
-    email: string
-  }
+  contacts: IContact[]
 }
 
 export interface IWork {
@@ -109,8 +105,10 @@ export interface ITruck {
   plate: string
   equipment: string
   renavam: string
-  year: {
-    manufacture: string
-    model: string
+  manufacture_year: number
+  model_year: number
+  type?: {
+    name: string
+    description: string
   }
 }

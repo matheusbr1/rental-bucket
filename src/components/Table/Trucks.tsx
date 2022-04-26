@@ -204,8 +204,8 @@ const Table: React.FC<TableProps> = ({ title, trucks }) => {
   
   const rows = trucks.map(truck => createData(
     truck.id,
-    truck.plate, 
-    truck.equipment
+    truck.plate,
+    truck?.type?.name || ''
   ))
 
   const EnhancedTableToolbar = (props: EnhancedTableToolbarProps) => {
@@ -354,7 +354,7 @@ const Table: React.FC<TableProps> = ({ title, trucks }) => {
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.plate}
+                      key={row.id}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">

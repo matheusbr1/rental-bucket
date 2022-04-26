@@ -363,7 +363,7 @@ const Table: React.FC<TableProps> = ({ title, customers }) => {
             <TableBody>
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
+                .map(row => {
                   const isItemSelected = isSelected(row.name as any);
 
                   return (
@@ -373,7 +373,7 @@ const Table: React.FC<TableProps> = ({ title, customers }) => {
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.name}
+                      key={row.id}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">

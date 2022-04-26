@@ -205,7 +205,7 @@ const Table: React.FC<TableProps> = ({ title, drivers }) => {
   const rows = drivers.map(driver => createData(
     driver.id,
     driver.name, 
-    driver.contact.cellphone ?? driver.contact.telephone
+    driver.contacts[0]?.contact
   ))
 
   const [selectedList, setSelectedList] = useState<number[]>([])
@@ -365,7 +365,7 @@ const Table: React.FC<TableProps> = ({ title, drivers }) => {
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.name}
+                      key={row.id}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
