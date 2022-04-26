@@ -1,15 +1,22 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import AppBar  from 'components/AppBar'
 import Table from 'components/Table/Works'
 import FloatingButton from 'components/FloatingButton'
 import { useHistory } from 'react-router'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Container, Box } from '@material-ui/core'
 import { IDefaultRootState, IWork } from 'interfaces'
 import { EmptyTableMessage } from 'components/EmptyTableMessage'
+import { api } from 'services/api'
+import { setWorks } from 'redux/work/work.actions'
 
 const List: React.FC = () => {
   const history = useHistory()
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    api.get('works').then(response => dispatch(setWorks(response.data)))
+  }, [dispatch])
 
   const works = useSelector<IDefaultRootState, IWork[]>(state => state.works)
 

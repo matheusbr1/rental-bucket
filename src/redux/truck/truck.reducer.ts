@@ -17,9 +17,6 @@ export function truckReducer (
         ...action.payload
       })
 
-    case TruckActions.RESET_STATE:
-      return state
-
     default:
       return state
   }

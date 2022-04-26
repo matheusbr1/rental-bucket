@@ -17,9 +17,6 @@ export function customerReducer (
         ...action.payload
       })
 
-    case CustomerActions.RESET_STATE:
-      return state
-
     default:
       return state
   }

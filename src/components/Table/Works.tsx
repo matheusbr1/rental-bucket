@@ -218,13 +218,15 @@ const Table: React.FC<TableProps> = ({ title, works }) => {
       ? work.customer.name
       : work.customer.fantasy_name
 
+      const endDate = new Date(work.end_date)
+
     return createData(
       work.id,
       customerName as string, 
-      work.type, 
+      work.work_type.name,
       work.quantity,
-      work.equipment, 
-      work.endDate.toDateString(), 
+      work.equipment.name,
+      endDate.toDateString(),
       'Pendente'
     )
   })

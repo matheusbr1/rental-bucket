@@ -77,14 +77,26 @@ export interface IDriver {
   contacts: IContact[]
 }
 
+export interface IWorkType {
+  id?: string
+  name: string
+}
+
+export interface IEquipment {
+  id?: string
+  name: string
+  description: string
+  capacity: string
+}
+
 export interface IWork {
   id: number
   customer: ICustomer
   driver: IDriver
-  endDate: Date
-  equipment: string
+  end_date: Date
+  equipment: IEquipment
   quantity: number
-  type: string
+  work_type: IWorkType
   truck: ITruck
 }
 

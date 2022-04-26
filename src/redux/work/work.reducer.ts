@@ -17,9 +17,6 @@ export function workReducer (
         ...action.payload,
       })
 
-    case WorkActions.RESET_STATE:
-      return state
-
     default:
       return state
   }

@@ -1,7 +1,6 @@
 import { IDriver } from "interfaces"
 
 export enum DriverActions {
-  RESET_STATE = 'RESET_STATE',
   SET_DRIVERS = 'SET_DRIVERS',
   CREATE_DRIVER = 'CREATE_DRIVER',
 }

@@ -1,7 +1,6 @@
 import { ICustomer } from "interfaces"
 
 export enum CustomerActions {
-  RESET_STATE = 'RESET_STATE',
   SET_CUSTOMERS = 'SET_CUSTOMERS',
   CREATE_CUSTOMER = 'CREATE_CUSTOMER',
 }

@@ -17,9 +17,6 @@ export function driverReducer (
         ...action.payload
       })
 
-    case DriverActions.RESET_STATE:
-      return state
-
     default:
       return state
   }
