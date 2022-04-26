@@ -1,27 +1,16 @@
 import * as yup from 'yup'
 
 export const contactSchema = yup.object().shape({
-  type: yup.string(),
+  contact_type: yup.string()
+    .required('Campo Obrigatório'),
 
-  email: yup.string()
-    .when('type', {
+  contact: yup.string()
+    .when('contact_type', {
       is: 'email',
       then: yup.string()
         .email('E-mail inválido')
-        .required('Campo Obrigatório')
-    }),
-  
-  telephone: yup.string()
-    .when('type', {
-      is: 'telephone',
-      then: yup.string()
-        .required('Campo Obrigatório')
-    }),
-  
-  cellphone: yup.string()
-    .when('type', {
-      is: 'cellphone',
-      then: yup.string()
-        .required('Campo Obrigatório')
+        .required('Campo Obrigatório'),
+      otherwise: yup.string()
+        .required('Campo Obrigatório'),
     }),
 })

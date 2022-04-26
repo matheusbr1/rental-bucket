@@ -15,14 +15,8 @@ import FormikTextField from 'components/FormikTextField'
 import FormikDateInput from 'components/FormikDateInput'
 import FormikAutoComplete from 'components/FormikAutoComplete'
 import Loading from 'components/Loading'
-import { 
-  Box, 
-  Container, 
-  Divider, 
-  Grid, 
-  Typography 
-} from '@material-ui/core'
 import { Contacts } from 'components/Contacts'
+import { Box, Container, Divider, Grid, Typography } from '@material-ui/core'
 
 interface AddressProps {
   logradouro: string 
@@ -36,7 +30,7 @@ const Create: React.FC = () => {
 
   const dispatch = useDispatch()
 
-  const { enqueueSnackbar } = useSnackbar()
+  const { enqueueSnackbar: snackbar } = useSnackbar()
 
   const [loading, setLoading] = useState(false)
   const [states, setStates] = useState<IState[]>([])
@@ -82,13 +76,13 @@ const Create: React.FC = () => {
   
       return address
     } catch {
-      enqueueSnackbar('Erro ao buscar endereço, tente novamente!', {
+      snackbar('Erro ao buscar endereço, tente novamente!', {
         variant: 'error'
       })
     } finally {
       setLoading(false)
     }
-  }, [states, enqueueSnackbar])
+  }, [states, snackbar])
 
   const handleCreate = useCallback(async (fields) => {
     console.log('Data', fields)
@@ -100,19 +94,19 @@ const Create: React.FC = () => {
 
       dispatch(createDriver(fields))
 
-      enqueueSnackbar('Motorista criado com sucesso!', {
+      snackbar('Motorista criado com sucesso!', {
         variant: 'success'
       })
 
       goBack()
     } catch (error) {
-      enqueueSnackbar('Erro ao criar motorista, tente novamente!', {
+      snackbar('Erro ao criar motorista, tente novamente!', {
         variant: 'error'
       })
     } finally {
       setLoading(false)
     }
-  }, [goBack, enqueueSnackbar, dispatch])
+  }, [goBack, snackbar, dispatch])
 
   return (
     <Container maxWidth='md' style={{ marginTop: 100 }} >
@@ -126,9 +120,11 @@ const Create: React.FC = () => {
           address: {
             CEP: '',
             street: '',
+            number: '',
             neighborhood: '',
             state: null,
-            city: null
+            city: null,
+            complement: ''
           },
           contacts: []
         }}
@@ -236,10 +232,12 @@ const Create: React.FC = () => {
                 <Divider style={{ margin: '2rem 0' }} />
               </Grid>
 
-              <Contacts 
-                contacts={values.contacts} 
-                setContacts={(contacts: IContact[]) => setFieldValue('contacts', contacts)} 
-              />
+              <Grid item lg={12} md={12} sm={12} xs={12} >
+                <Contacts 
+                  contacts={values.contacts} 
+                  setContacts={(contacts: IContact[]) => setFieldValue('contacts', contacts)} 
+                />
+              </Grid>
 
               <Grid item lg={12} md={12} sm={12} xs={12} >
                 <Divider style={{ margin: '2rem 0' }} />

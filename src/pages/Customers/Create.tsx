@@ -1,37 +1,27 @@
-/* eslint-disable no-unreachable */
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback } from 'react'
 import { useHistory } from 'react-router'
 import AppBar  from 'components/AppBar'
 import { useSnackbar } from 'notistack'
-import { IAddress, ICity, IContact, IState, PersonType } from 'interfaces'
-import axios from 'axios'
-import { getCitys } from 'fetchs/getCitys'
-import { getStates } from 'fetchs/getStates'
+import { IAddress, IContact, PersonType } from 'interfaces'
 import { createCustomer } from 'redux/customer/customer.actions'
 import { useDispatch } from 'react-redux'
 import { Formik, Form, Field } from 'formik'
 import FormikTextField from 'components/FormikTextField'
-import FormikAutoComplete from 'components/FormikAutoComplete'
-import Loading from 'components/Loading'
 import { api } from 'services/api'
 import { RadioGroup } from 'formik-mui'
 import { FormControlLabel, Radio } from '@mui/material'
 import Button from 'components/Button'
 import { Box, Container, Divider, Grid, Typography } from '@material-ui/core'
 import { Contacts } from 'components/Contacts'
-interface AddressProps {
-  logradouro: string 
-  uf: string 
-  localidade: string  
-  bairro: string 
-}
+import { Adresses } from 'components/Adresses'
+
 interface CustomerFields {
   person_type: PersonType
   CPF_CNPJ: string
   name?: string
   company_name?: string
   fantasy_name?: string
-  address: IAddress
+  adresses: IAddress[]
   contacts: IContact[]
 }
 
@@ -42,61 +32,7 @@ const Create: React.FC = () => {
 
   const { enqueueSnackbar: snackbar } = useSnackbar()
 
-  const [loading, setLoading] = useState(false)
-  const [states, setStates] = useState<IState[]>([])
-  const [citys, setCitys] = useState<ICity[]>([])
-
-  // Getting States
-  useEffect(() => {
-    (async () => {
-      const states = await getStates()
-      setStates(states)
-    })()
-  }, [])
-
-  const handleGetAdress = useCallback(async (CEP: string): Promise<Partial<IAddress> | undefined> => {
-    try {
-      setLoading(true)
-
-      let address = { CEP } as Partial<IAddress>
-  
-      const { data } = await axios.get(`https://viacep.com.br/ws/${CEP}/json`)
-
-      if (data.erro) {
-        throw new Error('Unable to fetch zip code')
-      }
-  
-      if (!data) {
-        return address
-      }
-  
-      const { logradouro, uf, localidade, bairro }: AddressProps = data
-          
-      address = {
-        neighborhood: bairro,
-        street: logradouro,
-        state: states.find(state => state.sigla === uf)
-      }
-  
-      const citys = await getCitys(uf)
-  
-      setCitys(citys)
-  
-      address.city = citys.find(city => city.name === localidade)
-  
-      return address
-    } catch {
-      snackbar('Erro ao buscar endereço, tente novamente!', {
-        variant: 'error'
-      })
-    } finally {
-      setLoading(false)
-    }
-  }, [states, snackbar])
-
   const handleCreate = useCallback(async (fields: CustomerFields) => {
-    setLoading(true)
-    
     try {
       const { data: customer } = await api.post('customers', fields)
 
@@ -108,20 +44,16 @@ const Create: React.FC = () => {
         })
       })
 
-      await api.post('customers/address', { 
-        ...fields.address,
-        state: fields.address.state?.sigla,
-        city: fields.address.city?.name,
-        customer_id: customer.id
+      fields.adresses.map(async (address) => {
+        await api.post('customers/address', { 
+          ...address,
+          state: address.state?.sigla,
+          city: address.city?.name,
+          customer_id: customer.id
+        })
       })
 
-      const newCustomer = {} as any
-
-      Object.assign(newCustomer, fields)
-
-      delete newCustomer.contact
-
-      dispatch(createCustomer(newCustomer))
+      dispatch(createCustomer(customer))
 
       snackbar('Cliente criado com sucesso!', {
         variant: 'success'
@@ -132,10 +64,44 @@ const Create: React.FC = () => {
       snackbar('Erro ao criar cliente, tente novamente!', {
         variant: 'error'
       })
-    } finally {
-      setLoading(false)
     }
   }, [goBack, snackbar, dispatch])
+
+  const renderFieldsByPerson = (person: PersonType) => {
+    if (person === 'F') {
+      return (
+      <React.Fragment>
+        <Grid item lg={6} md={6} sm={6} xs={12} >
+          <Field component={FormikTextField} label='Nome' name='name' />
+        </Grid>
+
+        <Grid item lg={6} md={6} sm={6} xs={12} >
+          <Field component={FormikTextField} label='CPF' name='CPF_CNPJ' />
+        </Grid>
+      </React.Fragment>
+      )
+    }
+
+    if (person === 'J') {
+      return (
+        <React.Fragment>
+          <Grid item lg={6} md={6} sm={6} xs={12} >
+            <Field component={FormikTextField} label='Razão Social' name='company_name' />
+          </Grid>
+
+          <Grid item lg={6} md={6} sm={6} xs={12} >
+            <Field component={FormikTextField} label='Nome Fantasia' name='fantasy_name' />
+          </Grid>
+
+          <Grid item lg={6} md={6} sm={6} xs={12} >
+            <Field component={FormikTextField} label='CNPJ' name='CPF_CNPJ' />
+          </Grid>
+
+          <Grid item lg={6} md={6} sm={6} xs={12} />
+        </React.Fragment>
+      )
+    }
+  }
 
   return (
     <Container maxWidth='md' style={{ marginTop: 100 }} >
@@ -151,22 +117,12 @@ const Create: React.FC = () => {
           name: '',
           company_name: '',
           fantasy_name: '',
-          address: {
-            CEP: '',
-            street: '',
-            number: '',
-            complement: '',
-            neighborhood: '',
-            state: null,
-            city: null
-          },
+          adresses: [],
           contacts: []
         }}
       >
-          {({ values, errors, touched, setFieldValue }) => (
+          {({ values, setFieldValue, isSubmitting }) => (
             <Form>
-              {loading && <Loading />}
-
               <Grid container spacing={3} >
                 <Grid item lg={12} md={12} sm={12} style={{ width: '100%' }}>
                   <Typography variant='h1' >
@@ -195,108 +151,29 @@ const Create: React.FC = () => {
                   </Field>
                 </Grid>
 
-                {values.person_type === 'F' ? (
-                  <React.Fragment>
-                    <Grid item lg={6} md={6} sm={6} xs={12} >
-                      <Field component={FormikTextField} label='Nome' name='name' />
-                    </Grid>
-
-                    <Grid item lg={6} md={6} sm={6} xs={12} >
-                      <Field component={FormikTextField} label='CPF' name='CPF_CNPJ' />
-                    </Grid>
-                  </React.Fragment>
-                ) : (
-                  <React.Fragment>
-                    <Grid item lg={6} md={6} sm={6} xs={12} >
-                      <Field component={FormikTextField} label='Razão Social' name='company_name' />
-                    </Grid>
-
-                    <Grid item lg={6} md={6} sm={6} xs={12} >
-                      <Field component={FormikTextField} label='Nome Fantasia' name='fantasy_name' />
-                    </Grid>
-
-                    <Grid item lg={6} md={6} sm={6} xs={12} >
-                      <Field component={FormikTextField} label='CNPJ' name='CPF_CNPJ' />
-                    </Grid>
-
-                    <Grid item lg={6} md={6} sm={6} xs={12} />
-                  </React.Fragment>
-                )}
+                {renderFieldsByPerson(values.person_type)}
 
                 <Grid item lg={12} md={12} sm={12} xs={12} >
                   <Divider style={{ margin: '2rem 0' }} />
                 </Grid>
 
                 <Grid item lg={12} md={12} sm={12} xs={12} >
-                  <Typography variant='h2' >
-                    Endereço
-                  </Typography>
-                </Grid>
-
-                <Grid item lg={2} md={2} sm={4} xs={12} >
-                  <Field 
-                    component={FormikTextField} 
-                    label='CEP' 
-                    name='address.CEP'
-                    onBlur={async () => {
-                      const address = await handleGetAdress(values.address.CEP)
-                      setFieldValue('address', { ...values.address, ...address })
-                    }}
+                  <Adresses
+                    adresses={values.adresses} 
+                    setAdresses={(adresses: IAddress[]) => setFieldValue('adresses', adresses)} 
                   />
-                </Grid>
-
-                <Grid item lg={10} md={10} sm={8} xs={12} >
-                  <Field component={FormikTextField} label='Logradouro' name='address.street' />
-                </Grid>
-
-                <Grid item lg={2} md={2} sm={4} xs={12} >
-                  <Field 
-                    component={FormikTextField} 
-                    label='Número' 
-                    name='address.number'
-                    type='number'
-                    inputProps={{ min: 0 }}
-                  />
-                </Grid>
-
-                <Grid item lg={10} md={10} sm={8} xs={12} >
-                  <Field component={FormikTextField} label='Bairro' name='address.neighborhood' />
-                </Grid>
-
-                <Grid item lg={2} md={2} sm={4} xs={12} >
-                  <FormikAutoComplete 
-                    name="address.state"
-                    options={states}
-                    error={errors.address?.state}
-                    touched={touched.address?.state}
-                    label='UF'
-                    getOptionLabel={(option: IState) => option.sigla}
-                  />
-                </Grid>
-
-                <Grid item lg={5} md={5} sm={4} xs={12} >
-                  <FormikAutoComplete 
-                    name="address.city"
-                    options={citys}
-                    error={errors.address?.city}
-                    touched={touched.address?.city}
-                    label='Cidade'
-                    getOptionLabel={(option: ICity) => option.name}
-                  />
-                </Grid>
-
-                <Grid item lg={5} md={5} sm={4} xs={12} >
-                  <Field component={FormikTextField} label='Complemento' name='address.complement' />
                 </Grid>
 
                 <Grid item lg={12} md={12} sm={12} xs={12} >
                   <Divider style={{ margin: '2rem 0' }} />
                 </Grid>
-
-                <Contacts 
-                  contacts={values.contacts} 
-                  setContacts={(contacts: IContact[]) => setFieldValue('contacts', contacts)} 
-                />
+                
+                <Grid item lg={12} md={12} sm={12} xs={12} >
+                  <Contacts 
+                    contacts={values.contacts} 
+                    setContacts={(contacts: IContact[]) => setFieldValue('contacts', contacts)} 
+                  />
+                </Grid>
 
                 <Grid item lg={12} md={12} sm={12} xs={12} >
                   <Divider style={{ margin: '2rem 0' }} />
@@ -305,7 +182,7 @@ const Create: React.FC = () => {
                 <Grid container spacing={3} justifyContent='flex-end' >
                   <Grid item lg={4} md={4} sm={4} xs={12} >
                     <Box mb='2rem' >
-                      <Button loading={loading} color='primary' type='submit' >
+                      <Button loading={isSubmitting} color='primary' type='submit' >
                         Criar
                       </Button>
                     </Box>
