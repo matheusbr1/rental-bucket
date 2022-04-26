@@ -67,12 +67,12 @@ export interface ICustomer {
 }
 
 export interface IDriver {
-  id: number
+  id?: number
   name: string
   CPF: string
   RG: string
   CNH: string
-  birthday: string | Date
+  birthday: Date | null
   address: IAddress
   contacts: IContact[]
 }

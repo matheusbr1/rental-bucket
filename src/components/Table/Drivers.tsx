@@ -195,7 +195,7 @@ const Table: React.FC<TableProps> = ({ title, drivers }) => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
 
   function createData(
-    id: number,
+    id: number | any,
     name: string,
     contact: string,
   ): Data {
@@ -203,7 +203,7 @@ const Table: React.FC<TableProps> = ({ title, drivers }) => {
   }
   
   const rows = drivers.map(driver => createData(
-    driver.id,
+    driver?.id,
     driver.name, 
     driver.contacts[0]?.contact
   ))

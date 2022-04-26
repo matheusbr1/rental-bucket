@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux'
 import { api } from 'services/api'
 import Button from 'components/Button'
 import axios from 'axios'
-import { IAddress, ICity, IContact, IState } from 'interfaces'
+import { IAddress, ICity, IContact, IDriver, IState } from 'interfaces'
 import { getStates } from 'fetchs/getStates'
 import { getCitys } from 'fetchs/getCitys'
 import { createDriver } from 'redux/driver/driver.actions'
@@ -84,13 +84,32 @@ const Create: React.FC = () => {
     }
   }, [states, snackbar])
 
-  const handleCreate = useCallback(async (fields) => {
-    console.log('Data', fields)
-
+  const handleCreate = useCallback(async (fields: IDriver) => {
     setLoading(true)
 
     try {
-      await api.post('/drivers', fields)
+      const { data: driver } = await api.post('/drivers', {
+        name: fields.name,
+        CPF: fields.CPF,
+        RG: fields.RG,
+        CNH: fields.CNH,
+        birthday: fields.birthday
+      })
+
+      fields.contacts.map(async ({ contact, contact_type }) => {
+        await api.post('/drivers/contact', {
+          contact,
+          contact_type,
+          driver_id: driver?.id
+        })
+      })
+
+      await api.post('/drivers/address', { 
+        ...fields.address,
+        state: fields.address.state?.sigla,
+        city: fields.address.city?.name,
+        driver_id: driver?.id
+      })
 
       dispatch(createDriver(fields))
 
@@ -117,6 +136,11 @@ const Create: React.FC = () => {
         enableReinitialize
         validateOnChange
         initialValues={{
+          name: '',
+          CPF: '',
+          RG: '',
+          CNH: '',
+          birthday: null,
           address: {
             CEP: '',
             street: '',
@@ -140,7 +164,7 @@ const Create: React.FC = () => {
                 </Typography>
               </Grid>
 
-              <Grid item lg={4} md={4} sm={4} xs={12} >
+              <Grid item lg={8} md={8} sm={8} xs={12} >
                 <Field component={FormikTextField} label='Nome' name='name' />
               </Grid>
 
