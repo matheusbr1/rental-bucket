@@ -4,7 +4,7 @@ import AppBar  from 'components/AppBar'
 import { useSnackbar } from 'notistack'
 import { useDispatch } from 'react-redux'
 import { Container, Grid, Typography, } from '@material-ui/core'
-import { truckEquipments, years } from 'mocks'
+import { years } from 'mocks'
 import { IBrand, IModel } from 'interfaces'
 import { getBrands } from 'fetchs/getBrands'
 import { getModels } from 'fetchs/getModels'
@@ -27,6 +27,12 @@ const Create: React.FC = () => {
   
   const [brands, setBrands] = useState<IBrand[]>([])
   const [models, setModels] = useState<IModel[]>([])
+
+  const [truckTypes, setTruckTypes] = useState()
+
+  useEffect(() => {
+    api.get('/trucks/types').then(response => setTruckTypes(response.data))
+  }, [])
 
   // Getting brands
   useEffect(() => {
@@ -90,7 +96,7 @@ const Create: React.FC = () => {
         initialValues={{
           brand: null,
           model: null,
-          equipment: '',
+          type: '',
           year: {
             manufacture: '',
             model: ''
@@ -158,11 +164,12 @@ const Create: React.FC = () => {
 
               <Grid item lg={4} md={4} sm={6} xs={12} >
                 <FormikAutoComplete 
-                  name="equipment"
-                  options={truckEquipments}
-                  error={errors.equipment}
-                  touched={touched.equipment}
-                  label='Equipamento'
+                  name="type"
+                  options={truckTypes}
+                  error={errors.type}
+                  touched={touched.type}
+                  getOptionLabel={(option: { name: string }) => option.name}
+                  label='Tipo'
                 />
               </Grid>
 

@@ -10,7 +10,7 @@ import SearchIcon from "@material-ui/icons/Search"
 import MoreIcon from "@material-ui/icons/MoreVert"
 import LogoutIcon from "@material-ui/icons/ExitToApp"
 import Box from "@material-ui/core/Box"
-import { fade, makeStyles, Theme, createStyles } from "@material-ui/core/styles"
+import { alpha, makeStyles, Theme, createStyles } from "@material-ui/core/styles"
 import { useHistory } from 'react-router'
 import clsx from  'clsx'
 import { useDispatch } from 'react-redux'
@@ -60,9 +60,9 @@ const AppBar: React.FC<AppBarProps> = ({ search=true }) => {
       search: {
         position: "relative",
         borderRadius: theme.shape.borderRadius,
-        backgroundColor: fade(theme.palette.common.white, 0.15),
+        backgroundColor: alpha(theme.palette.common.white, 0.15),
         "&:hover": {
-          backgroundColor: fade(theme.palette.common.white, 0.25)
+          backgroundColor: alpha(theme.palette.common.white, 0.25)
         },
         marginRight: theme.spacing(2),
         marginLeft: 0,

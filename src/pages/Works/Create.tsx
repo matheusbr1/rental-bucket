@@ -5,10 +5,9 @@ import { useSnackbar } from 'notistack'
 import { useDispatch, useSelector } from 'react-redux'
 import Moment from 'moment'
 import { Container, Grid, Typography, } from '@material-ui/core'
-import { equipments, workTypes } from 'mocks'
 import Button from 'components/Button'
 import { Formik, Form, Field } from 'formik'
-import { ICustomer, IDefaultRootState, IDriver, ITruck } from 'interfaces'
+import { IAddress, ICustomer, IDefaultRootState, IDriver, ITruck } from 'interfaces'
 import FormikTextField from 'components/FormikTextField'
 import FormikDateInput from 'components/FormikDateInput'
 import FormikAutoComplete from 'components/FormikAutoComplete'
@@ -24,6 +23,21 @@ const Create: React.FC = () => {
   const { enqueueSnackbar } = useSnackbar()
 
   const dispatch  = useDispatch()
+
+  const [workTypes, setWorkTypes] = useState()
+  const [equipments, setEquipments] = useState()
+
+  useEffect(() => {
+    api.get('/works/types').then(response => setWorkTypes(response.data))
+  }, [])
+
+  useEffect(() => {
+    api.get('/trucks/types/equipments').then(response => setEquipments(response.data))
+  }, [])
+
+  useEffect(() => {
+    api.get('/drivers').then(response => dispatch(setDrivers(response.data)))
+  }, [dispatch])
   
   useEffect(() => {
     api.get('/drivers').then(response =>dispatch(setDrivers(response.data)))
@@ -86,15 +100,16 @@ const Create: React.FC = () => {
           validateOnChange
           initialValues={{
             customer: null,
+            address: null,
             driver: null,
             truck: null,
             equipment: null,
             type: null,
             quantity: null,
-            endDate: Moment(new Date()).add(7, 'days').toDate()
+            end_date: Moment(new Date()).add(7, 'days').toDate()
           }}
         >
-          {({ errors, touched }) => (
+          {({ values, errors, touched }) => (
             <Form>
               <Grid container spacing={3} justifyContent='flex-end' >
                 <Grid item lg={12} md={12} sm={12} style={{ width: '100%' }}>
@@ -120,6 +135,20 @@ const Create: React.FC = () => {
                   />
                 </Grid>
 
+                <Grid item lg={8} md={8} sm={8} xs={12} >
+                  <FormikAutoComplete 
+                    name="address"
+                    disabled={!values.customer}
+                    options={(values.customer as null | ICustomer)?.adresses}
+                    error={errors.address}
+                    touched={touched.address}
+                    label='Endereço'
+                    getOptionLabel={({ CEP, street, city, state }: IAddress) => {
+                      return `${CEP} - ${street} - ${city} - ${state}`
+                    }}
+                  />
+                </Grid>
+
                 <Grid item lg={4} md={4} sm={6} xs={12} >
                   <FormikAutoComplete 
                     name="driver"
@@ -128,16 +157,6 @@ const Create: React.FC = () => {
                     touched={touched.driver}
                     label='Motorista'
                     getOptionLabel={(option: IDriver) => option.name}
-                  />
-                </Grid>
-
-                <Grid item lg={4} md={4} sm={6} xs={12} >
-                  <FormikAutoComplete 
-                    name="equipment"
-                    options={equipments}
-                    error={errors.equipment}
-                    touched={touched.equipment}
-                    label='Equipamento'
                   />
                 </Grid>
 
@@ -154,11 +173,23 @@ const Create: React.FC = () => {
 
                 <Grid item lg={4} md={4} sm={6} xs={12} >
                   <FormikAutoComplete 
+                    name="equipment"
+                    options={equipments}
+                    error={errors.equipment}
+                    touched={touched.equipment}
+                    getOptionLabel={(option: { name: string }) => option.name}
+                    label='Equipamento'
+                  />
+                </Grid>
+
+                <Grid item lg={4} md={4} sm={6} xs={12} >
+                  <FormikAutoComplete 
                     name="type"
                     options={workTypes}
                     error={errors.type}
                     touched={touched.type}
                     label='Serviço'
+                    getOptionLabel={(option: { name: string }) => option.name}
                   />
                 </Grid>
 
@@ -174,7 +205,7 @@ const Create: React.FC = () => {
                 </Grid>
 
                 <Grid item lg={4} md={4} sm={6} xs={12} >
-                  <FormikDateInput label="Data da retirada" name="endDate" />
+                  <FormikDateInput label="Data da retirada" name="end_date" />
                 </Grid>
 
                 <Grid item lg={4} md={4} sm={6} xs={12} />
