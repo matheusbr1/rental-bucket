@@ -50,14 +50,17 @@ const Create: React.FC = () => {
     try {
       setLoading(true)
 
-      await api.post('trucks', {
+      const { data: truck } = await api.post('trucks', {
         ...fields,
         brand_id: fields.brand?.id,
         model_id: fields.model?.id,
         truck_type_id: fields.truck_type.id,
       })
 
-      dispatch(createTruck(fields))
+      dispatch(createTruck({
+        id: truck.id,
+        ...fields
+      }))
 
       snackbar('Caminhão cadastrado com sucesso!', { variant: 'success' })
 

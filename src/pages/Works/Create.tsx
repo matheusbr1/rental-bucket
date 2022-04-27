@@ -61,17 +61,20 @@ const Create: React.FC = () => {
     setLoading(true)
 
     try { 
-      await api.post('works', {
+      const { data: work } = await api.post('works', {
         customer_CPF_CNPJ: fields.customer.CPF_CNPJ,
         driver_CPF: fields.driver.CPF,
         truck: fields.truck.plate,
         equipment: fields.equipment,
         quantity: fields.quantity,
         type: fields.type,
-        endDate: fields.endDate
+        end_date: fields.endDate
       })
 
-      dispatch(createWork(fields))
+      dispatch(createWork({
+        id: work.id,
+        ...fields
+      }))
 
       enqueueSnackbar('Serviço criado com sucesso!', {
         variant: 'success'

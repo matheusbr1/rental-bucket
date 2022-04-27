@@ -111,7 +111,10 @@ const Create: React.FC = () => {
         driver_id: driver?.id
       })
 
-      dispatch(createDriver(fields))
+      dispatch(createDriver({
+        id: driver.id,
+        ...fields
+      }))
 
       snackbar('Motorista criado com sucesso!', {
         variant: 'success'

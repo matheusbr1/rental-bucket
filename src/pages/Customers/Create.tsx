@@ -53,7 +53,10 @@ const Create: React.FC = () => {
         })
       })
 
-      dispatch(createCustomer(customer))
+      dispatch(createCustomer({
+        id: customer.id,
+        ...fields, 
+      }))
 
       snackbar('Cliente criado com sucesso!', {
         variant: 'success'
