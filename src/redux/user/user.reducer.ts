@@ -6,7 +6,8 @@ const persistedState = sessionStorage.getItem('@rentalbucket:user')
 const initialState = {
   data: {
     name: '',
-    email: ''
+    email: '',
+    avatar: 'https://lh3.googleusercontent.com/a-/AOh14GjFOW9XIzTAnRBsiQ7HHIHEDENmp0LObBXrMyeN4ac=s288-p-rw-no'
   },
   isAuthenticated: false
 }
@@ -21,9 +22,12 @@ export function userReducer (
 ): IUserInitialState {
   switch (action.type) {
     case UserActions.SIGN_IN:
-      const updatedState = { 
-        data: action.payload,
-        isAuthenticated: true
+      const updatedState = {
+        isAuthenticated: true,
+        data: {
+          ...state.data,
+          ...action.payload
+        }
       }
 
       sessionStorage.setItem('@rentalbucket:user', JSON.stringify(updatedState))

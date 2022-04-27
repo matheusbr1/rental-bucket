@@ -2,7 +2,7 @@
 import React, { useCallback, useState } from 'react'
 import { useSnackbar } from 'notistack'
 import { useHistory } from 'react-router'
-import AppBar  from 'components/AppBar'
+import { AppBar } from 'components/AppBar'
 import { Container } from '@material-ui/core'
 
 const Detail: React.FC = () => {
@@ -46,7 +46,7 @@ const Detail: React.FC = () => {
 
   return (
     <Container style={{ marginTop: 64 }} >
-      <AppBar search={false} />
+      <AppBar />
     </Container>
   )
 }

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
-import AppBar  from 'components/AppBar'
+import { AppBar } from 'components/AppBar'
 import { useSnackbar } from 'notistack'
 import { useDispatch } from 'react-redux'
 import { api } from 'services/api'
@@ -129,7 +129,7 @@ const Create: React.FC = () => {
 
   return (
     <Container maxWidth='md' style={{ marginTop: 100 }} >
-      <AppBar search={false} />
+      <AppBar />
 
       <Formik
         onSubmit={handleCreate}

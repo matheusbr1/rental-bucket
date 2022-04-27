@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useHistory } from 'react-router'
-import AppBar  from 'components/AppBar'
+import { AppBar } from 'components/AppBar'
 import { useSnackbar } from 'notistack'
 import { useDispatch, useSelector } from 'react-redux'
 import Moment from 'moment'
@@ -91,7 +91,7 @@ const Create: React.FC = () => {
 
   return (
     <>
-      <AppBar search={false} />
+      <AppBar />
 
       <Container maxWidth='md' style={{ marginTop: 100 }} >
         <Formik

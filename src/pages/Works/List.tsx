@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import AppBar  from 'components/AppBar'
+import { AppBar } from 'components/AppBar'
 import Table from 'components/Table/Works'
 import FloatingButton from 'components/FloatingButton'
 import { useHistory } from 'react-router'

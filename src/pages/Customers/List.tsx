@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import AppBar  from 'components/AppBar'
+import { AppBar } from 'components/AppBar'
 import FloatingButton from 'components/FloatingButton'
 import { useHistory } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
