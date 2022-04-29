@@ -6,6 +6,8 @@ import { getComparator, stableSort } from './shared/helpers'
 import { useStyles } from './shared/styles'
 import { HeadCell, Order } from './shared/interfaces'
 import { EnhancedTableHead } from './shared/TableHead'
+import { deleteDriver, setCurrentDriver } from 'redux/driver/driver.actions'
+import { useDispatch } from 'react-redux'
 
 import { 
   Table as MuiTable,
@@ -17,7 +19,6 @@ import {
   Checkbox,
   Box,
 } from '@material-ui/core'
-
 
 interface TableProps {
   title: string
@@ -42,7 +43,9 @@ const Table: React.FC<TableProps> = ({ drivers }) => {
   const [selected, setSelected] = React.useState<string[]>([])
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
-  const [currentSelected, setCurrentSelected] = useState<string>()
+  const [currentSelected, setCurrentSelected] = useState<string>('')
+
+  const dispatch = useDispatch()
 
   function createData(
     id: string,
@@ -55,7 +58,7 @@ const Table: React.FC<TableProps> = ({ drivers }) => {
   const rows = drivers.map(driver => createData(
     driver.id,
     driver.name, 
-    driver.contacts[0]?.contact
+    driver.contacts[0]?.contact || 'Nenhum Contato Cadastrado'
   ))
 
   const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof Data) => {
@@ -107,11 +110,11 @@ const Table: React.FC<TableProps> = ({ drivers }) => {
           path='drivers'
           title='Motoristas'
           numSelected={selected.length}
-          currentSelected={currentSelected as any}
-          selected={selected as any}
+          currentSelected={currentSelected}
+          selected={selected}
           setSelected={setSelected}
-          onDelete={id => console.log(id)}
-          onAccess={driver => console.log(driver)}
+          onDelete={id => dispatch(deleteDriver(id))}
+          onAccess={driver => dispatch(setCurrentDriver(driver))}
         />
 
         <TableContainer>
