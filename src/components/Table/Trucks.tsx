@@ -19,12 +19,11 @@ import {
 } from '@material-ui/core'
 
 interface TableProps {
-  title: string
   trucks: ITruck[]
 }
 
 interface Data {
-  id: number
+  id: string
   plate: string
   equipment: string
 }
@@ -34,17 +33,17 @@ const headCells: HeadCell[] = [
   { id: 'equipment', numeric: false, disablePadding: false, label: 'Equipamento' },
 ]
 
-const Table: React.FC<TableProps> = ({ title, trucks }) => {
+const Table: React.FC<TableProps> = ({ trucks }) => {
   const classes = useStyles()
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<keyof Data>('plate')
   const [selected, setSelected] = React.useState<string[]>([])
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
-  const [currentSelected, setCurrentSelected] = React.useState<number>()
+  const [currentSelected, setCurrentSelected] = React.useState<string>('')
 
   function createData(
-    id: number,
+    id: string,
     plate: string,
     equipment: string
   ): Data {
@@ -65,21 +64,21 @@ const Table: React.FC<TableProps> = ({ title, trucks }) => {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.plate)
+      const newSelecteds = rows.map((n) => n.id)
       setSelected(newSelecteds)
       return
     }
     setSelected([])
   }
 
-  const handleClick = (event: React.MouseEvent<unknown>, name: string, id: number) => {
-    const selectedIndex = selected.indexOf(name)
+  const handleClick = (event: React.MouseEvent<unknown>, id: string) => {
+    const selectedIndex = selected.indexOf(id)
     let newSelected: string[] = []
 
     setCurrentSelected(id)
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name)
+      newSelected = newSelected.concat(selected, id)
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1))
     } else if (selectedIndex === selected.length - 1) {
@@ -94,7 +93,7 @@ const Table: React.FC<TableProps> = ({ title, trucks }) => {
     setSelected(newSelected)
   }
 
-  const isSelected = (name: string) => selected.indexOf(name) !== -1
+  const isSelected = (id: string) => selected.indexOf(id) !== -1
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage)
 
@@ -104,11 +103,13 @@ const Table: React.FC<TableProps> = ({ title, trucks }) => {
         
         <EnhancedTableToolbar 
           path='trucks'
-          title={title}
+          title='Caminhões'
           numSelected={selected.length}
           currentSelected={currentSelected as any}
           selected={selected as  any}
           setSelected={setSelected}
+          onDelete={id => console.log(id)}
+          onAccess={truck => console.log(truck)}
         />
         
         <TableContainer>
@@ -133,13 +134,13 @@ const Table: React.FC<TableProps> = ({ title, trucks }) => {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.plate);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+                  const isItemSelected = isSelected(row.id)
+                  const labelId = `enhanced-table-checkbox-${index}`
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.plate, row.id)}
+                      onClick={(event) => handleClick(event, row.id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}

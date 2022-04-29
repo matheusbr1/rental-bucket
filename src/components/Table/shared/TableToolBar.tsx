@@ -6,8 +6,6 @@ import EditIcon from '@material-ui/icons/Edit'
 import OpenIcon from '@material-ui/icons/Launch'
 import { useHistory } from 'react-router'
 import { api } from 'services/api'
-import { useDispatch } from 'react-redux'
-import { deleteWork, setCurrentWork } from 'redux/work/work.actions'
 import { useSnackbar } from 'notistack'
 import Loading from 'components/Loading'
 
@@ -19,6 +17,8 @@ interface EnhancedTableToolbarProps {
   title: string
   path: string
   selected: string[]
+  onDelete: (id: string) => void
+  onAccess: (register: any) => void
   setSelected: (selected: string[]) => void
 }
 
@@ -47,16 +47,16 @@ const useToolbarStyles = makeStyles((theme: Theme) =>
 
 const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (props) => {
   const classes = useToolbarStyles()
-
-  const dispatch = useDispatch()
   
   const { 
     numSelected,
-    currentSelected: work_id, 
+    currentSelected: register_id, 
     title, 
     path,
     selected, 
-    setSelected
+    setSelected,
+    onDelete,
+    onAccess
   } = props;
 
   const { enqueueSnackbar: snackbar } = useSnackbar()
@@ -66,40 +66,47 @@ const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (props) => {
   const history = useHistory()
 
   const handleOpen = useCallback(async () => {
+    const treatedName = title.toLowerCase().slice(0, -1)
+
     try {
       setIsLoading(true)
 
-      const { data: work } = await api.get(`/${path}/${work_id}`)
+      const { data: register } = await api.get(`/${path}/${register_id}`)
 
-      dispatch(setCurrentWork(work))
+      onAccess(register)
   
-      history.push(`/${path}/${work_id}`)
+      history.push(`/${path}/${register_id}`)
     } catch (error) {
-      snackbar('Não foi possível acessar o serviço, tente novamente', { variant: 'error' })
+      snackbar(`Não foi possível acessar o ${treatedName}, tente novamente`, { variant: 'error' })
     } finally {
       setIsLoading(false)
     }
-  }, [dispatch, history, path, snackbar, work_id])
+  }, [title, path, register_id, onAccess, history, snackbar])
 
   const handleDelete = useCallback(async () => {
+    const treatedName = title.toLowerCase().slice(0, -1)
+
     try {
       setIsLoading(true)
 
-     for await (const selected_word_id of selected) {
-       await api.delete(`/${path}/${selected_word_id}`)
+     for await (const selected_register_id of selected) {
+       await api.delete(`/${path}/${selected_register_id}`)
 
-       dispatch(deleteWork(selected_word_id))
+       onDelete(selected_register_id)
      }
 
       setSelected([])
+
+      const treatedName = title.toLowerCase().slice(0, -1)
   
-      snackbar('Serviço deletado com sucesso!', { variant: 'success' })
+      snackbar(`${treatedName} deletado com sucesso!`,  { variant: 'success' })
     } catch (error) {
-      snackbar('Não foi possível deletar o serviço, tente novamente', { variant: 'error' })
+      snackbar(`Não foi possível deletar o ${treatedName}, tente novamente!`, { variant: 'error' }
+      )
     } finally {
       setIsLoading(false)
     }
-  }, [dispatch, path, selected, setSelected, snackbar])
+  }, [onDelete, path, selected, setSelected, snackbar, title])
 
   return (
     <Toolbar

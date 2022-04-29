@@ -33,7 +33,7 @@ const List: React.FC = () => {
         alignItems='center'
       >
         {works.length ? (
-          <Table  title='Serviços' works={works} />
+          <Table works={works} />
         ) : (
           <EmptyTableMessage tableName='serviços' />
         )}

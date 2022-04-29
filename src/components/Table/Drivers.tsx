@@ -25,7 +25,7 @@ interface TableProps {
 }
 
 interface Data {
-  id: number
+  id: string
   name: string
   contact: string
 }
@@ -35,17 +35,17 @@ const headCells: HeadCell[] = [
   { id: 'contact', numeric: false, disablePadding: false, label: 'Contato' },
 ]
 
-const Table: React.FC<TableProps> = ({ title, drivers }) => {
+const Table: React.FC<TableProps> = ({ drivers }) => {
   const classes = useStyles()
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<keyof Data>('name')
   const [selected, setSelected] = React.useState<string[]>([])
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
-  const [currentSelected, setCurrentSelected] = useState<number>()
+  const [currentSelected, setCurrentSelected] = useState<string>()
 
   function createData(
-    id: number | any,
+    id: string,
     name: string,
     contact: string,
   ): Data {
@@ -53,7 +53,7 @@ const Table: React.FC<TableProps> = ({ title, drivers }) => {
   }
   
   const rows = drivers.map(driver => createData(
-    driver?.id,
+    driver.id,
     driver.name, 
     driver.contacts[0]?.contact
   ))
@@ -73,14 +73,14 @@ const Table: React.FC<TableProps> = ({ title, drivers }) => {
     setSelected([])
   }
 
-  const handleClick = (event: React.MouseEvent<unknown>, name: string, id: number) => {
-    const selectedIndex = selected.indexOf(name)
+  const handleClick = (event: React.MouseEvent<unknown>, id: string) => {
+    const selectedIndex = selected.indexOf(id)
     let newSelected: string[] = []
 
     setCurrentSelected(id)
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name)
+      newSelected = newSelected.concat(selected, id)
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1))
     } else if (selectedIndex === selected.length - 1) {
@@ -95,7 +95,7 @@ const Table: React.FC<TableProps> = ({ title, drivers }) => {
     setSelected(newSelected)
   }
 
-  const isSelected = (name: string) => selected.indexOf(name) !== -1
+  const isSelected = (id: string) => selected.indexOf(id) !== -1
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage)
 
@@ -105,11 +105,13 @@ const Table: React.FC<TableProps> = ({ title, drivers }) => {
         
         <EnhancedTableToolbar 
           path='drivers'
-          title={title}
+          title='Motoristas'
           numSelected={selected.length}
           currentSelected={currentSelected as any}
           selected={selected as any}
           setSelected={setSelected}
+          onDelete={id => console.log(id)}
+          onAccess={driver => console.log(driver)}
         />
 
         <TableContainer>
@@ -134,12 +136,12 @@ const Table: React.FC<TableProps> = ({ title, drivers }) => {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map(row => {
-                  const isItemSelected = isSelected(row.name);
+                  const isItemSelected = isSelected(row.id);
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.name, row.id)}
+                      onClick={(event) => handleClick(event, row.id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}

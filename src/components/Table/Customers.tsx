@@ -17,28 +17,32 @@ import {
   Checkbox,
   Box,
 } from '@material-ui/core'
+import { useDispatch } from 'react-redux'
+import { deleteCustomer, setCurrentCustomer } from 'redux/customer/customer.actions'
 
 interface TableProps {
-  title: string 
   customers: ICustomer[]
 }
+
 
 const headCells: HeadCell[] = [
   { id: 'name', numeric: false, disablePadding: true, label: 'Cliente' },
   { id: 'contact', numeric: false, disablePadding: false, label: 'Contato' },
 ]
 
-const Table: React.FC<TableProps> = ({ title, customers }) => {
+const Table: React.FC<TableProps> = ({ customers }) => {
   const classes = useStyles()
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState('name')
   const [selected, setSelected] = React.useState<string[]>([])
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
-  const [currentSelected, setCurrentSelected] = useState<number>()
+  const [currentSelected, setCurrentSelected] = useState<string>('')
+
+  const dispatch = useDispatch()
 
   function createData(
-    id: number,
+    id: string,
     name: string,
     contact: string,
   ): any {
@@ -55,7 +59,7 @@ const Table: React.FC<TableProps> = ({ title, customers }) => {
     return createData(
       customer.id,
       customerName as string,
-      contact.contact
+      contact?.contact || 'Nenhum contato cadastrado'
     )
   })
 
@@ -67,21 +71,21 @@ const Table: React.FC<TableProps> = ({ title, customers }) => {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name)
+      const newSelecteds = rows.map((n) => n.id)
       setSelected(newSelecteds)
       return
     }
     setSelected([])
   }
 
-  const handleClick = (event: React.MouseEvent<unknown>, name: string, id: number) => {
-    const selectedIndex = selected.indexOf(name)
+  const handleClick = (event: React.MouseEvent<unknown>, id: string) => {
+    const selectedIndex = selected.indexOf(id)
     let newSelected: string[] = []
 
     setCurrentSelected(id)
 
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name)
+      newSelected = newSelected.concat(selected, id)
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1))
     } else if (selectedIndex === selected.length - 1) {
@@ -96,7 +100,7 @@ const Table: React.FC<TableProps> = ({ title, customers }) => {
     setSelected(newSelected)
   }
 
-  const isSelected = (name: string) => selected.indexOf(name) !== -1
+  const isSelected = (id: string) => selected.indexOf(id) !== -1
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage)
 
@@ -106,11 +110,13 @@ const Table: React.FC<TableProps> = ({ title, customers }) => {
 
         <EnhancedTableToolbar 
           path='customers'
-          title={title}
+          title='Clientes'
           numSelected={selected.length}
-          currentSelected={currentSelected as any}
-          selected={selected as any}
+          currentSelected={currentSelected}
+          selected={selected}
           setSelected={setSelected}
+          onDelete={id => dispatch(deleteCustomer(id))}
+          onAccess={customer => dispatch(setCurrentCustomer(customer))}
         />
         
         <TableContainer>
@@ -135,12 +141,12 @@ const Table: React.FC<TableProps> = ({ title, customers }) => {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map(row => {
-                  const isItemSelected = isSelected(row.name as any);
+                  const isItemSelected = isSelected(row.id as string)
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.name as any, Number(row.id))}
+                      onClick={(event) => handleClick(event, row.id as string)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}

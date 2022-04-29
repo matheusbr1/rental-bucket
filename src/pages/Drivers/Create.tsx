@@ -84,7 +84,7 @@ const Create: React.FC = () => {
     }
   }, [states, snackbar])
 
-  const handleCreate = useCallback(async (fields: IDriver) => {
+  const handleCreate = useCallback(async (fields: Omit<IDriver, 'id'>) => {
     setLoading(true)
 
     try {
@@ -111,10 +111,7 @@ const Create: React.FC = () => {
         driver_id: driver?.id
       })
 
-      dispatch(createDriver({
-        id: driver.id,
-        ...fields
-      }))
+      dispatch(createDriver(driver as IDriver))
 
       snackbar('Motorista criado com sucesso!', {
         variant: 'success'

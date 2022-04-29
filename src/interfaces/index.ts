@@ -56,8 +56,8 @@ export interface IContact {
 }
 
 export interface ICustomer {
+  id: string
   person_type: PersonType
-  id: number
   CPF_CNPJ: string
   name?: string
   company_name?: string
@@ -67,7 +67,7 @@ export interface ICustomer {
 }
 
 export interface IDriver {
-  id?: number
+  id: string
   name: string
   CPF: string
   RG: string
@@ -111,7 +111,7 @@ export interface IModel {
 }
 
 export interface ITruck {
-  id: number
+  id: string
   brand: IBrand | null
   model: IModel | null
   plate: string

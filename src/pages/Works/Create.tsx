@@ -53,7 +53,7 @@ const Create: React.FC = () => {
 
   const drivers = useSelector<IDefaultRootState, IDriver[]>(state => state.drivers)
   const trucks = useSelector<IDefaultRootState, ITruck[]>(state => state.trucks)
-  const customers = useSelector<IDefaultRootState, ICustomer[]>(state => state.customers)
+  const customers = useSelector<IDefaultRootState, ICustomer[]>(state => state.customers.all)
 
   const [loading, setLoading] = useState(false)
 
@@ -62,13 +62,13 @@ const Create: React.FC = () => {
 
     try { 
       const { data: work } = await api.post('works', {
-        customer_CPF_CNPJ: fields.customer.CPF_CNPJ,
-        driver_CPF: fields.driver.CPF,
-        truck: fields.truck.plate,
-        equipment: fields.equipment,
+        customer_id: fields.customer.id,
+        driver_id: fields.driver.id,
+        truck_id: fields.truck.id,
+        equipment_id: fields.equipment.id,
         quantity: fields.quantity,
-        type: fields.type,
-        end_date: fields.endDate
+        work_type_id: fields.work_type.id,
+        end_date: fields.end_date
       })
 
       dispatch(createWork({

@@ -19,7 +19,7 @@ export function workReducer (
         all: action.payload
       }
 
-    case  WorkActions.CREATE_WORK:
+    case WorkActions.CREATE_WORK:
       return {
         ...state,
         all: state.all.concat({
@@ -32,6 +32,12 @@ export function workReducer (
         return {
           current: null,
           all: state.all.filter(work => work.id !== action.payload)
+        }
+
+      case WorkActions.SET_CURRENT_WORK:
+        return {
+          ...state,
+          current: action.payload
         }
 
     default:

@@ -6,6 +6,8 @@ import { useStyles } from './shared/styles'
 import { HeadCell, Order } from './shared/interfaces'
 import { EnhancedTableToolbar } from './shared/TableToolBar'
 import { EnhancedTableHead } from './shared/TableHead'
+import { useDispatch } from 'react-redux'
+import { deleteWork, setCurrentWork } from 'redux/work/work.actions'
 
 import { 
   Table as MuiTable,
@@ -18,8 +20,8 @@ import {
   Box,
 } from '@material-ui/core'
 
+
 interface TableProps {
-  title: string
   works: IWork[]
 }
 
@@ -42,7 +44,7 @@ const headCells: HeadCell[] = [
   { id: 'status', numeric: false, disablePadding: false, label: 'Situação' },
 ]
 
-const Table: React.FC<TableProps> = ({ title, works }) => {
+const Table: React.FC<TableProps> = ({ works }) => {
   const classes = useStyles()
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<keyof Data>('type')
@@ -50,6 +52,8 @@ const Table: React.FC<TableProps> = ({ title, works }) => {
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
   const [currentSelected, setCurrentSelected] = useState<string>('')
+
+  const dispatch = useDispatch()
 
   function createData(
     id: string,
@@ -127,11 +131,13 @@ const Table: React.FC<TableProps> = ({ title, works }) => {
       <Paper className={classes.paper}>
         <EnhancedTableToolbar 
           path='works'
-          title={title}
+          title='Serviços'
           numSelected={selected.length}
           currentSelected={currentSelected}
           selected={selected}
           setSelected={setSelected}
+          onDelete={id => dispatch(deleteWork(id))}
+          onAccess={work => dispatch(setCurrentWork(work))}
         />
 
         <TableContainer>

@@ -21,7 +21,7 @@ const List: React.FC = () => {
       })
   }, [dispatch])
 
-  const customers = useSelector<IDefaultRootState, ICustomer[]>(state => state.customers)
+  const customers = useSelector<IDefaultRootState, ICustomer[]>(state => state.customers.all)
 
   return (
     <Container style={{ marginTop: 64 }} >
@@ -36,7 +36,7 @@ const List: React.FC = () => {
         alignItems='center'
       >
         {customers.length ? (
-          <Table title='Clientes' customers={customers} />
+          <Table customers={customers} />
         ) : (
           <EmptyTableMessage tableName='clientes' />
         )}
