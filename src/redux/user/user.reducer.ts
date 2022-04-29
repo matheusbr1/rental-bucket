@@ -12,9 +12,11 @@ const initialState = {
   isAuthenticated: false
 }
 
-const initialUserState = persistedState ? JSON.parse(persistedState) : initialState
+const initialUserState = persistedState 
+  ? JSON.parse(persistedState) 
+  : initialState
 
-export type IUserInitialState = typeof initialUserState
+export type IUserInitialState = typeof initialState
 
 export function userReducer (
   state: IUserInitialState = initialUserState, 

@@ -18,7 +18,7 @@ const List: React.FC = () => {
     api.get('works').then(response => dispatch(setWorks(response.data)))
   }, [dispatch])
 
-  const works = useSelector<IDefaultRootState, IWork[]>(state => state.works)
+  const works = useSelector<IDefaultRootState, IWork[]>(state => state.works.all)
 
   return (
     <Container style={{ marginTop: 64 }} >

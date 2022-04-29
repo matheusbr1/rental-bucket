@@ -24,7 +24,7 @@ interface TableProps {
 }
 
 interface Data {
-  id: number
+  id: string
   type: string
   equipment: string
   quantity: number
@@ -49,11 +49,10 @@ const Table: React.FC<TableProps> = ({ title, works }) => {
   const [selected, setSelected] = React.useState<string[]>([])
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
-  const [selectedList, setSelectedList] = useState<number[]>([])
-  const [currentSelected, setCurrentSelected] = useState<number>()
+  const [currentSelected, setCurrentSelected] = useState<string>('')
 
   function createData(
-    id: number,
+    id: string,
     customer: string,
     type: string,
     quantity: number,
@@ -90,34 +89,21 @@ const Table: React.FC<TableProps> = ({ title, works }) => {
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.customer)
+      const newSelecteds = rows.map((n) => n.id)
       setSelected(newSelecteds)
       return
     }
     setSelected([])
   }
 
-  const handleClick = (event: React.MouseEvent<unknown>, name: string, id: number) => {
-    const selectedIndex = selected.indexOf(name)
+  const handleClick = (event: React.MouseEvent<unknown>, id: string) => {
+    const selectedIndex = selected.indexOf(id)
     let newSelected: string[] = []
 
     setCurrentSelected(id)
 
-    setSelectedList((otherSelecteds: number[]) => {
-      const isSelected = otherSelecteds.filter(serviceID => serviceID === id)[0]
-
-      if (isSelected) {
-        return otherSelecteds.filter(serviceID => serviceID !== id)
-      } else {
-        return [
-          ...otherSelecteds,
-          id
-        ]
-      }
-    })    
-
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name)
+      newSelected = newSelected.concat(selected, id)
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1))
     } else if (selectedIndex === selected.length - 1) {
@@ -132,7 +118,7 @@ const Table: React.FC<TableProps> = ({ title, works }) => {
     setSelected(newSelected)
   }
 
-  const isSelected = (name: string) => selected.indexOf(name) !== -1
+  const isSelected = (id: string) => selected.indexOf(id) !== -1
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage)
 
@@ -144,7 +130,8 @@ const Table: React.FC<TableProps> = ({ title, works }) => {
           title={title}
           numSelected={selected.length}
           currentSelected={currentSelected}
-          selectedList={selectedList}
+          selected={selected}
+          setSelected={setSelected}
         />
 
         <TableContainer>
@@ -168,12 +155,12 @@ const Table: React.FC<TableProps> = ({ title, works }) => {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map(row => {
-                  const isItemSelected = isSelected(row.customer);
+                  const isItemSelected = isSelected(row.id);
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.customer, row.id)}
+                      onClick={(event) => handleClick(event, row.id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}

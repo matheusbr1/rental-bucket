@@ -41,7 +41,6 @@ const Table: React.FC<TableProps> = ({ title, trucks }) => {
   const [selected, setSelected] = React.useState<string[]>([])
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
-  const [selectedList, setSelectedList] = React.useState<number[]>([])
   const [currentSelected, setCurrentSelected] = React.useState<number>()
 
   function createData(
@@ -79,19 +78,6 @@ const Table: React.FC<TableProps> = ({ title, trucks }) => {
 
     setCurrentSelected(id)
 
-    setSelectedList((otherSelecteds: number[]) => {
-      const isSelected = otherSelecteds.filter(clientID => clientID === id)[0]
-
-      if (isSelected) {
-        return otherSelecteds.filter(clientID => clientID !== id)
-      } else {
-        return [
-          ...otherSelecteds,
-          id
-        ]
-      }
-    })    
-
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, name)
     } else if (selectedIndex === 0) {
@@ -120,8 +106,9 @@ const Table: React.FC<TableProps> = ({ title, trucks }) => {
           path='trucks'
           title={title}
           numSelected={selected.length}
-          currentSelected={currentSelected}
-          selectedList={selectedList}
+          currentSelected={currentSelected as any}
+          selected={selected as  any}
+          setSelected={setSelected}
         />
         
         <TableContainer>

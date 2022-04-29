@@ -90,7 +90,7 @@ export interface IEquipment {
 }
 
 export interface IWork {
-  id: number
+  id: string
   customer: ICustomer
   driver: IDriver
   end_date: Date

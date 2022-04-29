@@ -1,19 +1,25 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import clsx from 'clsx'
 import { createStyles, lighten, makeStyles, Theme } from '@material-ui/core/styles'
 import DeleteIcon from '@material-ui/icons/Delete'
 import EditIcon from '@material-ui/icons/Edit'
 import OpenIcon from '@material-ui/icons/Launch'
 import { useHistory } from 'react-router'
+import { api } from 'services/api'
+import { useDispatch } from 'react-redux'
+import { deleteWork, setCurrentWork } from 'redux/work/work.actions'
+import { useSnackbar } from 'notistack'
+import Loading from 'components/Loading'
 
 import {  Toolbar, Typography, IconButton, Tooltip } from '@material-ui/core'
 
 interface EnhancedTableToolbarProps {
   numSelected: number
-  currentSelected: number | undefined
-  selectedList: number[]
+  currentSelected: string
   title: string
   path: string
+  selected: string[]
+  setSelected: (selected: string[]) => void
 }
 
 const useToolbarStyles = makeStyles((theme: Theme) =>
@@ -41,22 +47,59 @@ const useToolbarStyles = makeStyles((theme: Theme) =>
 
 const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (props) => {
   const classes = useToolbarStyles()
+
+  const dispatch = useDispatch()
   
-  const { numSelected, currentSelected, selectedList, title, path } = props;
+  const { 
+    numSelected,
+    currentSelected: work_id, 
+    title, 
+    path,
+    selected, 
+    setSelected
+  } = props;
+
+  const { enqueueSnackbar: snackbar } = useSnackbar()
+
+  const [isLoading, setIsLoading] = useState(false)
 
   const history = useHistory()
 
-  const handleEdit = useCallback(() => {
-    history.push(`/${path}/${currentSelected}`)
-  }, [currentSelected, history, path])
+  const handleOpen = useCallback(async () => {
+    try {
+      setIsLoading(true)
 
-  const handleOpen = useCallback(() => {
-    history.push(`/${path}/${currentSelected}`)
-  }, [currentSelected, history, path])
+      const { data: work } = await api.get(`/${path}/${work_id}`)
 
-  const handleDelete = useCallback(() => {
-    console.log('Deletar: ', selectedList)
-  }, [selectedList])
+      dispatch(setCurrentWork(work))
+  
+      history.push(`/${path}/${work_id}`)
+    } catch (error) {
+      snackbar('Não foi possível acessar o serviço, tente novamente', { variant: 'error' })
+    } finally {
+      setIsLoading(false)
+    }
+  }, [dispatch, history, path, snackbar, work_id])
+
+  const handleDelete = useCallback(async () => {
+    try {
+      setIsLoading(true)
+
+     for await (const selected_word_id of selected) {
+       await api.delete(`/${path}/${selected_word_id}`)
+
+       dispatch(deleteWork(selected_word_id))
+     }
+
+      setSelected([])
+  
+      snackbar('Serviço deletado com sucesso!', { variant: 'success' })
+    } catch (error) {
+      snackbar('Não foi possível deletar o serviço, tente novamente', { variant: 'error' })
+    } finally {
+      setIsLoading(false)
+    }
+  }, [dispatch, path, selected, setSelected, snackbar])
 
   return (
     <Toolbar
@@ -64,6 +107,8 @@ const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (props) => {
         [classes.highlight]: numSelected > 0,
       })}
     >
+      {isLoading && <Loading />}
+      
       {numSelected > 0 ? (
         <Typography 
           className={classes.title} 
@@ -92,7 +137,7 @@ const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (props) => {
       )}
       {numSelected === 1 && (
         <Tooltip title="Editar">
-          <IconButton onClick={handleEdit} >
+          <IconButton onClick={handleOpen} >
             <EditIcon />
           </IconButton>
         </Tooltip>
