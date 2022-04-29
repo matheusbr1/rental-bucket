@@ -1,21 +1,44 @@
 import { ITruck, ReducerAction } from 'interfaces'
 import { TruckActions } from './truck.actions'
 
-export type ITruckInitialState = ITruck[]
+const INITIAL_STATE = {
+  all: [] as ITruck[],
+  current: null
+}
+
+export type ITruckInitialState = typeof INITIAL_STATE
 
 export function truckReducer (
-  state: ITruckInitialState = [], 
+  state: ITruckInitialState = INITIAL_STATE, 
   action: ReducerAction
 ): ITruckInitialState {
   switch (action.type) {
     case TruckActions.SET_TRUCKS:
-      return action.payload
+      return {
+        ...state,
+        all: action.payload
+      } 
+      
+    case TruckActions.CREATE_TRUCK:
+      return {
+        ...state,
+        all: state.all.concat({
+          id: state.all.length + 1,
+          ...action.payload
+        })
+      } 
 
-    case TruckActions.CREATE_TRUCK: 
-      return state.concat({
-        id: state.length + 1,
-        ...action.payload
-      })
+    case TruckActions.DELETE_TRUCK:
+      return {
+        current: null,
+        all: state.all.filter(truck => truck.id !== action.payload)
+      }
+
+    case TruckActions.SET_CURRENT_TRUCK:
+      return {
+        ...state,
+        current: action.payload
+      }
 
     default:
       return state

@@ -3,6 +3,8 @@ import { ITruck } from "interfaces"
 export enum TruckActions {
   SET_TRUCKS = 'SET_TRUCKS',
   CREATE_TRUCK = 'CREATE_TRUCK',
+  SET_CURRENT_TRUCK = 'SET_CURRENT_TRUCK',
+  DELETE_TRUCK = 'DELETE_TRUCK',
 }
 
 export function setTrucks(trucks: ITruck[]) {
@@ -11,4 +13,12 @@ export function setTrucks(trucks: ITruck[]) {
 
 export function createTruck(truck: ITruck) {
   return { type: TruckActions.CREATE_TRUCK, payload: truck }
+}
+
+export function setCurrentTruck(truck: ITruck) {
+  return { type: TruckActions.SET_CURRENT_TRUCK, payload: truck }
+}
+
+export function deleteTruck(id: string) {
+  return { type: TruckActions.DELETE_TRUCK, payload: id }
 }

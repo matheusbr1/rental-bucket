@@ -18,7 +18,7 @@ const List: React.FC = () => {
     api.get('trucks').then(response => dispatch(setTrucks(response.data)))
   }, [dispatch])
 
-  const trucks = useSelector<IDefaultRootState, ITruck[]>(state => state.trucks)
+  const trucks = useSelector<IDefaultRootState, ITruck[]>(state => state.trucks.all)
 
   return (
     <Container style={{ marginTop: 64 }} >

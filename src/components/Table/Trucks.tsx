@@ -6,6 +6,8 @@ import { HeadCell, Order } from './shared/interfaces'
 import { EnhancedTableHead } from './shared/TableHead'
 import { useStyles } from './shared/styles'
 import { EnhancedTableToolbar } from './shared/TableToolBar'
+import { deleteTruck, setCurrentTruck } from 'redux/truck/truck.actions'
+import { useDispatch } from 'react-redux'
 
 import { 
   Table as MuiTable,
@@ -41,6 +43,8 @@ const Table: React.FC<TableProps> = ({ trucks }) => {
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
   const [currentSelected, setCurrentSelected] = React.useState<string>('')
+
+  const dispatch = useDispatch()
 
   function createData(
     id: string,
@@ -105,11 +109,11 @@ const Table: React.FC<TableProps> = ({ trucks }) => {
           path='trucks'
           title='Caminhões'
           numSelected={selected.length}
-          currentSelected={currentSelected as any}
-          selected={selected as  any}
+          currentSelected={currentSelected}
+          selected={selected}
           setSelected={setSelected}
-          onDelete={id => console.log(id)}
-          onAccess={truck => console.log(truck)}
+          onDelete={id => dispatch(deleteTruck(id))}
+          onAccess={truck => dispatch(setCurrentTruck(truck))}
         />
         
         <TableContainer>

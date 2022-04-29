@@ -52,7 +52,7 @@ const Create: React.FC = () => {
   }, [dispatch])
 
   const drivers = useSelector<IDefaultRootState, IDriver[]>(state => state.drivers.all)
-  const trucks = useSelector<IDefaultRootState, ITruck[]>(state => state.trucks)
+  const trucks = useSelector<IDefaultRootState, ITruck[]>(state => state.trucks.all)
   const customers = useSelector<IDefaultRootState, ICustomer[]>(state => state.customers.all)
 
   const [loading, setLoading] = useState(false)
