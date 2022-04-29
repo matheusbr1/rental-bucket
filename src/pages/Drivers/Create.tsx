@@ -17,6 +17,8 @@ import FormikAutoComplete from 'components/FormikAutoComplete'
 import Loading from 'components/Loading'
 import { Contacts } from 'components/Contacts'
 import { Box, Container, Divider, Grid, Typography } from '@material-ui/core'
+import { driverSchema } from 'validations/driverSchema'
+import { removeMask } from 'utils/formatters'
 
 interface AddressProps {
   logradouro: string 
@@ -90,9 +92,9 @@ const Create: React.FC = () => {
     try {
       const { data: driver } = await api.post('/drivers', {
         name: fields.name,
-        CPF: fields.CPF,
-        RG: fields.RG,
-        CNH: fields.CNH,
+        CPF: removeMask(fields.CPF),
+        RG: removeMask(fields.RG),
+        CNH: removeMask(fields.CNH),
         birthday: fields.birthday
       })
 
@@ -135,6 +137,7 @@ const Create: React.FC = () => {
         onSubmit={handleCreate}
         enableReinitialize
         validateOnChange
+        validationSchema={driverSchema}
         initialValues={{
           name: '',
           CPF: '',
@@ -153,7 +156,7 @@ const Create: React.FC = () => {
           contacts: []
         }}
       >
-        {({ errors, touched, values, setFieldValue }) => (
+        {({ errors, touched, values, setFieldValue, isValid }) => (
           <Form>
             {loading && <Loading />}
 
@@ -269,7 +272,12 @@ const Create: React.FC = () => {
 
               <Grid item lg={4} md={4} sm={4} xs={12} >
                 <Box mb='2rem' >
-                  <Button loading={loading} color='primary' type='submit' >
+                  <Button 
+                    loading={loading} 
+                    color='primary' 
+                    type='submit'
+                    disabled={!isValid}
+                  >
                     Criar
                   </Button>
                 </Box>
