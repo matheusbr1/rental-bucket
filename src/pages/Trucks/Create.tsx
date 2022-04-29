@@ -15,6 +15,7 @@ import FormikTextField from 'components/FormikTextField'
 import FormikAutoComplete from 'components/FormikAutoComplete'
 import Loading from 'components/Loading'
 import { api } from 'services/api'
+import { trucksSchema } from 'validations/trucksSchema'
 
 const Create: React.FC = () => {
   const { goBack } = useHistory()
@@ -27,6 +28,7 @@ const Create: React.FC = () => {
   
   const [brands, setBrands] = useState<IBrand[]>([])
   const [models, setModels] = useState<IModel[]>([])
+  
   const [truckTypes, setTruckTypes] = useState([])
 
   // Getting truck types
@@ -87,15 +89,18 @@ const Create: React.FC = () => {
         onSubmit={handleCreate}
         enableReinitialize
         validateOnChange
+        validationSchema={trucksSchema}
         initialValues={{
           brand: null,
           model: null,
+          renavam: '',
+          plate: '',
           truck_type: null,
           manufacture_year: '',
           model_year: '',
         }}
       >
-        {({ errors, touched, values, isSubmitting }) => (
+        {({ errors, touched, values, isSubmitting, isValid }) => (
           <Form>
             {loading && <Loading />}
 
@@ -136,7 +141,7 @@ const Create: React.FC = () => {
 
               <Grid item lg={2} md={2} sm={6} xs={12} >
                 <FormikAutoComplete 
-                  name="year.manufacture"
+                  name="manufacture_year"
                   options={years}
                   error={errors?.manufacture_year}
                   touched={touched?.manufacture_year}
@@ -146,7 +151,7 @@ const Create: React.FC = () => {
             
               <Grid item lg={2} md={2} sm={6} xs={12} >
                 <FormikAutoComplete 
-                  name="year.model"
+                  name="model_year"
                   options={years}
                   error={errors?.model_year}
                   touched={touched?.model_year}
@@ -174,7 +179,12 @@ const Create: React.FC = () => {
               <Grid item lg={4} md={4} sm={6} xs={12} />
 
               <Grid item lg={4} md={4} sm={6} xs={12} >
-                <Button loading={loading} color='primary' type='submit' >
+                <Button 
+                  loading={loading} 
+                  disabled={!isValid}
+                  color='primary' 
+                  type='submit' 
+                >
                   Criar
                 </Button>
               </Grid>
