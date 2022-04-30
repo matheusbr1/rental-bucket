@@ -1,4 +1,5 @@
 import { ReducerAction } from 'interfaces'
+import { api } from 'services/api'
 import { UserActions } from './user.actions'
 
 const persistedState = sessionStorage.getItem('@rentalbucket:user')
@@ -18,6 +19,8 @@ const initialUserState = persistedState
 
 export type IUserInitialState = typeof initialState
 
+const getAvatarURL = (avatar: string) => `${api.defaults.baseURL}/avatar/${avatar}`
+
 export function userReducer (
   state: IUserInitialState = initialUserState, 
   action: ReducerAction
@@ -26,7 +29,10 @@ export function userReducer (
     case UserActions.SIGN_IN:
       const updatedState = {
         isAuthenticated: true,
-        data: action.payload
+        data: {
+          ...action.payload,
+          avatar: getAvatarURL(action.payload.avatar)
+        } 
       }
 
       sessionStorage.setItem('@rentalbucket:user', JSON.stringify(updatedState))
@@ -42,7 +48,7 @@ export function userReducer (
         ...state,
         data: {
           ...state.data,
-          avatar: action.payload
+          avatar: getAvatarURL(action.payload)
         }
       }
    

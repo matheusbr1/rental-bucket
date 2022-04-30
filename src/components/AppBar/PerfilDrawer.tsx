@@ -25,6 +25,9 @@ interface PerfilDrawerProps {
 const ChangeAvatarIcon = styled(CameraAltIcon)(() => ({
   width: 32,
   height: 32,
+  background: 'white',
+  borderRadius: '100%',
+  padding: 4
 }))
 
 const Input = styled('input')({
@@ -67,16 +70,14 @@ const PerfilDrawer: React.FC<PerfilDrawerProps> = ({ isOpen, setIsOpen }) =>  {
 
           try {
             setIsUploadingAvatar(true)
-
-            const url = 'https://lh3.googleusercontent.com/a-/AOh14GjFOW9XIzTAnRBsiQ7HHIHEDENmp0LObBXrMyeN4ac=s288-p-rw-no'
             
-            await api.patch('/users/avatar', formData, {
+            const { data: avatarURL } = await api.patch('/users/avatar', formData, {
               headers: {
                 'Content-Type': 'multipart/form-data'
               }
             })
 
-            dispatch(updateUserAvatar(url))
+            dispatch(updateUserAvatar(avatarURL))
 
             snackbar('Avatar alterado com sucesso!', { variant: 'success' })
           } catch (error) {
