@@ -7,7 +7,7 @@ const initialState = {
   data: {
     name: '',
     email: '',
-    avatar: 'https://lh3.googleusercontent.com/a-/AOh14GjFOW9XIzTAnRBsiQ7HHIHEDENmp0LObBXrMyeN4ac=s288-p-rw-no'
+    avatar: ''
   },
   isAuthenticated: false
 }
@@ -26,10 +26,7 @@ export function userReducer (
     case UserActions.SIGN_IN:
       const updatedState = {
         isAuthenticated: true,
-        data: {
-          ...state.data,
-          ...action.payload
-        }
+        data: action.payload
       }
 
       sessionStorage.setItem('@rentalbucket:user', JSON.stringify(updatedState))
@@ -38,8 +35,16 @@ export function userReducer (
 
     case UserActions.SIGN_OUT: 
       sessionStorage.removeItem('@rentalbucket:user')
-
       return initialState
+
+    case UserActions.UPDATE_USER_AVATAR:
+      return {
+        ...state,
+        data: {
+          ...state.data,
+          avatar: action.payload
+        }
+      }
    
     default:
       return state

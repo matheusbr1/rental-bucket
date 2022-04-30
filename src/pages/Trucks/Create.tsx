@@ -33,7 +33,7 @@ const Create: React.FC = () => {
 
   // Getting truck types
   useEffect(() => {
-    api.get('/trucks/types').then(response => setTruckTypes(response.data))
+    api.get('/truck/types').then(response => setTruckTypes(response.data))
   }, [])
 
   // Getting brands

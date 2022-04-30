@@ -1,4 +1,4 @@
-import React, { useCallback }  from 'react'
+import React, { useCallback, useState }  from 'react'
 import MuiAppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import Toolbar from '@mui/material/Toolbar'
@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { signOut } from 'redux/user/user.actions'
 import { useCookies } from 'react-cookie'
 import { IDefaultRootState } from 'interfaces'
+import { PerfilDrawer } from './PerfilDrawer'
 interface IConfig {
   label: string
   destiny: string
@@ -28,17 +29,15 @@ const pages: IConfig[] = [
   { label: 'Caminhões', destiny: '/trucks' }
 ]
 
-const settings: IConfig[] = [
-  { label: 'Dashboard', destiny: '/dashboard' },
-  { label: 'Perfil', destiny: '/profile' },
-  { label: 'Sair', destiny: '/' },
-]
+const settings: string[] = ['Perfil', 'Sair']
 
 const AppBar = () => {
-  const avatar = useSelector((state: IDefaultRootState) => state.user.data.avatar)
+  const user = useSelector((state: IDefaultRootState) => state.user.data)
 
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
   const history = useHistory()
 
@@ -66,6 +65,11 @@ const AppBar = () => {
         right: 0,
       }}
     >
+      <PerfilDrawer
+        isOpen={isDrawerOpen}
+        setIsOpen={setIsDrawerOpen}
+      />
+
       <MuiAppBar position="static" enableColorOnDark={false} >
         <Container maxWidth="xl">
           <Toolbar disableGutters>
@@ -144,12 +148,12 @@ const AppBar = () => {
             </Box>
 
             <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
+              <Tooltip title="Abrir configurações">
                 <IconButton 
                   onClick={e => setAnchorElUser(e.currentTarget)} 
                   sx={{ p: 0 }}
                 >
-                  <Avatar alt="Remy Sharp" src={avatar} />
+                  <Avatar alt={user.name} src={user.avatar} />
                 </IconButton>
               </Tooltip>
               <Menu
@@ -168,14 +172,22 @@ const AppBar = () => {
                 open={Boolean(anchorElUser)}
                 onClose={() => setAnchorElUser(null)}
               >
-                {settings.map(({ label, destiny }) => (
-                  <MenuItem key={label} onClick={() => {
+                {settings.map(setting => (
+                  <MenuItem key={setting} onClick={() => {
                     setAnchorElUser(null)
-                    destiny === '/' 
-                      ? handleSignOut()
-                      : history.push(destiny)
+
+                    switch (setting) {
+                      case 'Sair':
+                        handleSignOut()
+                        break;
+                      case 'Perfil':
+                        setIsDrawerOpen(true)
+                        break;
+                      default:
+                        break;
+                    }
                   }}>
-                    <Typography textAlign="center">{label}</Typography>
+                    <Typography textAlign="center">{setting}</Typography>
                   </MenuItem>
                 ))}
               </Menu>

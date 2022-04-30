@@ -28,11 +28,11 @@ const Create: React.FC = () => {
   const [equipments, setEquipments] = useState()
 
   useEffect(() => {
-    api.get('/works/types').then(response => setWorkTypes(response.data))
+    api.get('/work/types').then(response => setWorkTypes(response.data))
   }, [])
 
   useEffect(() => {
-    api.get('/trucks/types/equipments').then(response => setEquipments(response.data))
+    api.get('/truck/types/equipments').then(response => setEquipments(response.data))
   }, [])
 
   useEffect(() => {
