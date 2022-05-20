@@ -58,7 +58,7 @@ const Table: React.FC<TableProps> = ({ drivers }) => {
   const rows = drivers.map(driver => createData(
     driver.id,
     driver.name, 
-    driver.contacts[0]?.contact || 'Nenhum Contato Cadastrado'
+    driver?.contacts?.length ? driver?.contacts[0]?.contact : 'Nenhum Contato Cadastrado'
   ))
 
   const handleRequestSort = (event: React.MouseEvent<unknown>, property: keyof Data) => {

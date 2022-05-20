@@ -62,13 +62,15 @@ const Create: React.FC = () => {
 
     try { 
       const { data: work } = await api.post('works', {
-        customer_id: fields.customer.id,
-        driver_id: fields.driver.id,
-        truck_id: fields.truck.id,
-        equipment_id: fields.equipment.id,
+        start_date: new Date(),
+        end_date: fields.end_date,
         quantity: fields.quantity,
+        customer_id: fields.customer.id,
+        address_id: fields.address.id,
+        truck_id: fields.truck.id,
+        driver_id: fields.driver.id,
         work_type_id: fields.work_type.id,
-        end_date: fields.end_date
+        equipment_id: fields.equipment.id,
       })
 
       dispatch(createWork({
@@ -107,7 +109,7 @@ const Create: React.FC = () => {
             driver: null,
             truck: null,
             equipment: null,
-            type: null,
+            work_type: null,
             quantity: null,
             end_date: Moment(new Date()).add(7, 'days').toDate()
           }}
@@ -187,10 +189,10 @@ const Create: React.FC = () => {
 
                 <Grid item lg={4} md={4} sm={6} xs={12} >
                   <FormikAutoComplete 
-                    name="type"
+                    name="work_type"
                     options={workTypes}
-                    error={errors.type}
-                    touched={touched.type}
+                    error={errors.work_type}
+                    touched={touched.work_type}
                     label='Serviço'
                     getOptionLabel={(option: { name: string }) => option.name}
                   />
