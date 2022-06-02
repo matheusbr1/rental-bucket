@@ -7,7 +7,6 @@ import { useSnackbar } from 'notistack'
 import { Field, Form, Formik } from 'formik'
 import FormikTextField from 'components/FormikTextField'
 import { signInSchema } from 'validations/signInSchema'
-import { ISignUpFields } from 'interfaces'
 import { Link } from 'react-router-dom'
 import { 
   Container, 
@@ -42,6 +41,11 @@ const useStyles = makeStyles((theme) => createStyles({
   }
 }))
 
+export interface ISignUpFields {
+  name: string
+  email: string
+  password: string
+}
 
 const SignIn: React.FC = () => {
   const history = useHistory()

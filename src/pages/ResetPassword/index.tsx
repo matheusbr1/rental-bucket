@@ -1,17 +1,13 @@
 import React, { useCallback } from 'react'
-import { useHistory } from 'react-router'
+import { useHistory, useLocation } from 'react-router'
 import { createStyles } from '@material-ui/styles'
 import Button from 'components/Button'
 import { api } from 'services/api'
 import { useSnackbar } from 'notistack'
-import { useDispatch } from 'react-redux'
 import { Field, Form, Formik } from 'formik'
 import FormikTextField from 'components/FormikTextField'
-import { signInSchema } from 'validations/signInSchema'
-import { signIn } from 'redux/user/user.actions'
 import { Link } from 'react-router-dom'
-import { useCookies } from 'react-cookie'
-import { ISignInFields } from 'interfaces'
+import { resetPasswordSchema } from 'validations/resetPasswordSchema'
 import { 
   Container, 
   Typography, 
@@ -21,6 +17,10 @@ import {
   Grid, 
 } from '@material-ui/core'
 
+
+interface IResetPasswordFields {
+  password: string
+}
 
 const useStyles = makeStyles((theme) => createStyles({
   content: {
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme) => createStyles({
     padding: theme.spacing(4),
     maxWidth: 500,
     '& h1': {
-      marginBottom: theme.spacing(1),
+      marginBottom: theme.spacing(2),
     },
     '& h3': {
       marginBottom: theme.spacing(2),
@@ -45,65 +45,54 @@ const useStyles = makeStyles((theme) => createStyles({
   }
 }))
 
+
 const SignIn: React.FC = () => {
   const history = useHistory()
 
-  const dispatch = useDispatch()
-
   const { enqueueSnackbar: snackbar } = useSnackbar()
 
-  const [, setCookies] = useCookies(['rentalbucket.token'])
+  const { search: params } = useLocation()
 
   const classes = useStyles()
 
-  const handleSignIn = useCallback(async ({ email, password }: ISignInFields) => {
+  const handleSignUp = useCallback(async ({ password }: IResetPasswordFields) => {
     try {
-      const { data } = await api.post('/sessions', { email, password })
-
-      dispatch(signIn(data.user))
-
-      setCookies('rentalbucket.token', String(data.token))
-
-      history.push('/works')
+      await api.post('/password/reset', { password }, {
+       params: {
+         token: params.replace('?token=', '')
+       }
+      })
+      
+      snackbar('Nova senha criada com sucesso, faça login!', { variant: 'success' })
+      
+      history.push('/')
     } catch (error) {
-      snackbar('Erro ao fazer login, tente novamente!', { variant: 'error' })
+      snackbar('Erro ao criar senha, tente novamente!', { variant: 'error' })
     }
-  }, [dispatch, setCookies, history, snackbar])
+  }, [history, params, snackbar])
 
   return (
     <Container>
       <Box className={classes.content} >
         <Card className={classes.card} elevation={4} >
           <Typography variant='h1' >
-            Login
+            Recuperação de senha
           </Typography>
 
           <Typography variant='h3' >
-            Faça login para acessar a plataforma
+            Escolha uma nova senha
           </Typography>
 
           <Formik
-            onSubmit={handleSignIn}
+            onSubmit={handleSignUp}
             enableReinitialize
             validateOnChange
-            validationSchema={signInSchema}
-            initialValues={{
-              email: '',
-              password: ''
-            }}
+            validationSchema={resetPasswordSchema}
+            initialValues={{ password: '' }}
           >
             {({ isSubmitting }) => (
               <Form>
                 <Grid container spacing={3} >
-                  <Grid item xs={12} md={12} xl={12} >
-                    <Field
-                      component={FormikTextField}
-                      label='E-mail'
-                      id='email'
-                      name='email'
-                    />
-                  </Grid>
-
                   <Grid item xs={12} md={12} xl={12} >
                     <Field
                       component={FormikTextField}
@@ -114,18 +103,10 @@ const SignIn: React.FC = () => {
                     />
                   </Grid>
 
-                  <Grid item xs={6} md={6} xl={6}>
-                    <Link to='/signup' >
-                      Criar um usuário
+                  <Grid item xs={12} md={12} xl={12} >
+                    <Link to='/' >
+                      Voltar para o login
                     </Link>
-                  </Grid>
-
-                  <Grid item xs={6} md={6} xl={6}>
-                    <Box display='flex' justifyContent='end' >
-                      <Link to='/forgotPassword'>
-                        Esqueci minha senha
-                      </Link>
-                    </Box>
                   </Grid>
                   
                   <Grid item xs={12} md={12} xl={12} >
@@ -134,7 +115,7 @@ const SignIn: React.FC = () => {
                       type='submit'
                       loading={isSubmitting} 
                     >
-                      Entrar
+                      Alterar
                     </Button>
                   </Grid>
                 </Grid>

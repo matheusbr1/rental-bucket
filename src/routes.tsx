@@ -17,6 +17,8 @@ import Trucks from './pages/Trucks/List'
 import CreateTruck from './pages/Trucks/Create'
 import TruckDetail from './pages/Trucks/Detail'
 import SignUp from 'pages/SignUp'
+import ForgotPassword from 'pages/ForgotPassword'
+import ResetPassword from 'pages/ResetPassword'
 
 interface PrivateRouteProps {
   component: React.FC<any>
@@ -46,6 +48,9 @@ const Routes: React.FC = () => (
     <Switch>
       <Route path='/' exact component={SignIn} />
       <Route path='/signup' exact component={SignUp} />
+      
+      <Route path='/forgotPassword' exact component={ForgotPassword} />
+      <Route path='/resetPassword' exact component={ResetPassword} />
       
       <PrivateRoute path='/works' exact component={Works}  />
       <PrivateRoute path='/work/:id' component={WorkDetail} />

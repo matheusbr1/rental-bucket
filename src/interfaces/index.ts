@@ -14,20 +14,16 @@ export interface IDefaultRootState  {
   user: IUserInitialState
 }
 
+export interface ISignInFields {
+  email: string
+  password: string
+}
+
 export interface ReducerAction {
   type: string
   payload?: any
 }
 
-export interface ISignInFields {
-  email: string
-  password: string
-}
-export interface ISignUpFields {
-  name: string
-  email: string
-  password: string
-}
 
 export interface IState {
   sigla: string
