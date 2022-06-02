@@ -38,9 +38,10 @@ interface AddressProps {
 interface AdressesProps {
   adresses: IAddress[]
   setAdresses: (adresses: IAddress[]) => void
+  disabled?: boolean
 }
 
-const Adresses: React.FC<AdressesProps> = ({ adresses, setAdresses }) => {
+const Adresses: React.FC<AdressesProps> = ({ adresses, setAdresses, disabled = false }) => {
   const { enqueueSnackbar: snackbar } = useSnackbar()
 
   const [loading, setLoading] = useState(false)
@@ -142,7 +143,7 @@ const Adresses: React.FC<AdressesProps> = ({ adresses, setAdresses }) => {
                   </Typography>
                 </Box>
 
-                <IconButton edge="end" aria-label="add">
+                <IconButton edge="end" aria-label="add" disabled={disabled} >
                   <Add onClick={() => setIsAddingAddress(true)} />
                 </IconButton>
               </Box>
@@ -163,7 +164,7 @@ const Adresses: React.FC<AdressesProps> = ({ adresses, setAdresses }) => {
                         secondary={`${CEP}, ${state?.sigla}, ${city?.name}`}
                       />
                       <ListItemSecondaryAction>
-                        <IconButton edge="end" aria-label="delete">
+                        <IconButton edge="end" aria-label="delete" disabled={disabled} >
                           <DeleteIcon onClick={() => handleDelete(CEP)} />
                         </IconButton>
                       </ListItemSecondaryAction>

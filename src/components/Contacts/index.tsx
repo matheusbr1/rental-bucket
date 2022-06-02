@@ -28,9 +28,10 @@ import {
 interface ContactsProps {
   contacts: IContact[]
   setContacts: (contacts: IContact[]) => void
+  disabled?: boolean
 }
 
-const Contacts: React.FC<ContactsProps> = ({ contacts, setContacts }) => {
+const Contacts: React.FC<ContactsProps> = ({ contacts, setContacts, disabled = false }) => {
   const { enqueueSnackbar: snackbar } = useSnackbar()
 
   const [isAddingContact, setIsAddingContact] =useState(false);
@@ -72,7 +73,7 @@ const Contacts: React.FC<ContactsProps> = ({ contacts, setContacts }) => {
                     </Typography>
                   </Box>
 
-                  <IconButton edge="end" aria-label="add">
+                  <IconButton edge="end" aria-label="add" disabled={disabled}>
                     <Add onClick={() => setIsAddingContact(true)} />
                   </IconButton>
                 </Box>
@@ -93,7 +94,7 @@ const Contacts: React.FC<ContactsProps> = ({ contacts, setContacts }) => {
                           secondary={contact_type}
                         />
                         <ListItemSecondaryAction>
-                          <IconButton edge="end" aria-label="delete">
+                          <IconButton edge="end" aria-label="delete" disabled={disabled}>
                             <DeleteIcon onClick={() => handleDelete(contact)} />
                           </IconButton>
                         </ListItemSecondaryAction>

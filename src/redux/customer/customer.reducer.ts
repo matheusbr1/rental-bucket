@@ -3,7 +3,7 @@ import { CustomerActions } from './customer.actions'
 
 const INITIAL_STATE = {
   all: [] as ICustomer[],
-  current: null
+  current: null as null | ICustomer
 }
 
 export type ICustomerInitialState = typeof INITIAL_STATE
