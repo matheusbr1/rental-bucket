@@ -74,8 +74,10 @@ const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (props) => {
       const { data: register } = await api.get(`/${path}/${register_id}`)
 
       onAccess(register)
+
+      const singularPath = path.slice(0, -1)
   
-      history.push(`/${path}/${register_id}`)
+      history.push(`/${singularPath}/${register_id}`)
     } catch (error) {
       snackbar(`Não foi possível acessar o ${treatedName}, tente novamente`, { variant: 'error' })
     } finally {

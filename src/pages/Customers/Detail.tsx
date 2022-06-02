@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { AppBar } from 'components/AppBar'
 import { useSnackbar } from 'notistack'
 import { useHistory, useParams } from 'react-router'
@@ -14,7 +14,7 @@ import Button from 'components/Button'
 import { Box, Container, Divider, Grid, Typography } from '@material-ui/core'
 import { Contacts } from 'components/Contacts'
 import { Adresses } from 'components/Adresses'
-import { deleteCustomer } from 'redux/customer/customer.actions'
+import { deleteCustomer, setCurrentCustomer } from 'redux/customer/customer.actions'
 
 interface CustomerFields {
   person_type: PersonType
@@ -30,7 +30,7 @@ interface IDetailParams {
 }
 
 const Detail: React.FC = () => {
-  const { goBack } = useHistory()
+  const { push } = useHistory()
 
   const { id } = useParams<IDetailParams>()
 
@@ -113,7 +113,7 @@ const Detail: React.FC = () => {
 
       // Requisição
 
-      goBack()
+      push('/customers')
 
       snackbar('Cliente editado com sucesso', {
         variant: 'success'
@@ -123,7 +123,7 @@ const Detail: React.FC = () => {
         variant: 'error'
       })
     }
-  }, [snackbar, goBack])
+  }, [snackbar, push])
 
   const handleDelete = useCallback(async () => {  
     try {
@@ -137,128 +137,150 @@ const Detail: React.FC = () => {
         variant: 'success'
       })
 
-      goBack()
+      push('/customers')
     } catch (error) {
       snackbar('Erro ao deletar cliente, tente novamente!', {
         variant: 'error'
       })
     }
-  }, [dispatch, goBack, id, snackbar])
+  }, [dispatch, push, id, snackbar])
+
+  useEffect(() => {
+    if (currentCustomer || isDeleting) {
+      return
+    }
+
+    (async () => {
+      try {
+        const { data: customer } = await api.get(`/customers/${id}`)
+         
+        dispatch(setCurrentCustomer(customer))
+      } catch (error) {
+        snackbar('Erro ao buscar cliente, tente novamente!', {
+          variant: 'error'
+        })
+
+        push('/customers')
+      }
+    })()
+  }, [currentCustomer, dispatch, push, id, snackbar, isDeleting])
 
   return (
     <Container maxWidth='md' style={{ marginTop: 100 }} >
       <AppBar />
 
-      <Formik
-        onSubmit={handleEdit}
-        validateOnChange
-        enableReinitialize
-        initialValues={currentCustomer}
-      >
-        {({ values, setFieldValue, isSubmitting }) => (
-          <Form aria-disabled >
-            <Grid container spacing={3} >
-              <Grid item lg={12} md={12} sm={12} style={{ width: '100%' }}>
-                <Typography variant='h1' >
-                  Detalhe do cliente
-                </Typography>
-              </Grid>
+      {currentCustomer && (
+        <Formik
+          onSubmit={handleEdit}
+          validateOnChange
+          enableReinitialize
+          initialValues={currentCustomer}
+        >
+          {({ values, setFieldValue, isSubmitting }) => (
+            <Form aria-disabled >
+              <Grid container spacing={3} >
+                <Grid item lg={12} md={12} sm={12} style={{ width: '100%' }}>
+                  <Typography variant='h1' >
+                    Cliente: {values.person_type === 'F' ? values.name : values.fantasy_name}
+                  </Typography>
+                </Grid>
 
-              <Grid item lg={12} md={12} sm={12} xs={12} >
-                <Field
-                  row
-                  component={RadioGroup}
-                  name='person_type'
-                >
-                  <FormControlLabel
-                    value="F"
-                    defaultChecked
-                    label="Pessoa Física"
-                    disabled={formStatus === 'isViewing' || isSubmitting}
-                    control={<Radio />}
-                  />
-
-                  <FormControlLabel
-                    value="J"
-                    label="Pessoa Jurídica"
-                    disabled={formStatus === 'isViewing' || isSubmitting}
-                    control={<Radio />}
-                  />
-                </Field>
-              </Grid>
-
-              {renderFieldsByPerson(values.person_type as PersonType, isSubmitting)}
-
-              <Grid item lg={12} md={12} sm={12} xs={12} >
-                <Divider style={{ margin: '2rem 0' }} />
-              </Grid>
-
-              <Grid item lg={12} md={12} sm={12} xs={12} >
-                <Adresses
-                  disabled={formStatus === 'isViewing'}
-                  adresses={values.adresses} 
-                  setAdresses={(adresses: IAddress[]) => setFieldValue('adresses', adresses)} 
-                />
-              </Grid>
-
-              <Grid item lg={12} md={12} sm={12} xs={12} >
-                <Divider style={{ margin: '2rem 0' }} />
-              </Grid>
-              
-              <Grid item lg={12} md={12} sm={12} xs={12} >
-                <Contacts
-                  disabled={formStatus === 'isViewing'}
-                  contacts={values.contacts} 
-                  setContacts={(contacts: IContact[]) => setFieldValue('contacts', contacts)} 
-                />
-              </Grid>
-
-              <Grid item lg={12} md={12} sm={12} xs={12} >
-                <Divider style={{ margin: '2rem 0' }} />
-              </Grid>
-
-              <Grid container spacing={3} justifyContent='flex-end' >
-                <Grid item lg={4} md={4} sm={4} xs={12} >
-                  <Box 
-                    mb='2rem'
-                    display='flex'
-                    justifyContent='space-between'
-                    gridGap={5}
+                <Grid item lg={12} md={12} sm={12} xs={12} >
+                  <Field
+                    row
+                    component={RadioGroup}
+                    name='person_type'
                   >
-                    <Button 
-                      loading={isDeleting} 
-                      color='secondary'
-                      onClick={handleDelete} 
+                    <FormControlLabel
+                      value="F"
+                      defaultChecked
+                      label="Pessoa Física"
+                      disabled={formStatus === 'isViewing' || isSubmitting}
+                      control={<Radio />}
+                    />
+
+                    <FormControlLabel
+                      value="J"
+                      label="Pessoa Jurídica"
+                      disabled={formStatus === 'isViewing' || isSubmitting}
+                      control={<Radio />}
+                    />
+                  </Field>
+                </Grid>
+
+                {renderFieldsByPerson(values.person_type as PersonType, isSubmitting)}
+
+                <Grid item lg={12} md={12} sm={12} xs={12} >
+                  <Divider style={{ margin: '2rem 0' }} />
+                </Grid>
+
+                <Grid item lg={12} md={12} sm={12} xs={12} >
+                  <Adresses
+                    disabled={formStatus === 'isViewing'}
+                    adresses={values.adresses} 
+                    setAdresses={(adresses: IAddress[]) => setFieldValue('adresses', adresses)} 
+                  />
+                </Grid>
+
+                <Grid item lg={12} md={12} sm={12} xs={12} >
+                  <Divider style={{ margin: '2rem 0' }} />
+                </Grid>
+                
+                <Grid item lg={12} md={12} sm={12} xs={12} >
+                  <Contacts
+                    disabled={formStatus === 'isViewing'}
+                    contacts={values.contacts} 
+                    setContacts={(contacts: IContact[]) => setFieldValue('contacts', contacts)} 
+                  />
+                </Grid>
+
+                <Grid item lg={12} md={12} sm={12} xs={12} >
+                  <Divider style={{ margin: '2rem 0' }} />
+                </Grid>
+
+                <Grid container spacing={3} justifyContent='flex-end' >
+                  <Grid item lg={4} md={4} sm={4} xs={12} >
+                    <Box 
+                      mb='2rem'
+                      display='flex'
+                      justifyContent='space-between'
+                      gridGap={5}
                     >
-                      Deletar
-                    </Button>
-
-                    {formStatus === 'isViewing' && (
                       <Button 
-                        color='primary'
-                        type='button'
-                        onClick={() => setFormStatus('isEditing')}
+                        loading={isDeleting} 
+                        color='secondary'
+                        onClick={handleDelete} 
                       >
-                        Editar
+                        Deletar
                       </Button>
-                    )}
 
-                    {formStatus === 'isEditing' && (
-                      <Button 
-                        loading={isSubmitting} 
-                        color='primary'
-                        type='submit'
-                      >
-                        Salvar
-                      </Button>
-                    )}
-                  </Box>
+                      {formStatus === 'isViewing' && (
+                        <Button 
+                          color='primary'
+                          type='button'
+                          onClick={() => setFormStatus('isEditing')}
+                        >
+                          Editar
+                        </Button>
+                      )}
+
+                      {formStatus === 'isEditing' && (
+                        <Button 
+                          loading={isSubmitting} 
+                          color='primary'
+                          type='submit'
+                        >
+                          Salvar
+                        </Button>
+                      )}
+                    </Box>
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-          </Form>
-        )}
-      </Formik>
+            </Form>
+          )}
+        </Formik>
+      )}
     </Container>
   )
 }

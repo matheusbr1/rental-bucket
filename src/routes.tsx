@@ -48,16 +48,16 @@ const Routes: React.FC = () => (
       <Route path='/signup' exact component={SignUp} />
       
       <PrivateRoute path='/works' exact component={Works}  />
-      <PrivateRoute path='/works/:id' component={WorkDetail} />
+      <PrivateRoute path='/work/:id' component={WorkDetail} />
       <PrivateRoute path='/works/create' component={CreateWork}  />
       <PrivateRoute path='/customers' exact component={Customers}  />
-      <PrivateRoute path='/customers/:id' component={CostumerDetail} />
+      <PrivateRoute path='/customer/:id' component={CostumerDetail} />
       <PrivateRoute path='/customers/create' component={CreateCostumer}  />
       <PrivateRoute path='/drivers' exact component={Drivers}  />
-      <PrivateRoute path='/drivers/:id' component={DriverDetail} />
+      <PrivateRoute path='/driver/:id' component={DriverDetail} />
       <PrivateRoute path='/drivers/create' component={CreateDriver}  />
       <PrivateRoute path='/trucks' exact component={Trucks}  />
-      <PrivateRoute path='/trucks/:id' component={TruckDetail} />
+      <PrivateRoute path='/truck/:id' component={TruckDetail} />
       <PrivateRoute path='/trucks/create' component={CreateTruck}  />
     </Switch>
   </Router>
