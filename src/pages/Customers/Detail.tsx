@@ -1,20 +1,15 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useCallback, useEffect, useState } from 'react'
 import { AppBar } from 'components/AppBar'
 import { useSnackbar } from 'notistack'
 import { useHistory, useParams } from 'react-router'
-import { IAddress, IContact, ICustomer, IDefaultRootState, PersonType } from 'interfaces'
+import { IAddress, IContact, ICustomer, IDefaultRootState, PersonType, FormStatus } from 'interfaces'
 import { useDispatch, useSelector } from 'react-redux'
-import { Formik, Form, Field } from 'formik'
-import FormikTextField from 'components/FormikTextField'
+import { Formik, Form } from 'formik'
 import { api } from 'services/api'
-import { RadioGroup } from 'formik-mui'
-import { FormControlLabel, Radio } from '@mui/material'
 import Button from 'components/Button'
-import { Box, Container, Divider, Grid, Typography } from '@material-ui/core'
-import { Contacts } from 'components/Contacts'
-import { Adresses } from 'components/Adresses'
+import { Box, Container, Grid, Typography } from '@material-ui/core'
 import { deleteCustomer, setCurrentCustomer } from 'redux/customer/customer.actions'
+import { CustomerCoreForm } from './FormCore'
 
 interface CustomerFields {
   person_type: PersonType
@@ -42,70 +37,7 @@ const Detail: React.FC = () => {
 
   const [isDeleting, setIsDeleting] = useState(false)
 
-  const [formStatus, setFormStatus] = useState<'isEditing' | 'isViewing'>('isViewing')
-
-  const renderFieldsByPerson = (person: PersonType, isSubmitting: boolean) => {
-    const disabled = formStatus === 'isViewing' || isSubmitting
-
-    if (person === 'F') {
-      return (
-      <React.Fragment>
-        <Grid item lg={6} md={6} sm={6} xs={12} >
-          <Field 
-            component={FormikTextField} 
-            label='Nome' 
-            name='name'
-            disabled={disabled}
-          />
-        </Grid>
-
-        <Grid item lg={6} md={6} sm={6} xs={12} >
-          <Field 
-            component={FormikTextField} 
-            label='CPF' 
-            name='CPF_CNPJ' 
-            disabled={disabled}
-          />
-        </Grid>
-      </React.Fragment>
-      )
-    }
-
-    if (person === 'J') {
-      return (
-        <React.Fragment>
-          <Grid item lg={6} md={6} sm={6} xs={12} >
-            <Field 
-              component={FormikTextField} 
-              label='Razão Social' 
-              name='company_name' 
-              disabled={disabled}
-            />
-          </Grid>
-
-          <Grid item lg={6} md={6} sm={6} xs={12} >
-            <Field 
-              component={FormikTextField} 
-              label='Nome Fantasia' 
-              name='fantasy_name' 
-              disabled={disabled}
-            />
-          </Grid>
-
-          <Grid item lg={6} md={6} sm={6} xs={12} >
-            <Field 
-              component={FormikTextField} 
-              label='CNPJ' 
-              name='CPF_CNPJ' 
-              disabled={disabled}
-            />
-          </Grid>
-
-          <Grid item lg={6} md={6} sm={6} xs={12} />
-        </React.Fragment>
-      )
-    }
-  }
+  const [formStatus, setFormStatus] = useState<FormStatus>('isViewing')
 
   const handleEdit = useCallback(async (fields: CustomerFields) => {
     try {
@@ -176,7 +108,7 @@ const Detail: React.FC = () => {
           enableReinitialize
           initialValues={currentCustomer}
         >
-          {({ values, setFieldValue, isSubmitting }) => (
+          {({ values, isSubmitting }) => (
             <Form aria-disabled >
               <Grid container spacing={3} >
                 <Grid item lg={12} md={12} sm={12} style={{ width: '100%' }}>
@@ -185,58 +117,7 @@ const Detail: React.FC = () => {
                   </Typography>
                 </Grid>
 
-                <Grid item lg={12} md={12} sm={12} xs={12} >
-                  <Field
-                    row
-                    component={RadioGroup}
-                    name='person_type'
-                  >
-                    <FormControlLabel
-                      value="F"
-                      defaultChecked
-                      label="Pessoa Física"
-                      disabled={formStatus === 'isViewing' || isSubmitting}
-                      control={<Radio />}
-                    />
-
-                    <FormControlLabel
-                      value="J"
-                      label="Pessoa Jurídica"
-                      disabled={formStatus === 'isViewing' || isSubmitting}
-                      control={<Radio />}
-                    />
-                  </Field>
-                </Grid>
-
-                {renderFieldsByPerson(values.person_type as PersonType, isSubmitting)}
-
-                <Grid item lg={12} md={12} sm={12} xs={12} >
-                  <Divider style={{ margin: '2rem 0' }} />
-                </Grid>
-
-                <Grid item lg={12} md={12} sm={12} xs={12} >
-                  <Adresses
-                    disabled={formStatus === 'isViewing'}
-                    adresses={values.adresses} 
-                    setAdresses={(adresses: IAddress[]) => setFieldValue('adresses', adresses)} 
-                  />
-                </Grid>
-
-                <Grid item lg={12} md={12} sm={12} xs={12} >
-                  <Divider style={{ margin: '2rem 0' }} />
-                </Grid>
-                
-                <Grid item lg={12} md={12} sm={12} xs={12} >
-                  <Contacts
-                    disabled={formStatus === 'isViewing'}
-                    contacts={values.contacts} 
-                    setContacts={(contacts: IContact[]) => setFieldValue('contacts', contacts)} 
-                  />
-                </Grid>
-
-                <Grid item lg={12} md={12} sm={12} xs={12} >
-                  <Divider style={{ margin: '2rem 0' }} />
-                </Grid>
+                <CustomerCoreForm formStatus={formStatus} />
 
                 <Grid container spacing={3} justifyContent='flex-end' >
                   <Grid item lg={4} md={4} sm={4} xs={12} >
@@ -258,13 +139,13 @@ const Detail: React.FC = () => {
                         <Button 
                           color='primary'
                           type='button'
-                          onClick={() => setFormStatus('isEditing')}
+                          onClick={() => setFormStatus('isFilling')}
                         >
                           Editar
                         </Button>
                       )}
 
-                      {formStatus === 'isEditing' && (
+                      {formStatus === 'isFilling' && (
                         <Button 
                           loading={isSubmitting} 
                           color='primary'

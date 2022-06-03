@@ -144,13 +144,6 @@ const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (props) => {
           </IconButton>
         </Tooltip>
       )}
-      {numSelected === 1 && (
-        <Tooltip title="Editar">
-          <IconButton onClick={handleOpen} >
-            <EditIcon />
-          </IconButton>
-        </Tooltip>
-      )}
       {numSelected > 0 && (
         <Tooltip title="Deletar">
           <IconButton onClick={handleDelete} >

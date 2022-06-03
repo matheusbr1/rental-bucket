@@ -5,6 +5,7 @@ import { IUserInitialState } from "redux/user/user.reducer"
 import { IWorkInitialState } from "redux/work/work.reducer"
 
 export type PersonType = 'F' | 'J'
+export type FormStatus = 'isFilling' | 'isViewing'
 
 export interface IDefaultRootState  {
   works: IWorkInitialState

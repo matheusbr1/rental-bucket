@@ -5,15 +5,11 @@ import { useSnackbar } from 'notistack'
 import { IAddress, IContact, PersonType } from 'interfaces'
 import { createCustomer } from 'redux/customer/customer.actions'
 import { useDispatch } from 'react-redux'
-import { Formik, Form, Field } from 'formik'
-import FormikTextField from 'components/FormikTextField'
+import { Formik, Form } from 'formik'
 import { api } from 'services/api'
-import { RadioGroup } from 'formik-mui'
-import { FormControlLabel, Radio } from '@mui/material'
 import Button from 'components/Button'
-import { Box, Container, Divider, Grid, Typography } from '@material-ui/core'
-import { Contacts } from 'components/Contacts'
-import { Adresses } from 'components/Adresses'
+import { Box, Container, Grid, Typography } from '@material-ui/core'
+import { CustomerCoreForm } from './FormCore'
 
 interface CustomerFields {
   person_type: PersonType
@@ -70,42 +66,6 @@ const Create: React.FC = () => {
     }
   }, [goBack, snackbar, dispatch])
 
-  const renderFieldsByPerson = (person: PersonType) => {
-    if (person === 'F') {
-      return (
-      <React.Fragment>
-        <Grid item lg={6} md={6} sm={6} xs={12} >
-          <Field component={FormikTextField} label='Nome' name='name' />
-        </Grid>
-
-        <Grid item lg={6} md={6} sm={6} xs={12} >
-          <Field component={FormikTextField} label='CPF' name='CPF_CNPJ' />
-        </Grid>
-      </React.Fragment>
-      )
-    }
-
-    if (person === 'J') {
-      return (
-        <React.Fragment>
-          <Grid item lg={6} md={6} sm={6} xs={12} >
-            <Field component={FormikTextField} label='Razão Social' name='company_name' />
-          </Grid>
-
-          <Grid item lg={6} md={6} sm={6} xs={12} >
-            <Field component={FormikTextField} label='Nome Fantasia' name='fantasy_name' />
-          </Grid>
-
-          <Grid item lg={6} md={6} sm={6} xs={12} >
-            <Field component={FormikTextField} label='CNPJ' name='CPF_CNPJ' />
-          </Grid>
-
-          <Grid item lg={6} md={6} sm={6} xs={12} />
-        </React.Fragment>
-      )
-    }
-  }
-
   return (
     <Container maxWidth='md' style={{ marginTop: 100 }} >
       <AppBar />
@@ -124,7 +84,7 @@ const Create: React.FC = () => {
           contacts: []
         }}
       >
-          {({ values, setFieldValue, isSubmitting }) => (
+          {({ isSubmitting }) => (
             <Form>
               <Grid container spacing={3} >
                 <Grid item lg={12} md={12} sm={12} style={{ width: '100%' }}>
@@ -133,54 +93,7 @@ const Create: React.FC = () => {
                   </Typography>
                 </Grid>
 
-                <Grid item lg={12} md={12} sm={12} xs={12} >
-                  <Field
-                    row
-                    component={RadioGroup}
-                    name='person_type'
-                  >
-                    <FormControlLabel
-                      value="F"
-                      defaultChecked
-                      label="Pessoa Física"
-                      control={<Radio />}
-                    />
-
-                    <FormControlLabel
-                      value="J"
-                      label="Pessoa Jurídica"
-                      control={<Radio />}
-                    />
-                  </Field>
-                </Grid>
-
-                {renderFieldsByPerson(values.person_type)}
-
-                <Grid item lg={12} md={12} sm={12} xs={12} >
-                  <Divider style={{ margin: '2rem 0' }} />
-                </Grid>
-
-                <Grid item lg={12} md={12} sm={12} xs={12} >
-                  <Adresses
-                    adresses={values.adresses} 
-                    setAdresses={(adresses: IAddress[]) => setFieldValue('adresses', adresses)} 
-                  />
-                </Grid>
-
-                <Grid item lg={12} md={12} sm={12} xs={12} >
-                  <Divider style={{ margin: '2rem 0' }} />
-                </Grid>
-                
-                <Grid item lg={12} md={12} sm={12} xs={12} >
-                  <Contacts 
-                    contacts={values.contacts} 
-                    setContacts={(contacts: IContact[]) => setFieldValue('contacts', contacts)} 
-                  />
-                </Grid>
-
-                <Grid item lg={12} md={12} sm={12} xs={12} >
-                  <Divider style={{ margin: '2rem 0' }} />
-                </Grid>
+                <CustomerCoreForm />
 
                 <Grid container spacing={3} justifyContent='flex-end' >
                   <Grid item lg={4} md={4} sm={4} xs={12} >
