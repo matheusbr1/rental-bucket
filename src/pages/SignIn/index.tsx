@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useHistory } from 'react-router'
 import { createStyles } from '@material-ui/styles'
 import Button from 'components/Button'
@@ -12,6 +12,8 @@ import { signIn } from 'redux/user/user.actions'
 import { Link } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
 import { ISignInFields } from 'interfaces'
+import Visibility from '@material-ui/icons/Visibility'
+import VisibilityOff from '@material-ui/icons/VisibilityOff'
 import { 
   Container, 
   Typography, 
@@ -19,6 +21,10 @@ import {
   Box, 
   makeStyles,
   Grid, 
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  Input
 } from '@material-ui/core'
 
 
@@ -53,6 +59,8 @@ const SignIn: React.FC = () => {
   const { enqueueSnackbar: snackbar } = useSnackbar()
 
   const [, setCookies] = useCookies(['rentalbucket.token'])
+
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false)
 
   const classes = useStyles()
 
@@ -89,7 +97,7 @@ const SignIn: React.FC = () => {
             validationSchema={signInSchema}
             initialValues={{
               email: '',
-              password: ''
+              password: '',
             }}
           >
             {({ isSubmitting }) => (
@@ -110,7 +118,20 @@ const SignIn: React.FC = () => {
                       label='Senha'
                       id='password'
                       name='password'
-                      type='password'
+                      type={isPasswordVisible ? 'text' : 'password'}
+                      InputProps={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <IconButton
+                              aria-label="toggle password visibility"
+                              onClick={() => setIsPasswordVisible(isVisible => !isVisible)}
+                              edge="end"
+                            >
+                              {isPasswordVisible ? <VisibilityOff /> : <Visibility />}
+                            </IconButton>
+                          </InputAdornment>
+                        )
+                      }}
                     />
                   </Grid>
 
