@@ -153,7 +153,7 @@ const Adresses: React.FC<AdressesProps> = ({ adresses, setAdresses, disabled = f
               <Grid item lg={12} md={12} sm={12} xs={12} >
                 <List dense>
                   {adresses.map(({ CEP, street, number, state, city }) => (
-                    <ListItem key={CEP} >
+                    <ListItem key={CEP + number} >
                       <ListItemAvatar>
                         <Avatar>
                           <HomeIcon />

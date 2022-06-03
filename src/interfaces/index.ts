@@ -36,6 +36,7 @@ export interface ICity {
 }
 
 export interface IAddress { 
+  id?: string
   CEP: string
   street: string
   number: string
@@ -48,6 +49,7 @@ export interface IAddress {
 export type ContactType = 'phone' | 'cellphone' | 'email'
 
 export interface IContact {
+  id?: string
   contact: string
   contact_type: ContactType
 }

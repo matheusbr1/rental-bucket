@@ -32,26 +32,36 @@ const Create: React.FC = () => {
     try {
       const { data: customer } = await api.post('customers', fields)
 
-      fields.contacts.map(async ({ contact, contact_type }) => {
-        await api.post('customers/contact', {
-          contact,
-          contact_type,
+      const contacts = [] as IContact[]
+      const adresses = [] as IAddress[]
+
+      for await (const contact of fields.contacts) {
+        const { data: newContact } = await api.post('customers/contact', {
+          ...contact,
+          contact: contact.contact,
+          contact_type: contact.contact_type,
           customer_id: customer.id
         })
-      })
 
-      fields.adresses.map(async (address) => {
-        await api.post('customers/address', { 
+        contacts.push(newContact)
+      }
+
+      for await (const address of fields.adresses) {
+        const { data: newAddress } = await api.post('customers/address', { 
           ...address,
           state: address.state?.sigla,
           city: address.city?.name,
           customer_id: customer.id
         })
-      })
+
+        adresses.push(newAddress)
+      }
 
       dispatch(createCustomer({
-        id: customer.id,
         ...fields, 
+        id: customer.id,
+        contacts,
+        adresses
       }))
 
       snackbar('Cliente criado com sucesso!', {

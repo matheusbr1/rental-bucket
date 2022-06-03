@@ -5,6 +5,7 @@ export enum CustomerActions {
   CREATE_CUSTOMER = 'CREATE_CUSTOMER',
   SET_CURRENT_CUSTOMER = 'SET_CURRENT_CUSTOMER',
   DELETE_CUSTOMER = 'DELETE_CUSTOMER',
+  UPDATE_CUSTOMER = 'UPDATE_CUSTOMER',
 }
 
 export function createCustomer(customer: ICustomer) {
@@ -21,4 +22,11 @@ export function setCurrentCustomer(customer: ICustomer) {
 
 export function deleteCustomer(id: string) {
   return { type: CustomerActions.DELETE_CUSTOMER, payload: id }
+}
+
+export function updateCustomer(id: string, updatedCustomer: ICustomer) {
+  return { type: CustomerActions.UPDATE_CUSTOMER, payload: {
+    id,
+    updatedCustomer
+  }}
 }

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import { AppBar } from 'components/AppBar'
 import { useSnackbar } from 'notistack'
 import { useHistory, useParams } from 'react-router'
@@ -8,7 +8,7 @@ import { Formik, Form } from 'formik'
 import { api } from 'services/api'
 import Button from 'components/Button'
 import { Box, Container, Grid, Typography } from '@material-ui/core'
-import { deleteCustomer, setCurrentCustomer } from 'redux/customer/customer.actions'
+import { deleteCustomer, updateCustomer } from 'redux/customer/customer.actions'
 import { CustomerCoreForm } from './FormCore'
 
 interface CustomerFields {
@@ -43,7 +43,65 @@ const Detail: React.FC = () => {
     try {
       console.log('data', fields)
 
-      // Requisição
+      // Updating customer
+
+      const response = await api.put(`/customers/${id}`, fields)
+
+      // Updating or creating infos
+
+      const contacts = [] as IContact[]
+
+      for await (const contact of fields.contacts) {
+        if (contact.id) {
+          contacts.push(contact)
+        } else {
+          const { data: newContact } = await api.post('customers/contact', {
+            contact: contact.contact,
+            contact_type: contact.contact_type,
+            customer_id: id
+          })
+  
+          contacts.push(newContact)
+        }
+      }
+
+      const adresses = [] as IAddress[]
+
+      for await (const address of fields.adresses) {
+         if (address.id) {
+          adresses.push(address)
+        } else {
+          const { data: newAddress } = await api.post('customers/address', { 
+            ...address,
+            state: address.state?.sigla,
+            city: address.city?.name,
+            customer_id: id
+          })
+  
+          adresses.push(newAddress)
+        }
+      }
+
+      // Deleting infos
+
+      const contactsToDelete = currentCustomer?.contacts.filter(a => !contacts.find(b => b.id === a.id)) // difference
+      const adressesToDelete = currentCustomer?.adresses.filter(a => !adresses.find(b => b.id === a.id)) // difference
+      
+      for await (const contact of contactsToDelete) {
+        await api.delete(`customers/contact/${contact.id}`)
+      }
+
+      for await (const address of adressesToDelete) {
+        await api.delete(`customers/address/${address.id}`)
+      }
+
+      const updatedCustomer = {
+        ...response.data.data,
+        contacts,
+        adresses,
+      } 
+
+      dispatch(updateCustomer(id, updatedCustomer))
 
       push('/customers')
 
@@ -55,7 +113,7 @@ const Detail: React.FC = () => {
         variant: 'error'
       })
     }
-  }, [snackbar, push])
+  }, [id, currentCustomer, dispatch, push, snackbar])
 
   const handleDelete = useCallback(async () => {  
     try {
@@ -76,26 +134,12 @@ const Detail: React.FC = () => {
       })
     }
   }, [dispatch, push, id, snackbar])
-
+  
   useEffect(() => {
-    if (currentCustomer || isDeleting) {
-      return
+    if (!currentCustomer) {
+      push('/customers')
     }
-
-    (async () => {
-      try {
-        const { data: customer } = await api.get(`/customers/${id}`)
-         
-        dispatch(setCurrentCustomer(customer))
-      } catch (error) {
-        snackbar('Erro ao buscar cliente, tente novamente!', {
-          variant: 'error'
-        })
-
-        push('/customers')
-      }
-    })()
-  }, [currentCustomer, dispatch, push, id, snackbar, isDeleting])
+  }, [currentCustomer, push])
 
   return (
     <Container maxWidth='md' style={{ marginTop: 100 }} >

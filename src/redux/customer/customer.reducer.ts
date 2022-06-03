@@ -16,6 +16,7 @@ export function customerReducer (
     case CustomerActions.SET_CUSTOMERS:
       return {
         ...state,
+        current: null,
         all: action.payload
       }
 
@@ -33,6 +34,15 @@ export function customerReducer (
         current: null,
         all: state.all.filter(customer => customer.id !== action.payload)
       }
+
+      case CustomerActions.UPDATE_CUSTOMER:
+        return {
+          current: null,
+          all: state.all.map(customer => customer.id === action.payload.id 
+            ? action.payload.updatedCustomer 
+            : customer
+          )
+        }
 
     case CustomerActions.SET_CURRENT_CUSTOMER:
       return {
