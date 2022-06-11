@@ -5,6 +5,7 @@ export enum DriverActions {
   CREATE_DRIVER = 'CREATE_DRIVER',
   SET_CURRENT_DRIVER = 'SET_CURRENT_DRIVER',
   DELETE_DRIVER = 'DELETE_DRIVER',
+  UPDATE_DRIVER = 'UPDATE_DRIVER',
 }
 
 export function setDrivers (drivers: IDriver[]) {
@@ -21,4 +22,11 @@ export function setCurrentDriver(driver: IDriver) {
 
 export function deleteDriver(id: string) {
   return { type: DriverActions.DELETE_DRIVER, payload: id }
+}
+
+export function updateDriver(id: string, updatedDriver: IDriver) {
+  return { type: DriverActions.UPDATE_DRIVER, payload: {
+    id,
+    updatedDriver
+  }}
 }

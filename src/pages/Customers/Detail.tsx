@@ -95,6 +95,8 @@ const Detail: React.FC = () => {
         await api.delete(`customers/address/${address.id}`)
       }
 
+      // Updating Customer into state
+
       const updatedCustomer = {
         ...response.data.data,
         contacts,

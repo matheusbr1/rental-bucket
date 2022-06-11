@@ -3,7 +3,7 @@ import { DriverActions } from './driver.actions'
 
 const INITIAL_STATE = {
   all: [] as IDriver[],
-  current: null
+  current: null as null | IDriver
 }
 
 export type IDriverInitialState = typeof INITIAL_STATE
