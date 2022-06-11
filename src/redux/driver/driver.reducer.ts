@@ -15,7 +15,7 @@ export function driverReducer (
   switch (action.type) {
     case DriverActions.SET_DRIVERS:
       return {
-        ...state,
+        current: null,
         all: action.payload
       } 
       

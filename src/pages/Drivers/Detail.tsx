@@ -13,6 +13,7 @@ import DriverFormCore from './FormCore'
 import { api } from 'services/api'
 import { useParams } from 'react-router-dom'
 import { deleteDriver, updateDriver } from 'redux/driver/driver.actions'
+import { removeMask } from 'utils/formatters'
 
 interface IDetailParams {
   id: string
@@ -43,7 +44,13 @@ const Detail: React.FC = () => {
 
        // Updating customer
 
-       const response = await api.put(`/drivers/${id}`, fields)
+       const response = await api.put(`/drivers/${id}`, {
+        name: fields.name,
+        CPF: removeMask(fields.CPF),
+        RG: removeMask(fields.RG),
+        CNH: removeMask(fields.CNH),
+        birthday: fields.birthday
+       })
 
        // Updating or creating contact
 
