@@ -29,7 +29,7 @@ const Create: React.FC = () => {
         ...fields,
         brand_id: fields.brand?.id,
         model_id: fields.model?.id,
-        truck_type_id: fields.truck_type.id,
+        truck_type_id: fields.type.id,
       })
 
       dispatch(createTruck({
@@ -61,7 +61,7 @@ const Create: React.FC = () => {
           model: null,
           renavam: '',
           plate: '',
-          truck_type: null,
+          type: null,
           manufacture_year: '',
           model_year: '',
         }}

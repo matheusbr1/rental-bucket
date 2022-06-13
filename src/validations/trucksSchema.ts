@@ -12,7 +12,7 @@ export const trucksSchema = yup.object().shape({
   plate: yup.string()
     .required('Campo obrigatório'),
   
-  truck_type: yup.object()
+  type: yup.object()
     .nullable()
     .required('Campo obrigatório'),
   

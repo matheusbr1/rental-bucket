@@ -97,10 +97,10 @@ const TruckFormCore: React.FC = () => {
 
       <Grid item lg={4} md={4} sm={6} xs={12} >
         <FormikAutoComplete 
-          name="truck_type"
+          name="type"
           options={truckTypes}
-          error={errors?.truck_type}
-          touched={touched?.truck_type}
+          error={errors?.type}
+          touched={touched?.type}
           getOptionLabel={(option: { name: string }) => option.name}
           label='Tipo'
         />

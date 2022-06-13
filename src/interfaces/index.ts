@@ -118,7 +118,7 @@ export interface ITruck {
   renavam: string
   manufacture_year: number
   model_year: number
-  truck_type?: {
+  type?: {
     name: string
     description: string
   }
