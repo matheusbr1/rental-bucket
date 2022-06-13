@@ -97,6 +97,7 @@ export interface IWork {
   quantity: number
   work_type: IWorkType
   truck: ITruck
+  address: IWork
 }
 
 export interface IBrand {
