@@ -1,21 +1,16 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { useHistory } from 'react-router'
 import { AppBar } from 'components/AppBar'
 import { useSnackbar } from 'notistack'
 import { useDispatch } from 'react-redux'
 import { Container, Grid, Typography, } from '@material-ui/core'
-import { years } from 'mocks'
-import { IBrand, IModel } from 'interfaces'
-import { getBrands } from 'fetchs/getBrands'
-import { getModels } from 'fetchs/getModels'
 import Button from 'components/Button'
 import { createTruck } from 'redux/truck/truck.actions'
-import { Formik, Form, Field } from 'formik'
-import FormikTextField from 'components/FormikTextField'
-import FormikAutoComplete from 'components/FormikAutoComplete'
+import { Formik, Form } from 'formik'
 import Loading from 'components/Loading'
 import { api } from 'services/api'
 import { trucksSchema } from 'validations/trucksSchema'
+import { TruckFormCore } from './FormCore'
 
 const Create: React.FC = () => {
   const { goBack } = useHistory()
@@ -26,28 +21,6 @@ const Create: React.FC = () => {
 
   const [loading, setLoading] = useState(false)
   
-  const [brands, setBrands] = useState<IBrand[]>([])
-  const [models, setModels] = useState<IModel[]>([])
-  
-  const [truckTypes, setTruckTypes] = useState([])
-
-  // Getting truck types
-  useEffect(() => {
-    api.get('/truck/types').then(response => setTruckTypes(response.data))
-  }, [])
-
-  // Getting brands
-  useEffect(() => {
-    (async () => {
-      try {
-        const brands = await getBrands()
-        setBrands(brands)
-       } catch (error) {
-        snackbar('Não foi possível obter as marcas!', { variant: 'error' })
-       }
-    })()
-  }, [snackbar])
-
   const handleCreate = useCallback(async (fields) => {
     try {
       setLoading(true)
@@ -74,13 +47,6 @@ const Create: React.FC = () => {
     }
   }, [goBack, snackbar, dispatch])
 
-  const handleBrandBlur = useCallback(async (brand: IBrand | null) => {
-    if (!!brand) {
-      const models = await getModels(brand.id)
-      setModels(models)
-    }
-  }, [])
-
   return (
     <Container maxWidth='md' style={{ marginTop: 100 }} >
       <AppBar />
@@ -100,7 +66,7 @@ const Create: React.FC = () => {
           model_year: '',
         }}
       >
-        {({ errors, touched, values, isSubmitting, isValid }) => (
+        {({ isValid }) => (
           <Form>
             {loading && <Loading />}
 
@@ -111,72 +77,7 @@ const Create: React.FC = () => {
                 </Typography>
               </Grid>
 
-              <Grid item lg={4} md={4} sm={6} xs={12} >
-                <FormikAutoComplete 
-                  name="brand"
-                  options={brands}
-                  error={errors.brand}
-                  touched={touched.brand}
-                  label='Marca'
-                  getOptionLabel={(option: IBrand) => option.name}
-                  onBlur={() => handleBrandBlur(values.brand)}
-                /> 
-              </Grid>
-
-              <Grid item lg={4} md={4} sm={6} xs={12} >
-                <FormikAutoComplete 
-                  name="model"
-                  options={models}
-                  error={errors.model}
-                  disabled={!values.brand || isSubmitting}
-                  touched={touched.model}
-                  label='Modelo'
-                  getOptionLabel={(option: IModel) => option.name}
-                />
-              </Grid>
-
-              <Grid item lg={4} md={4} sm={6} xs={12} >
-                <Field component={FormikTextField} label='Placa' name='plate' />
-              </Grid>
-
-              <Grid item lg={2} md={2} sm={6} xs={12} >
-                <FormikAutoComplete 
-                  name="manufacture_year"
-                  options={years}
-                  error={errors?.manufacture_year}
-                  touched={touched?.manufacture_year}
-                  label='Ano Fab'
-                />
-              </Grid>
-            
-              <Grid item lg={2} md={2} sm={6} xs={12} >
-                <FormikAutoComplete 
-                  name="model_year"
-                  options={years}
-                  error={errors?.model_year}
-                  touched={touched?.model_year}
-                  label='Ano Modelo'
-                />
-              </Grid>
-
-              <Grid item lg={4} md={4} sm={6} xs={12} >
-                <FormikAutoComplete 
-                  name="truck_type"
-                  options={truckTypes}
-                  error={errors?.truck_type}
-                  touched={touched?.truck_type}
-                  getOptionLabel={(option: { name: string }) => option.name}
-                  label='Tipo'
-                />
-              </Grid>
-
-              <Grid item lg={4} md={4} sm={6} xs={12} >
-                <Field component={FormikTextField} label='Renavan' name='renavam' />
-              </Grid>
-
-              <Grid item lg={4} md={4} sm={6} xs={12} />
-              
-              <Grid item lg={4} md={4} sm={6} xs={12} />
+              <TruckFormCore />
 
               <Grid item lg={4} md={4} sm={6} xs={12} >
                 <Button 
