@@ -4,13 +4,17 @@ import { Field, useFormikContext } from 'formik'
 import { useSnackbar } from 'notistack'
 import FormikTextField from 'components/FormikTextField'
 import FormikAutoComplete from 'components/FormikAutoComplete'
-import { IBrand, IModel, ITruck } from 'interfaces'
+import { FormStatus, IBrand, IModel, ITruck } from 'interfaces'
 import { Grid } from '@material-ui/core'
 import { api } from 'services/api'
 import { getBrands } from 'fetchs/getBrands'
 import { getModels } from 'fetchs/getModels'
 
-const TruckFormCore: React.FC = () => {
+interface ICustomerCoreFormProps {
+  formStatus?: FormStatus
+}
+
+const TruckFormCore: React.FC<ICustomerCoreFormProps> = ({ formStatus }) => {
   const { errors, touched, values, isSubmitting } = useFormikContext<ITruck>()
 
   const { enqueueSnackbar: snackbar } = useSnackbar()
@@ -53,6 +57,7 @@ const TruckFormCore: React.FC = () => {
           options={brands}
           error={errors.brand}
           touched={touched.brand}
+          disabled={formStatus === 'isViewing'}
           label='Marca'
           getOptionLabel={(option: IBrand) => option.name}
           onBlur={() => handleBrandBlur(values.brand)}
@@ -64,7 +69,7 @@ const TruckFormCore: React.FC = () => {
           name="model"
           options={models}
           error={errors.model}
-          disabled={!values.brand || isSubmitting}
+          disabled={!values.brand || isSubmitting || formStatus === 'isViewing'}
           touched={touched.model}
           label='Modelo'
           getOptionLabel={(option: IModel) => option.name}
@@ -72,7 +77,12 @@ const TruckFormCore: React.FC = () => {
       </Grid>
 
       <Grid item lg={4} md={4} sm={6} xs={12} >
-        <Field component={FormikTextField} label='Placa' name='plate' />
+        <Field 
+          component={FormikTextField} 
+          label='Placa' 
+          name='plate'
+          disabled={formStatus === 'isViewing'} 
+        />
       </Grid>
 
       <Grid item lg={2} md={2} sm={6} xs={12} >
@@ -82,6 +92,7 @@ const TruckFormCore: React.FC = () => {
           error={errors?.manufacture_year}
           touched={touched?.manufacture_year}
           label='Ano Fab'
+          disabled={formStatus === 'isViewing'}
         />
       </Grid>
     
@@ -92,6 +103,7 @@ const TruckFormCore: React.FC = () => {
           error={errors?.model_year}
           touched={touched?.model_year}
           label='Ano Modelo'
+          disabled={formStatus === 'isViewing'}
         />
       </Grid>
 
@@ -103,11 +115,17 @@ const TruckFormCore: React.FC = () => {
           touched={touched?.type}
           getOptionLabel={(option: { name: string }) => option.name}
           label='Tipo'
+          disabled={formStatus === 'isViewing'}
         />
       </Grid>
 
       <Grid item lg={4} md={4} sm={6} xs={12} >
-        <Field component={FormikTextField} label='Renavan' name='renavam' />
+        <Field 
+          component={FormikTextField} 
+          label='Renavan' 
+          name='renavam' 
+          disabled={formStatus === 'isViewing'}
+        />
       </Grid>
 
       <Grid item lg={4} md={4} sm={6} xs={12} />

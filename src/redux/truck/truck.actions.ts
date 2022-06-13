@@ -5,6 +5,7 @@ export enum TruckActions {
   CREATE_TRUCK = 'CREATE_TRUCK',
   SET_CURRENT_TRUCK = 'SET_CURRENT_TRUCK',
   DELETE_TRUCK = 'DELETE_TRUCK',
+  UPDATE_TRUCK = 'UPDATE_TRUCK',
 }
 
 export function setTrucks(trucks: ITruck[]) {
@@ -21,4 +22,11 @@ export function setCurrentTruck(truck: ITruck) {
 
 export function deleteTruck(id: string) {
   return { type: TruckActions.DELETE_TRUCK, payload: id }
+}
+
+export function updateTruck(id: string, updatedTruck: ITruck) {
+  return { type: TruckActions.UPDATE_TRUCK, payload: {
+    id,
+    updatedTruck
+  }}
 }

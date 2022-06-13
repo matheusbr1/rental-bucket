@@ -3,7 +3,7 @@ import { TruckActions } from './truck.actions'
 
 const INITIAL_STATE = {
   all: [] as ITruck[],
-  current: null
+  current: null as null | ITruck
 }
 
 export type ITruckInitialState = typeof INITIAL_STATE

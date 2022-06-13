@@ -120,6 +120,7 @@ export interface ITruck {
   manufacture_year: number
   model_year: number
   type?: {
+    id?: string
     name: string
     description: string
   }

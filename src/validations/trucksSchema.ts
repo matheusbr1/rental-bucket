@@ -20,8 +20,10 @@ export const trucksSchema = yup.object().shape({
     .required('Campo obrigatório'),
   
   manufacture_year: yup.string()
+    .nullable()
     .required('Campo obrigatório'),
   
   model_year: yup.string()
+    .nullable()
     .required('Campo obrigatório'),
 })

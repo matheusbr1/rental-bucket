@@ -26,7 +26,10 @@ const Create: React.FC = () => {
       setLoading(true)
 
       const { data: truck } = await api.post('trucks', {
-        ...fields,
+        plate: fields.plate,
+        renavam: fields.renavam, 
+        manufacture_year: fields.manufacture_year,
+        model_year: fields.model_year,
         brand_id: fields.brand?.id,
         model_id: fields.model?.id,
         truck_type_id: fields.type.id,
