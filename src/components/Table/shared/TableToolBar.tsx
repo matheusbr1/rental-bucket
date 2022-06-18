@@ -4,9 +4,9 @@ import { createStyles, lighten, makeStyles, Theme } from '@material-ui/core/styl
 import DeleteIcon from '@material-ui/icons/Delete'
 import OpenIcon from '@material-ui/icons/Launch'
 import { useHistory } from 'react-router'
-import { api } from 'services/api'
 import { useSnackbar } from 'notistack'
 import Loading from 'components/Loading'
+import usePrivateApi from 'hooks/usePrivateApi'
 
 import {  Toolbar, Typography, IconButton, Tooltip } from '@material-ui/core'
 
@@ -45,6 +45,8 @@ const useToolbarStyles = makeStyles((theme: Theme) =>
 )
 
 const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (props) => {
+  const api = usePrivateApi()
+
   const classes = useToolbarStyles()
   
   const { 
@@ -82,7 +84,7 @@ const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (props) => {
     } finally {
       setIsLoading(false)
     }
-  }, [title, path, register_id, onAccess, history, snackbar])
+  }, [title, api, path, register_id, onAccess, history, snackbar])
 
   const handleDelete = useCallback(async () => {
     const treatedName = title.toLowerCase().slice(0, -1)
@@ -107,7 +109,7 @@ const EnhancedTableToolbar: React.FC<EnhancedTableToolbarProps> = (props) => {
     } finally {
       setIsLoading(false)
     }
-  }, [onDelete, path, selected, setSelected, snackbar, title])
+  }, [api, onDelete, path, selected, setSelected, snackbar, title])
 
   return (
     <Toolbar

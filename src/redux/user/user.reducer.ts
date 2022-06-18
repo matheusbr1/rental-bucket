@@ -1,5 +1,5 @@
 import { ReducerAction } from 'interfaces'
-import { api } from 'services/api'
+import { privateApi } from 'services/api'
 import { UserActions } from './user.actions'
 
 const persistedState = sessionStorage.getItem('@rentalbucket:user')
@@ -19,7 +19,7 @@ const initialUserState = persistedState
 
 export type IUserInitialState = typeof initialState
 
-const getAvatarURL = (avatar: string) => `${api.defaults.baseURL}/avatar/${avatar}`
+const getAvatarURL = (avatar: string) => `${privateApi.defaults.baseURL}/avatar/${avatar}`
 
 export function userReducer (
   state: IUserInitialState = initialUserState, 

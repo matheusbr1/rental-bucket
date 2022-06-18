@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import { useHistory } from 'react-router'
 import { createStyles } from '@material-ui/styles'
 import Button from 'components/Button'
-import { api } from 'services/api'
+import usePrivateApi from 'hooks/usePrivateApi'
 import { useSnackbar } from 'notistack'
 import { Field, Form, Formik } from 'formik'
 import FormikTextField from 'components/FormikTextField'
@@ -16,7 +16,6 @@ import {
   makeStyles,
   Grid, 
 } from '@material-ui/core'
-
 
 const useStyles = makeStyles((theme) => createStyles({
   content: {
@@ -48,6 +47,8 @@ export interface ISignUpFields {
 }
 
 const SignIn: React.FC = () => {
+  const api = usePrivateApi()
+
   const history = useHistory()
 
   const { enqueueSnackbar: snackbar } = useSnackbar()
@@ -64,7 +65,7 @@ const SignIn: React.FC = () => {
     } catch (error) {
       snackbar('Erro ao criar o usuário, tente novamente!', { variant: 'error' })
     }
-  }, [history, snackbar])
+  }, [api, history, snackbar])
 
   return (
     <Container>

@@ -6,10 +6,10 @@ import { IAddress, IContact, PersonType } from 'interfaces'
 import { createCustomer } from 'redux/customer/customer.actions'
 import { useDispatch } from 'react-redux'
 import { Formik, Form } from 'formik'
-import { api } from 'services/api'
 import Button from 'components/Button'
 import { Box, Container, Grid, Typography } from '@material-ui/core'
 import { CustomerCoreForm } from './FormCore'
+import usePrivateApi from 'hooks/usePrivateApi'
 
 interface CustomerFields {
   person_type: PersonType
@@ -22,6 +22,8 @@ interface CustomerFields {
 }
 
 const Create: React.FC = () => {
+  const api = usePrivateApi()
+
   const { goBack } = useHistory()
 
   const dispatch = useDispatch()
@@ -74,7 +76,7 @@ const Create: React.FC = () => {
         variant: 'error'
       })
     }
-  }, [goBack, snackbar, dispatch])
+  }, [api, dispatch, snackbar, goBack])
 
   return (
     <Container maxWidth='md' style={{ marginTop: 100 }} >

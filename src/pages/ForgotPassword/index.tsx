@@ -2,12 +2,12 @@ import React, { useCallback } from 'react'
 import { useHistory } from 'react-router'
 import { createStyles } from '@material-ui/styles'
 import Button from 'components/Button'
-import { api } from 'services/api'
 import { useSnackbar } from 'notistack'
 import { Field, Form, Formik } from 'formik'
 import FormikTextField from 'components/FormikTextField'
 import { forgotPasswordSchema } from 'validations/forgotPasswordSchema'
 import { Link } from 'react-router-dom'
+import usePrivateApi from 'hooks/usePrivateApi'
 import { 
   Container, 
   Typography, 
@@ -44,8 +44,9 @@ const useStyles = makeStyles((theme) => createStyles({
   }
 }))
 
-
 const SignIn: React.FC = () => {
+  const api = usePrivateApi()
+
   const history = useHistory()
 
   const { enqueueSnackbar: snackbar } = useSnackbar()
@@ -62,7 +63,7 @@ const SignIn: React.FC = () => {
     } catch (error) {
       snackbar('Erro ao enviar email, tente novamente!', { variant: 'error' })
     }
-  }, [history, snackbar])
+  }, [api, history, snackbar])
 
   return (
     <Container>

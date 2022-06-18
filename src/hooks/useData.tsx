@@ -5,11 +5,11 @@ interface IDataContext { }
 const DataContext = createContext<IDataContext>({} as IDataContext)
 
 const DataProvider: React.FC = ({ children }) => {
- return (
+  return (
     <DataContext.Provider value={{}}>
       {children}
     </DataContext.Provider>
- )
+  )
 }
 
 function useData (): IDataContext {

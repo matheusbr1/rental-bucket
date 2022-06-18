@@ -1,12 +1,10 @@
 import axios from 'axios'
-import { Cookies } from 'react-cookie'
 
-const cookies = new Cookies()
-const token = cookies.get('rentalbucket.token')
+export const sessionApi = axios.create({ 
+  baseURL: process.env.REACT_APP_BASE_URL_API,
+})
 
-export const api = axios.create({
-  baseURL: 'http://localhost:3334',
-  headers: {
-    Authorization: `Bearer ${token}`
-  }
+export const privateApi = axios.create({
+  baseURL: process.env.REACT_APP_BASE_URL_API,
+  headers: { 'Content-Type': 'application/json' }
 })

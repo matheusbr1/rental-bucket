@@ -4,7 +4,7 @@ import { useHistory, useParams } from 'react-router'
 import { AppBar } from 'components/AppBar'
 import { Box, Container, Grid, Typography } from '@material-ui/core'
 import { TruckFormCore } from './FormCore'
-import { api } from 'services/api'
+import usePrivateApi from 'hooks/usePrivateApi'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteTruck, updateTruck } from 'redux/truck/truck.actions'
 import { FormStatus, IDefaultRootState, ITruck } from 'interfaces'
@@ -18,6 +18,8 @@ interface IDetailParams {
 }
 
 const Detail: React.FC = () => {
+  const api = usePrivateApi()
+
   const { push } = useHistory()
 
   const dispatch = useDispatch()
@@ -62,7 +64,7 @@ const Detail: React.FC = () => {
     } finally {
       setLoading(false)
     }
-  }, [dispatch, id, snackbar])
+  }, [api, dispatch, id, push, snackbar])
 
   const handleDelete = useCallback(async () => {  
     try {
@@ -82,7 +84,7 @@ const Detail: React.FC = () => {
         variant: 'error'
       })
     }
-  }, [dispatch, push, id, snackbar])
+  }, [api, id, dispatch, snackbar, push])
   
   useEffect(() => {
     if (!currentTruck) {

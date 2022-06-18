@@ -6,17 +6,20 @@ import { useHistory } from 'react-router'
 import { useSelector, useDispatch } from 'react-redux'
 import { Box, Container } from '@material-ui/core'
 import { IDefaultRootState, IDriver } from 'interfaces'
-import { api } from 'services/api'
 import { setDrivers } from 'redux/driver/driver.actions'
 import { EmptyTableMessage } from 'components/EmptyTableMessage'
+import usePrivateApi from 'hooks/usePrivateApi'
 
 const List: React.FC = () => {
+  const api = usePrivateApi()
+
   const history = useHistory()
+
   const dispatch = useDispatch()
 
   useEffect(() => {
     api.get('/drivers').then(response =>dispatch(setDrivers(response.data)))
-  }, [dispatch])
+  }, [api, dispatch])
 
   const drivers = useSelector<IDefaultRootState, IDriver[]>(state => state.drivers.all)
 

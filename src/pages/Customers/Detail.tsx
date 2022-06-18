@@ -5,11 +5,11 @@ import { useHistory, useParams } from 'react-router'
 import { IAddress, IContact, ICustomer, IDefaultRootState, PersonType, FormStatus } from 'interfaces'
 import { useDispatch, useSelector } from 'react-redux'
 import { Formik, Form } from 'formik'
-import { api } from 'services/api'
 import Button from 'components/Button'
 import { Box, Container, Grid, Typography } from '@material-ui/core'
 import { deleteCustomer, updateCustomer } from 'redux/customer/customer.actions'
 import { CustomerCoreForm } from './FormCore'
+import usePrivateApi from 'hooks/usePrivateApi'
 
 interface CustomerFields {
   person_type: PersonType
@@ -25,6 +25,8 @@ interface IDetailParams {
 }
 
 const Detail: React.FC = () => {
+  const api = usePrivateApi()
+  
   const { push } = useHistory()
 
   const { id } = useParams<IDetailParams>()
@@ -115,7 +117,7 @@ const Detail: React.FC = () => {
         variant: 'error'
       })
     }
-  }, [id, currentCustomer, dispatch, push, snackbar])
+  }, [api, id, currentCustomer?.contacts, currentCustomer?.adresses, dispatch, push, snackbar])
 
   const handleDelete = useCallback(async () => {  
     try {
@@ -135,7 +137,7 @@ const Detail: React.FC = () => {
         variant: 'error'
       })
     }
-  }, [dispatch, push, id, snackbar])
+  }, [api, id, dispatch, snackbar, push])
   
   useEffect(() => {
     if (!currentCustomer) {

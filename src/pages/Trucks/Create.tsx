@@ -8,11 +8,13 @@ import Button from 'components/Button'
 import { createTruck } from 'redux/truck/truck.actions'
 import { Formik, Form } from 'formik'
 import Loading from 'components/Loading'
-import { api } from 'services/api'
+import usePrivateApi from 'hooks/usePrivateApi'
 import { trucksSchema } from 'validations/trucksSchema'
 import { TruckFormCore } from './FormCore'
 
 const Create: React.FC = () => {
+  const api = usePrivateApi()
+
   const { goBack } = useHistory()
 
   const dispatch = useDispatch()
@@ -48,7 +50,7 @@ const Create: React.FC = () => {
     } finally {
       setLoading(false)
     }
-  }, [goBack, snackbar, dispatch])
+  }, [api, dispatch, snackbar, goBack])
 
   return (
     <Container maxWidth='md' style={{ marginTop: 100 }} >

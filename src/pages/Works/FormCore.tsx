@@ -4,7 +4,7 @@ import FormikTextField from 'components/FormikTextField'
 import FormikDateInput from 'components/FormikDateInput'
 import FormikAutoComplete from 'components/FormikAutoComplete'
 import { Grid } from '@material-ui/core'
-import { api } from 'services/api'
+import usePrivateApi from 'hooks/usePrivateApi'
 import { useDispatch, useSelector } from 'react-redux'
 import { setDrivers } from 'redux/driver/driver.actions'
 import { setCustomers } from 'redux/customer/customer.actions'
@@ -19,6 +19,8 @@ import {
 } from 'interfaces'
 
 const WorkFormCore: React.FC = () => {
+  const api = usePrivateApi()
+
   const { errors, touched, values } = useFormikContext<IWork>()
 
   const dispatch  = useDispatch()
@@ -28,23 +30,23 @@ const WorkFormCore: React.FC = () => {
 
   useEffect(() => {
     api.get('/work/types').then(response => setWorkTypes(response.data))
-  }, [])
+  }, [api])
 
   useEffect(() => {
     api.get('/truck/types/equipments').then(response => setEquipments(response.data))
-  }, [])
+  }, [api])
   
   useEffect(() => {
     api.get('/drivers').then(response => dispatch(setDrivers(response.data)))
-  }, [dispatch])
+  }, [api, dispatch])
 
   useEffect(() => {
     api.get('trucks').then(response => dispatch(setTrucks(response.data)))
-  }, [dispatch])
+  }, [api, dispatch])
 
   useEffect(() => {
     api.get('customers').then(response => dispatch(setCustomers(response.data)))
-  }, [dispatch])
+  }, [api, dispatch])
 
   const drivers = useSelector<IDefaultRootState, IDriver[]>(state => state.drivers.all)
   const trucks = useSelector<IDefaultRootState, ITruck[]>(state => state.trucks.all)

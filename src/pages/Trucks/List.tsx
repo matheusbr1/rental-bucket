@@ -6,17 +6,20 @@ import { useHistory } from 'react-router'
 import { useSelector, useDispatch } from 'react-redux'
 import { Box, Container } from '@material-ui/core'
 import { IDefaultRootState, ITruck } from 'interfaces'
-import { api } from 'services/api'
+import usePrivateApi from 'hooks/usePrivateApi'
 import { setTrucks } from 'redux/truck/truck.actions'
 import { EmptyTableMessage } from 'components/EmptyTableMessage'
 
 const List: React.FC = () => {
+  const api = usePrivateApi()
+
   const history = useHistory()
+  
   const dispatch = useDispatch()
 
   useEffect(() => {
     api.get('trucks').then(response => dispatch(setTrucks(response.data)))
-  }, [dispatch])
+  }, [api, dispatch])
 
   const trucks = useSelector<IDefaultRootState, ITruck[]>(state => state.trucks.all)
 

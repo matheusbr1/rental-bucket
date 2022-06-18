@@ -6,7 +6,7 @@ import FormikTextField from 'components/FormikTextField'
 import FormikAutoComplete from 'components/FormikAutoComplete'
 import { FormStatus, IBrand, IModel, ITruck } from 'interfaces'
 import { Grid } from '@material-ui/core'
-import { api } from 'services/api'
+import usePrivateApi from 'hooks/usePrivateApi'
 import { getBrands } from 'fetchs/getBrands'
 import { getModels } from 'fetchs/getModels'
 
@@ -15,6 +15,8 @@ interface ICustomerCoreFormProps {
 }
 
 const TruckFormCore: React.FC<ICustomerCoreFormProps> = ({ formStatus }) => {
+  const api = usePrivateApi()
+
   const { errors, touched, values, isSubmitting } = useFormikContext<ITruck>()
 
   const { enqueueSnackbar: snackbar } = useSnackbar()
@@ -35,7 +37,7 @@ const TruckFormCore: React.FC<ICustomerCoreFormProps> = ({ formStatus }) => {
   useEffect(() => {
     api.get('/truck/types')
       .then(response => setTruckTypes(response.data))
-  }, [])
+  }, [api])
 
   // Getting brands
   useEffect(() => {

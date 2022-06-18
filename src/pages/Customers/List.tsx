@@ -6,12 +6,15 @@ import { useDispatch, useSelector } from 'react-redux'
 import Table from 'components/Table/Customers'
 import { Box, Container } from '@material-ui/core'
 import { ICustomer, IDefaultRootState } from 'interfaces'
-import { api } from 'services/api'
 import { setCustomers } from 'redux/customer/customer.actions'
 import { EmptyTableMessage } from 'components/EmptyTableMessage'
+import usePrivateApi from 'hooks/usePrivateApi'
 
 const List: React.FC = () => {
+  const api = usePrivateApi()
+  
   const history = useHistory()
+  
   const dispatch  = useDispatch()
 
   useEffect(() => {
@@ -19,7 +22,7 @@ const List: React.FC = () => {
       .then(response => {
         dispatch(setCustomers(response.data))
       })
-  }, [dispatch])
+  }, [api, dispatch])
 
   const customers = useSelector<IDefaultRootState, ICustomer[]>(state => state.customers.all)
 

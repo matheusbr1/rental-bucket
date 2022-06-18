@@ -3,7 +3,6 @@ import { useHistory } from 'react-router'
 import { AppBar } from 'components/AppBar'
 import { useSnackbar } from 'notistack'
 import { useDispatch } from 'react-redux'
-import { api } from 'services/api'
 import Button from 'components/Button'
 import { IContact, IDriver } from 'interfaces'
 import { createDriver } from 'redux/driver/driver.actions'
@@ -13,8 +12,11 @@ import { Box, Container, Grid, Typography } from '@material-ui/core'
 import { driverSchema } from 'validations/driverSchema'
 import { removeMask } from 'utils/formatters'
 import DriverFormCore from './FormCore'
+import usePrivateApi from 'hooks/usePrivateApi'
 
 const Create: React.FC = () => {
+  const api = usePrivateApi()
+  
   const { goBack } = useHistory()
 
   const dispatch = useDispatch()
@@ -74,7 +76,7 @@ const Create: React.FC = () => {
     } finally {
       setLoading(false)
     }
-  }, [goBack, snackbar, dispatch])
+  }, [api, dispatch, snackbar, goBack])
 
   return (
     <Container maxWidth='md' style={{ marginTop: 100 }} >

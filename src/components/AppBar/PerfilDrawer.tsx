@@ -4,18 +4,18 @@ import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
-import Drawer from '@mui/material/Drawer';
-import Divider from '@mui/material/Divider';
+import Drawer from '@mui/material/Drawer'
+import Divider from '@mui/material/Divider'
 import { useDispatch, useSelector } from 'react-redux'
 import { IDefaultRootState } from 'interfaces'
-import CameraAltIcon from '@mui/icons-material/CameraAlt';
-import { styled } from '@mui/material/styles';
-import Badge from '@mui/material/Badge';
-import Stack from '@mui/material/Stack';
-import { api } from 'services/api'
+import CameraAltIcon from '@mui/icons-material/CameraAlt'
+import { styled } from '@mui/material/styles'
+import Badge from '@mui/material/Badge'
+import Stack from '@mui/material/Stack'
 import Skeleton from '@mui/material/Skeleton'
 import { useSnackbar } from 'notistack'
 import { updateUserAvatar } from 'redux/user/user.actions'
+import usePrivateApi from 'hooks/usePrivateApi'
 
 interface PerfilDrawerProps {
   isOpen: boolean
@@ -35,6 +35,8 @@ const Input = styled('input')({
 })
 
 const PerfilDrawer: React.FC<PerfilDrawerProps> = ({ isOpen, setIsOpen }) =>  {
+  const api = usePrivateApi()
+
   const { enqueueSnackbar: snackbar } = useSnackbar()
 
   const dispatch = useDispatch()

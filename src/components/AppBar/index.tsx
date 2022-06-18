@@ -14,9 +14,9 @@ import MenuItem from '@mui/material/MenuItem'
 import { useHistory } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { signOut } from 'redux/user/user.actions'
-import { useCookies } from 'react-cookie'
 import { IDefaultRootState } from 'interfaces'
 import { PerfilDrawer } from './PerfilDrawer'
+import usePersistedState from 'hooks/usePersistedState'
 interface IConfig {
   label: string
   destiny: string
@@ -32,6 +32,8 @@ const pages: IConfig[] = [
 const settings: string[] = ['Perfil', 'Sair']
 
 const AppBar = () => {
+  const [, setTokens] = usePersistedState('@rentalbucket:tokens', null)
+
   const user = useSelector((state: IDefaultRootState) => state.user.data)
 
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
@@ -43,15 +45,13 @@ const AppBar = () => {
 
   const dispatch = useDispatch()
 
-  const [, , removeCookies] = useCookies(['rentalbucket.token'])
-
   const handleSignOut = useCallback(async () => {
     dispatch(signOut())
 
-    removeCookies('rentalbucket.token')
+    setTokens(null)
 
     history.push('/')
-  }, [dispatch, history, removeCookies])
+  }, [dispatch, history, setTokens])
 
   return (
     <Box

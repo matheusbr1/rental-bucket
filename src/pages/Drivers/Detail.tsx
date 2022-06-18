@@ -1,25 +1,26 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useSnackbar } from 'notistack'
 import { AppBar } from 'components/AppBar'
 import { useHistory } from 'react-router'
 import { Box, Container, Grid, Typography } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux'
 import Button from 'components/Button'
-import {  FormStatus, IAddress, IContact, IDefaultRootState, IDriver } from 'interfaces'
+import { FormStatus, IContact, IDefaultRootState, IDriver } from 'interfaces'
 import { Formik, Form } from 'formik'
 import Loading from 'components/Loading'
 import DriverFormCore from './FormCore'
-import { api } from 'services/api'
 import { useParams } from 'react-router-dom'
 import { deleteDriver, updateDriver } from 'redux/driver/driver.actions'
 import { removeMask } from 'utils/formatters'
+import usePrivateApi from 'hooks/usePrivateApi'
 
 interface IDetailParams {
   id: string
 }
 
 const Detail: React.FC = () => {
+  const api = usePrivateApi()
+
   const { push } = useHistory()
 
   const { id } = useParams<IDetailParams>()
@@ -116,7 +117,7 @@ const Detail: React.FC = () => {
       setLoading(false)
     }
 
-  }, [currentDriver?.contacts, dispatch, id, push, snackbar])
+  }, [api, currentDriver?.contacts, dispatch, id, push, snackbar])
 
   const handleDelete = useCallback(async () => {
     try {
@@ -138,7 +139,7 @@ const Detail: React.FC = () => {
     } finally {
       setIsDeleting(false)
     }
-  }, [id, dispatch, snackbar, push])
+  }, [api, id, dispatch, snackbar, push])
 
   useEffect(() => {
     if (!currentDriver) {

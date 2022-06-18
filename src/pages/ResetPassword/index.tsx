@@ -2,12 +2,12 @@ import React, { useCallback } from 'react'
 import { useHistory, useLocation } from 'react-router'
 import { createStyles } from '@material-ui/styles'
 import Button from 'components/Button'
-import { api } from 'services/api'
 import { useSnackbar } from 'notistack'
 import { Field, Form, Formik } from 'formik'
 import FormikTextField from 'components/FormikTextField'
 import { Link } from 'react-router-dom'
 import { resetPasswordSchema } from 'validations/resetPasswordSchema'
+import usePrivateApi from 'hooks/usePrivateApi'
 import { 
   Container, 
   Typography, 
@@ -16,7 +16,6 @@ import {
   makeStyles,
   Grid, 
 } from '@material-ui/core'
-
 
 interface IResetPasswordFields {
   password: string
@@ -47,6 +46,8 @@ const useStyles = makeStyles((theme) => createStyles({
 
 
 const SignIn: React.FC = () => {
+  const api = usePrivateApi()
+
   const history = useHistory()
 
   const { enqueueSnackbar: snackbar } = useSnackbar()
@@ -69,7 +70,7 @@ const SignIn: React.FC = () => {
     } catch (error) {
       snackbar('Erro ao criar senha, tente novamente!', { variant: 'error' })
     }
-  }, [history, params, snackbar])
+  }, [api, history, params, snackbar])
 
   return (
     <Container>

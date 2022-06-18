@@ -7,12 +7,14 @@ import Moment from 'moment'
 import { Container, Grid, Typography, } from '@material-ui/core'
 import Button from 'components/Button'
 import { Formik, Form } from 'formik'
-import { api } from 'services/api'
+import usePrivateApi from 'hooks/usePrivateApi'
 import { createWork } from 'redux/work/work.actions'
 import { WorkFormCore } from './FormCore'
 import { worksSchema } from 'validations/worksSchema'
 
 const Create: React.FC = () => {
+  const api = usePrivateApi()
+
   const { goBack } = useHistory()
 
   const { enqueueSnackbar } = useSnackbar()
@@ -56,7 +58,7 @@ const Create: React.FC = () => {
     } finally {
       setLoading(false)
     }
-  }, [goBack, enqueueSnackbar, dispatch])
+  }, [api, dispatch, enqueueSnackbar, goBack])
 
   return (
     <>

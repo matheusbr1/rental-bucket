@@ -2,7 +2,6 @@ import React, { useCallback, useState } from 'react'
 import { useHistory } from 'react-router'
 import { createStyles } from '@material-ui/styles'
 import Button from 'components/Button'
-import { api } from 'services/api'
 import { useSnackbar } from 'notistack'
 import { useDispatch } from 'react-redux'
 import { Field, Form, Formik } from 'formik'
@@ -10,10 +9,11 @@ import FormikTextField from 'components/FormikTextField'
 import { signInSchema } from 'validations/signInSchema'
 import { signIn } from 'redux/user/user.actions'
 import { Link } from 'react-router-dom'
-import { useCookies } from 'react-cookie'
 import { ISignInFields } from 'interfaces'
 import Visibility from '@material-ui/icons/Visibility'
 import VisibilityOff from '@material-ui/icons/VisibilityOff'
+import { sessionApi } from 'services/api'
+import usePersistedState from 'hooks/usePersistedState'
 import { 
   Container, 
   Typography, 
@@ -24,7 +24,6 @@ import {
   IconButton,
   InputAdornment,
 } from '@material-ui/core'
-
 
 const useStyles = makeStyles((theme) => createStyles({
   content: {
@@ -50,13 +49,13 @@ const useStyles = makeStyles((theme) => createStyles({
 }))
 
 const SignIn: React.FC = () => {
+  const [, setTokens] = usePersistedState('@rentalbucket:tokens', null)
+
   const history = useHistory()
 
   const dispatch = useDispatch()
 
   const { enqueueSnackbar: snackbar } = useSnackbar()
-
-  const [, setCookies] = useCookies(['rentalbucket.token'])
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false)
 
@@ -64,17 +63,21 @@ const SignIn: React.FC = () => {
 
   const handleSignIn = useCallback(async ({ email, password }: ISignInFields) => {
     try {
-      const { data } = await api.post('/sessions', { email, password })
+      const { data } = await sessionApi.post('/sessions', { email, password })
 
       dispatch(signIn(data.user))
 
-      setCookies('rentalbucket.token', String(data.token))
+      setTokens({
+        accessToken: String(data.token),
+        refreshToken: String(data.refresh_token)
+      })
 
       history.push('/works')
     } catch (error) {
+      console.log(error)
       snackbar('Erro ao fazer login, tente novamente!', { variant: 'error' })
     }
-  }, [dispatch, setCookies, history, snackbar])
+  }, [dispatch, setTokens, history, snackbar])
 
   return (
     <Container>
