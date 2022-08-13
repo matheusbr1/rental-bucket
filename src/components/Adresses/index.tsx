@@ -189,6 +189,7 @@ const Adresses: React.FC<AdressesProps> = ({ adresses, setAdresses, disabled = f
                     component={FormikTextField} 
                     label='CEP' 
                     name='CEP'
+                    mask='cep'
                     onBlur={async () => {
                       const address = await handleGetAdress(values.CEP)
                       setValues({ ...values, ...address } as any)

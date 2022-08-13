@@ -34,7 +34,8 @@ const CustomerCoreForm: React.FC<ICustomerCoreFormProps> = ({ formStatus = 'isFi
           <Field 
             component={FormikTextField} 
             label='CPF' 
-            name='CPF_CNPJ' 
+            name='CPF_CNPJ'
+            mask='cpf'
             disabled={disabled}
           />
         </Grid>
@@ -67,7 +68,8 @@ const CustomerCoreForm: React.FC<ICustomerCoreFormProps> = ({ formStatus = 'isFi
             <Field 
               component={FormikTextField} 
               label='CNPJ' 
-              name='CPF_CNPJ' 
+              name='CPF_CNPJ'
+              mask='cnpj'
               disabled={disabled}
             />
           </Grid>
@@ -92,6 +94,10 @@ const CustomerCoreForm: React.FC<ICustomerCoreFormProps> = ({ formStatus = 'isFi
             label="Pessoa Física"
             disabled={formStatus === 'isViewing' || isSubmitting}
             control={<Radio />}
+            onChange={value => {
+              setFieldValue('CPF_CNPJ', '')
+              setFieldValue('person_type', value)
+            }}
           />
 
           <FormControlLabel
@@ -99,6 +105,10 @@ const CustomerCoreForm: React.FC<ICustomerCoreFormProps> = ({ formStatus = 'isFi
             label="Pessoa Jurídica"
             disabled={formStatus === 'isViewing' || isSubmitting}
             control={<Radio />}
+            onChange={value => {
+              setFieldValue('CPF_CNPJ', '')
+              setFieldValue('person_type', value)
+            }}
           />
         </Field>
       </Grid>

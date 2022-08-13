@@ -105,7 +105,7 @@ const Create: React.FC = () => {
           contacts: []
         }}
       >
-        {({ errors, touched, values, setFieldValue, isValid }) => (
+        {({ isValid }) => (
           <Form>
             {loading && <Loading />}
 

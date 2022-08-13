@@ -83,6 +83,7 @@ const TruckFormCore: React.FC<ICustomerCoreFormProps> = ({ formStatus }) => {
           component={FormikTextField} 
           label='Placa' 
           name='plate'
+          mask='plate'
           disabled={formStatus === 'isViewing'} 
         />
       </Grid>
@@ -126,6 +127,7 @@ const TruckFormCore: React.FC<ICustomerCoreFormProps> = ({ formStatus }) => {
           component={FormikTextField} 
           label='Renavan' 
           name='renavam' 
+          mask='renavam' 
           disabled={formStatus === 'isViewing'}
         />
       </Grid>

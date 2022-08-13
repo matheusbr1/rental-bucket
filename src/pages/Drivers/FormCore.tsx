@@ -98,6 +98,7 @@ const DriverFormCore: React.FC<ICustomerCoreFormProps> = ({ formStatus = 'isFill
           component={FormikTextField} 
           label='CPF' 
           name='CPF' 
+          mask='cpf'
           disabled={formStatus === 'isViewing'}
         />
       </Grid>
@@ -107,6 +108,7 @@ const DriverFormCore: React.FC<ICustomerCoreFormProps> = ({ formStatus = 'isFill
           component={FormikTextField} 
           label='RG' 
           name='RG' 
+          mask='rg'
           disabled={formStatus === 'isViewing'}
         />
       </Grid>
@@ -116,6 +118,7 @@ const DriverFormCore: React.FC<ICustomerCoreFormProps> = ({ formStatus = 'isFill
           component={FormikTextField} 
           label='CNH' 
           name='CNH' 
+          mask='cnh'
           disabled={formStatus === 'isViewing'}
         />
       </Grid>

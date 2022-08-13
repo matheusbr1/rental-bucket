@@ -31,6 +31,8 @@ interface ContactsProps {
   disabled?: boolean
 }
 
+type ContactType = 'email' | 'phone' | 'cellphone'
+
 const Contacts: React.FC<ContactsProps> = ({ contacts, setContacts, disabled = false }) => {
   const { enqueueSnackbar: snackbar } = useSnackbar()
 
@@ -50,6 +52,19 @@ const Contacts: React.FC<ContactsProps> = ({ contacts, setContacts, disabled = f
     snackbar('Contato adicionado com sucesso!', { variant: 'success' })
   }, [contacts, setContacts, snackbar])
 
+  const handleContactMask = (contactType: ContactType) => {
+    switch (contactType) {
+      case 'email': 
+        return 'email'
+      case 'phone':
+        return 'telephone'
+      case 'cellphone':
+        return 'cellphone'
+      default:
+        return ''
+    }
+  }
+
   return (
       <Formik
         onSubmit={(values, actions) => {
@@ -62,7 +77,7 @@ const Contacts: React.FC<ContactsProps> = ({ contacts, setContacts, disabled = f
           contact: ''
         }}
       >
-        {({ submitForm, resetForm }) => (
+        {({ values, submitForm, resetForm, setFieldValue }) => (
           <Form style={{ width: '100%' }} >
             <Grid container spacing={3} >
               <Grid item lg={12} md={12} sm={12} xs={12} >
@@ -122,9 +137,23 @@ const Contacts: React.FC<ContactsProps> = ({ contacts, setContacts, disabled = f
                       select
                       disabled={false}
                     >
-                      <MenuItem value='phone'>Telefone</MenuItem>
-                      <MenuItem value='cellphone'>Celular</MenuItem>
-                      <MenuItem value='email'>Email</MenuItem>
+                      <MenuItem 
+                        onClick={()=> setFieldValue('contact', '')} 
+                        value='phone'>
+                          Telefone
+                        </MenuItem>
+                      
+                      <MenuItem 
+                        onClick={()=> setFieldValue('contact', '')} 
+                        value='cellphone'>
+                          Celular
+                        </MenuItem>
+                      
+                      <MenuItem 
+                        onClick={()=> setFieldValue('contact', '')} 
+                        value='email'>
+                          Email
+                        </MenuItem>
                     </Field>
                   </Grid>
 
@@ -133,6 +162,7 @@ const Contacts: React.FC<ContactsProps> = ({ contacts, setContacts, disabled = f
                       component={FormikTextField} 
                       label='Contato' 
                       name='contact'
+                      mask={handleContactMask(values.contact_type as ContactType)}
                       disabled={false}
                     />
                   </Grid>

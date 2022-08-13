@@ -10,6 +10,7 @@ import Button from 'components/Button'
 import { Box, Container, Grid, Typography } from '@material-ui/core'
 import { CustomerCoreForm } from './FormCore'
 import usePrivateApi from 'hooks/usePrivateApi'
+import { removeMask } from 'utils/formatters'
 
 interface CustomerFields {
   person_type: PersonType
@@ -32,7 +33,10 @@ const Create: React.FC = () => {
 
   const handleCreate = useCallback(async (fields: CustomerFields) => {
     try {
-      const { data: customer } = await api.post('customers', fields)
+      const { data: customer } = await api.post('customers', {
+        ...fields,
+        CPF_CNPJ: removeMask(fields.CPF_CNPJ)
+      })
 
       const contacts = [] as IContact[]
       const adresses = [] as IAddress[]
