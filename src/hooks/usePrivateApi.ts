@@ -2,7 +2,7 @@ import { useCallback, useEffect } from "react"
 import { privateApi } from "services/api"
 import usePersistedState from "./usePersistedState"
 import { useHistory } from 'react-router-dom'
-import { signOut } from "redux/user/user.actions"
+import { signOut } from "store/user/user.actions"
 import { useSnackbar } from "notistack"
 import { useDispatch } from "react-redux"
 

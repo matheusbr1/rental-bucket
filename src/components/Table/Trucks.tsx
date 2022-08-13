@@ -6,7 +6,7 @@ import { HeadCell, Order } from './shared/interfaces'
 import { EnhancedTableHead } from './shared/TableHead'
 import { useStyles } from './shared/styles'
 import { EnhancedTableToolbar } from './shared/TableToolBar'
-import { deleteTruck, setCurrentTruck } from 'redux/truck/truck.actions'
+import { deleteTruck, setCurrentTruck } from 'store/truck/truck.actions'
 import { useDispatch } from 'react-redux'
 
 import { 

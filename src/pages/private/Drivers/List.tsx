@@ -6,7 +6,7 @@ import { useHistory } from 'react-router'
 import { useSelector, useDispatch } from 'react-redux'
 import { Box, Container } from '@material-ui/core'
 import { IDefaultRootState, IDriver } from 'interfaces'
-import { setDrivers } from 'redux/driver/driver.actions'
+import { setDrivers } from 'store/driver/driver.actions'
 import { EmptyTableMessage } from 'components/EmptyTableMessage'
 import usePrivateApi from 'hooks/usePrivateApi'
 

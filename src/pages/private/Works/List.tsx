@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Container, Box } from '@material-ui/core'
 import { IDefaultRootState, IWork } from 'interfaces'
 import { EmptyTableMessage } from 'components/EmptyTableMessage'
-import { setWorks } from 'redux/work/work.actions'
+import { setWorks } from 'store/work/work.actions'
 import usePrivateApi from 'hooks/usePrivateApi'
 
 const List: React.FC = () => {

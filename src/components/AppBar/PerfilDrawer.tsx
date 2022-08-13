@@ -14,7 +14,7 @@ import Badge from '@mui/material/Badge'
 import Stack from '@mui/material/Stack'
 import Skeleton from '@mui/material/Skeleton'
 import { useSnackbar } from 'notistack'
-import { updateUserAvatar } from 'redux/user/user.actions'
+import { updateUserAvatar } from 'store/user/user.actions'
 import usePrivateApi from 'hooks/usePrivateApi'
 
 interface PerfilDrawerProps {

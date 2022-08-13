@@ -18,7 +18,7 @@ import {
   Box,
 } from '@material-ui/core'
 import { useDispatch } from 'react-redux'
-import { deleteCustomer, setCurrentCustomer } from 'redux/customer/customer.actions'
+import { deleteCustomer, setCurrentCustomer } from 'store/customer/customer.actions'
 
 interface TableProps {
   customers: ICustomer[]

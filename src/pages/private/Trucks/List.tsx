@@ -7,7 +7,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Box, Container } from '@material-ui/core'
 import { IDefaultRootState, ITruck } from 'interfaces'
 import usePrivateApi from 'hooks/usePrivateApi'
-import { setTrucks } from 'redux/truck/truck.actions'
+import { setTrucks } from 'store/truck/truck.actions'
 import { EmptyTableMessage } from 'components/EmptyTableMessage'
 
 const List: React.FC = () => {

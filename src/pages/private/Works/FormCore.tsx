@@ -6,9 +6,9 @@ import FormikAutoComplete from 'components/FormikAutoComplete'
 import { Grid } from '@material-ui/core'
 import usePrivateApi from 'hooks/usePrivateApi'
 import { useDispatch, useSelector } from 'react-redux'
-import { setDrivers } from 'redux/driver/driver.actions'
-import { setCustomers } from 'redux/customer/customer.actions'
-import { setTrucks } from 'redux/truck/truck.actions'
+import { setDrivers } from 'store/driver/driver.actions'
+import { setCustomers } from 'store/customer/customer.actions'
+import { setTrucks } from 'store/truck/truck.actions'
 import { 
   IAddress, 
   ICustomer, 

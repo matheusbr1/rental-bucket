@@ -7,7 +7,7 @@ import { HeadCell, Order } from './shared/interfaces'
 import { EnhancedTableToolbar } from './shared/TableToolBar'
 import { EnhancedTableHead } from './shared/TableHead'
 import { useDispatch } from 'react-redux'
-import { deleteWork, setCurrentWork } from 'redux/work/work.actions'
+import { deleteWork, setCurrentWork } from 'store/work/work.actions'
 
 import { 
   Table as MuiTable,

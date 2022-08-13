@@ -1,8 +1,8 @@
-import { ICustomerInitialState } from "redux/customer/customer.reducer"
-import { IDriverInitialState } from "redux/driver/driver.reducer"
-import { ITruckInitialState } from "redux/truck/truck.reducer"
-import { IUserInitialState } from "redux/user/user.reducer"
-import { IWorkInitialState } from "redux/work/work.reducer"
+import { ICustomerInitialState } from "store/customer/customer.reducer"
+import { IDriverInitialState } from "store/driver/driver.reducer"
+import { ITruckInitialState } from "store/truck/truck.reducer"
+import { IUserInitialState } from "store/user/user.reducer"
+import { IWorkInitialState } from "store/work/work.reducer"
 
 export type PersonType = 'F' | 'J'
 export type FormStatus = 'isFilling' | 'isViewing'

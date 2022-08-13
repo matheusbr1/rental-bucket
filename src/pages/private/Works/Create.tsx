@@ -8,7 +8,7 @@ import { Container, Grid, Typography, } from '@material-ui/core'
 import Button from 'components/Button'
 import { Formik, Form } from 'formik'
 import usePrivateApi from 'hooks/usePrivateApi'
-import { createWork } from 'redux/work/work.actions'
+import { createWork } from 'store/work/work.actions'
 import { WorkFormCore } from './FormCore'
 import { worksSchema } from 'validations/worksSchema'
 

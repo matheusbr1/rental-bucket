@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Table from 'components/Table/Customers'
 import { Box, Container } from '@material-ui/core'
 import { ICustomer, IDefaultRootState } from 'interfaces'
-import { setCustomers } from 'redux/customer/customer.actions'
+import { setCustomers } from 'store/customer/customer.actions'
 import { EmptyTableMessage } from 'components/EmptyTableMessage'
 import usePrivateApi from 'hooks/usePrivateApi'
 

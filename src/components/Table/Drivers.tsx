@@ -6,7 +6,7 @@ import { getComparator, stableSort } from './shared/helpers'
 import { useStyles } from './shared/styles'
 import { HeadCell, Order } from './shared/interfaces'
 import { EnhancedTableHead } from './shared/TableHead'
-import { deleteDriver, setCurrentDriver } from 'redux/driver/driver.actions'
+import { deleteDriver, setCurrentDriver } from 'store/driver/driver.actions'
 import { useDispatch } from 'react-redux'
 
 import { 

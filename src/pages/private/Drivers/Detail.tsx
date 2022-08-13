@@ -10,7 +10,7 @@ import { Formik, Form } from 'formik'
 import Loading from 'components/Loading'
 import DriverFormCore from './FormCore'
 import { useParams } from 'react-router-dom'
-import { deleteDriver, updateDriver } from 'redux/driver/driver.actions'
+import { deleteDriver, updateDriver } from 'store/driver/driver.actions'
 import { removeMask } from 'utils/formatters'
 import usePrivateApi from 'hooks/usePrivateApi'
 
