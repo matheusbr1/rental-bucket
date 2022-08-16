@@ -75,8 +75,6 @@ const Detail: React.FC = () => {
         } else {
           const { data: newAddress } = await api.post('customers/address', { 
             ...address,
-            state: address.state?.sigla,
-            city: address.city?.name,
             customer_id: id
           })
   

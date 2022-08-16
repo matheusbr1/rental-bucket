@@ -55,8 +55,6 @@ const Create: React.FC = () => {
       for await (const address of fields.adresses) {
         const { data: newAddress } = await api.post('customers/address', { 
           ...address,
-          state: address.state?.sigla,
-          city: address.city?.name,
           customer_id: customer.id
         })
 

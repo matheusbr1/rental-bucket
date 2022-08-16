@@ -28,11 +28,9 @@ export const driverSchema = yup.object().shape({
       .required('Campo obrigatório'),
     number: yup.string()
       .required('Campo obrigatório'),
-    state: yup.object()
-      .nullable()
+    state: yup.string()
       .required('Campo obrigatório'),
-    city: yup.object()
-      .nullable()
+    city: yup.string()
       .required('Campo obrigatório'),
     neighborhood: yup.string()
       .required('Campo obrigatório'),

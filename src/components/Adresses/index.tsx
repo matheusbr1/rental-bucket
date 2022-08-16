@@ -1,6 +1,6 @@
 
 import React, { useCallback, useEffect, useState } from 'react'
-import { IAddress, ICity, IState } from 'interfaces';
+import { IAddress } from 'interfaces';
 import { Delete, Check  } from '@material-ui/icons'
 import HomeIcon from '@material-ui/icons/Home';
 import DeleteIcon from '@material-ui/icons/Delete'
@@ -45,8 +45,8 @@ const Adresses: React.FC<AdressesProps> = ({ adresses, setAdresses, disabled = f
   const { enqueueSnackbar: snackbar } = useSnackbar()
 
   const [loading, setLoading] = useState(false)
-  const [states, setStates] = useState<IState[]>([])
-  const [citys, setCitys] = useState<ICity[]>([])
+  const [states, setStates] = useState<string[]>([])
+  const [citys, setCitys] = useState<string[]>([])
 
   // Getting States
   useEffect(() => {
@@ -94,14 +94,14 @@ const Adresses: React.FC<AdressesProps> = ({ adresses, setAdresses, disabled = f
       address = {
         neighborhood: bairro,
         street: logradouro,
-        state: states.find(state => state.sigla === uf)
+        state: states.find(state => state === uf)
       }
   
       const citys = await getCitys(uf)
   
       setCitys(citys)
   
-      address.city = citys.find(city => city.name === localidade)
+      address.city = citys.find(city => city === localidade)
   
       return address
     } catch {
@@ -161,7 +161,7 @@ const Adresses: React.FC<AdressesProps> = ({ adresses, setAdresses, disabled = f
                       </ListItemAvatar>
                       <ListItemText
                         primary={`${street}, ${number}`}
-                        secondary={`${CEP}, ${state?.sigla}, ${city?.name}`}
+                        secondary={`${CEP}, ${state}, ${city}`}
                       />
                       <ListItemSecondaryAction>
                         <IconButton edge="end" aria-label="delete" disabled={disabled} >
@@ -222,7 +222,7 @@ const Adresses: React.FC<AdressesProps> = ({ adresses, setAdresses, disabled = f
                     error={errors?.state}
                     touched={touched?.state}
                     label='UF'
-                    getOptionLabel={(option: IState) => option.sigla}
+                    getOptionLabel={option => option}
                   />
                 </Grid>
 
@@ -233,7 +233,7 @@ const Adresses: React.FC<AdressesProps> = ({ adresses, setAdresses, disabled = f
                     error={errors?.city}
                     touched={touched?.city}
                     label='Cidade'
-                    getOptionLabel={(option: ICity) => option.name}
+                    getOptionLabel={option => option}
                   />
                 </Grid>
 

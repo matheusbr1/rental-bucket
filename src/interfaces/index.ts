@@ -24,25 +24,14 @@ export interface ReducerAction {
   type: string
   payload?: any
 }
-
-
-export interface IState {
-  sigla: string
-  nome: string
-}
-
-export interface ICity {
-  name: string
-}
-
 export interface IAddress { 
   id?: string
   CEP: string
   street: string
   number: string
   neighborhood: string
-  state: IState | null
-  city: ICity | null
+  state: string | null
+  city: string | null
   complement?: string
 }
 

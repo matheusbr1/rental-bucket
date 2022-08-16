@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useSnackbar } from 'notistack'
 import { Divider, Grid, Typography } from '@material-ui/core'
 import axios from 'axios'
-import { FormStatus, IAddress, ICity, IContact, IDriver, IState } from 'interfaces'
+import { FormStatus, IAddress, IContact, IDriver } from 'interfaces'
 import { getStates } from 'fetchs/getStates'
 import { getCitys } from 'fetchs/getCitys'
 import { Field, useFormikContext } from 'formik'
@@ -29,8 +29,8 @@ const DriverFormCore: React.FC<ICustomerCoreFormProps> = ({ formStatus = 'isFill
   const { enqueueSnackbar: snackbar } = useSnackbar()
 
   const [loading, setLoading] = useState(false)
-  const [states, setStates] = useState<IState[]>([])
-  const [citys, setCitys] = useState<ICity[]>([])
+  const [states, setStates] = useState<string[]>([])
+  const [citys, setCitys] = useState<string[]>([])
 
   // Getting States
   useEffect(() => {
@@ -61,14 +61,14 @@ const DriverFormCore: React.FC<ICustomerCoreFormProps> = ({ formStatus = 'isFill
       address = {
         neighborhood: bairro,
         street: logradouro,
-        state: states.find(state => state.sigla === uf)
+        state: states.find(state => state === uf)
       }
   
       const citys = await getCitys(uf)
   
       setCitys(citys)
   
-      address.city = citys.find(city => city.name === localidade)
+      address.city = citys.find(city => city === localidade)
   
       return address
     } catch {
@@ -192,7 +192,7 @@ const DriverFormCore: React.FC<ICustomerCoreFormProps> = ({ formStatus = 'isFill
           error={errors.address?.state}
           touched={touched.address?.state}
           label='UF'
-          getOptionLabel={(option: IState) => option.sigla}
+          getOptionLabel={option => option}
           disabled={formStatus === 'isViewing'}
         />
       </Grid>
@@ -204,7 +204,7 @@ const DriverFormCore: React.FC<ICustomerCoreFormProps> = ({ formStatus = 'isFill
           error={errors.address?.city}
           touched={touched.address?.city}
           label='Cidade'
-          getOptionLabel={(option: ICity) => option.name}
+          getOptionLabel={option => option}
           disabled={formStatus === 'isViewing'}
         />
       </Grid>

@@ -9,10 +9,8 @@ export const addressSchema = yup.object().shape({
     .required('Campo obrigatório'),
   neighborhood: yup.string()
     .required('Campo obrigatório'),
-  state: yup.object()
+  state: yup.string()
+    .required('Campo obrigatório'),
+  city: yup.string()
     .required('Campo obrigatório')
-    .typeError('Campo obrigatório'),
-  city: yup.object()
-    .required('Campo obrigatório')
-    .typeError('Campo obrigatório'),
 })
