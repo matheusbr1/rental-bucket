@@ -1,10 +1,10 @@
 import { Box, Typography } from '@material-ui/core'
 
-interface EmptyTableMessageProps {
+interface EmptyMessageProps {
   tableName: string
 }
 
-const EmptyTableMessage: React.FC<EmptyTableMessageProps> = ({ tableName }) => {
+const EmptyMessage: React.FC<EmptyMessageProps> = ({ tableName }) => {
   return (
     <Box>
       <Typography variant='h3' align='center' >
@@ -17,4 +17,4 @@ const EmptyTableMessage: React.FC<EmptyTableMessageProps> = ({ tableName }) => {
   )
 }
 
-export { EmptyTableMessage }
+export { EmptyMessage }

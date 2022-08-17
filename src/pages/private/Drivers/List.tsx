@@ -7,7 +7,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Box, Container } from '@material-ui/core'
 import { IDefaultRootState, IDriver } from 'interfaces'
 import { setDrivers } from 'store/driver/driver.actions'
-import { EmptyTableMessage } from 'components/EmptyTableMessage'
 import usePrivateApi from 'hooks/usePrivateApi'
 
 const List: React.FC = () => {
@@ -35,11 +34,7 @@ const List: React.FC = () => {
         justifyContent='center' 
         alignItems='center'
       >
-        {drivers.length ? (
-          <Table  title='Motoristas' drivers={drivers} />
-        ) : (
-          <EmptyTableMessage tableName='motoristas' />
-        )}
+        <Table  title='Motoristas' drivers={drivers} />
         
         <FloatingButton onClick={() => history.push('drivers/create')} />
       </Box>

@@ -19,6 +19,7 @@ import {
   Checkbox,
   Box,
 } from '@material-ui/core'
+import { EmptyMessage } from './shared/EmptyMessage'
 
 interface TableProps {
   title: string
@@ -46,6 +47,10 @@ const Table: React.FC<TableProps> = ({ drivers }) => {
   const [currentSelected, setCurrentSelected] = useState<string>('')
 
   const dispatch = useDispatch()
+
+  if (!drivers.length) {
+    return <EmptyMessage tableName='motoristas' />
+  }
 
   function createData(
     id: string,

@@ -19,6 +19,7 @@ import {
   Checkbox,
   Box,
 } from '@material-ui/core'
+import { EmptyMessage } from './shared/EmptyMessage'
 
 interface TableProps {
   trucks: ITruck[]
@@ -45,6 +46,10 @@ const Table: React.FC<TableProps> = ({ trucks }) => {
   const [currentSelected, setCurrentSelected] = React.useState<string>('')
 
   const dispatch = useDispatch()
+
+  if (!trucks.length) {
+    return <EmptyMessage tableName='caminhões' />
+  }
 
   function createData(
     id: string,

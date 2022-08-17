@@ -7,7 +7,6 @@ import Table from 'components/Table/Customers'
 import { Box, Container } from '@material-ui/core'
 import { ICustomer, IDefaultRootState } from 'interfaces'
 import { setCustomers } from 'store/customer/customer.actions'
-import { EmptyTableMessage } from 'components/EmptyTableMessage'
 import usePrivateApi from 'hooks/usePrivateApi'
 
 const List: React.FC = () => {
@@ -38,11 +37,7 @@ const List: React.FC = () => {
         justifyContent='center' 
         alignItems='center'
       >
-        {customers.length ? (
-          <Table customers={customers} />
-        ) : (
-          <EmptyTableMessage tableName='clientes' />
-        )}
+        <Table customers={customers} />
 
         <FloatingButton onClick={() => history.push('customers/create')} />
       </Box>

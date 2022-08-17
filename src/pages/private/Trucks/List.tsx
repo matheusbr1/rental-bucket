@@ -8,7 +8,6 @@ import { Box, Container } from '@material-ui/core'
 import { IDefaultRootState, ITruck } from 'interfaces'
 import usePrivateApi from 'hooks/usePrivateApi'
 import { setTrucks } from 'store/truck/truck.actions'
-import { EmptyTableMessage } from 'components/EmptyTableMessage'
 
 const List: React.FC = () => {
   const api = usePrivateApi()
@@ -35,11 +34,7 @@ const List: React.FC = () => {
         justifyContent='center' 
         alignItems='center'
       >
-        {trucks.length ? (
-          <Table trucks={trucks} />
-        ) : (
-          <EmptyTableMessage tableName='caminhões' />
-        )}
+        <Table trucks={trucks} />
         
         <FloatingButton onClick={() => history.push('trucks/create')} />
       </Box>

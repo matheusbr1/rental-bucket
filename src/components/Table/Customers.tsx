@@ -6,6 +6,8 @@ import { EnhancedTableToolbar } from './shared/TableToolBar'
 import { getComparator, stableSort } from './shared/helpers'
 import { useStyles } from './shared/styles'
 import { HeadCell, Order } from './shared/interfaces'
+import { useDispatch } from 'react-redux'
+import { deleteCustomer, setCurrentCustomer } from 'store/customer/customer.actions'
 
 import { 
   Table as MuiTable,
@@ -17,13 +19,11 @@ import {
   Checkbox,
   Box,
 } from '@material-ui/core'
-import { useDispatch } from 'react-redux'
-import { deleteCustomer, setCurrentCustomer } from 'store/customer/customer.actions'
+import { EmptyMessage } from './shared/EmptyMessage'
 
 interface TableProps {
   customers: ICustomer[]
 }
-
 
 const headCells: HeadCell[] = [
   { id: 'name', numeric: false, disablePadding: true, label: 'Cliente' },
@@ -40,6 +40,10 @@ const Table: React.FC<TableProps> = ({ customers }) => {
   const [currentSelected, setCurrentSelected] = useState<string>('')
 
   const dispatch = useDispatch()
+
+  if (!customers.length) {
+    return <EmptyMessage tableName='clientes' />
+  }
 
   function createData(
     id: string,

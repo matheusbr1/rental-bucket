@@ -6,7 +6,6 @@ import { useHistory } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { Container, Box } from '@material-ui/core'
 import { IDefaultRootState, IWork } from 'interfaces'
-import { EmptyTableMessage } from 'components/EmptyTableMessage'
 import { setWorks } from 'store/work/work.actions'
 import usePrivateApi from 'hooks/usePrivateApi'
 
@@ -33,11 +32,7 @@ const List: React.FC = () => {
         justifyContent='center' 
         alignItems='center'
       >
-        {works.length ? (
-          <Table works={works} />
-        ) : (
-          <EmptyTableMessage tableName='serviços' />
-        )}
+        <Table works={works} />
 
         <FloatingButton onClick={() => history.push('works/create')} />
       </Box>
