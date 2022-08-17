@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useEffect } from 'react'
 import { useSnackbar } from 'notistack'
 import { useHistory } from 'react-router'
-import { Box, Grid, Typography } from '@material-ui/core'
+import { Grid, Typography } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux'
 import { FormStatus, IDefaultRootState, IWork } from 'interfaces'
 import { useParams } from 'react-router-dom'
@@ -10,10 +10,10 @@ import usePrivateApi from 'hooks/usePrivateApi'
 import { Form, Formik } from 'formik'
 import { worksSchema } from 'validations/worksSchema'
 import { WorkFormCore } from './FormCore'
-import Button from 'components/Button'
 import Loading from 'components/Loading'
 import Moment from 'moment'
 import { FormContainer } from 'components/layout/FormContainer'
+import { WorkFormFooter } from './FormFooter'
 
 interface IDetailParams {
   id: string
@@ -119,44 +119,17 @@ const Detail: React.FC = () => {
 
                 <WorkFormCore formStatus={formStatus} />
 
-                <Grid container spacing={3} justifyContent='flex-end' >
-                  <Grid item lg={4} md={4} sm={4} xs={12} >
-                    <Box 
-                      mb='2rem'
-                      display='flex'
-                      justifyContent='space-between'
-                      gridGap={5}
-                    >
-                      <Button 
-                        loading={isDeleting} 
-                        color='secondary'
-                        onClick={handleDelete} 
-                      >
-                        Deletar
-                      </Button>
-
-                      {formStatus === 'isViewing' && (
-                        <Button 
-                          color='primary'
-                          type='button'
-                          onClick={() => setFormStatus('isFilling')}
-                        >
-                          Editar
-                        </Button>
-                      )}
-
-                      {formStatus === 'isFilling' && (
-                        <Button 
-                          loading={isSubmitting} 
-                          color='primary'
-                          type='submit'
-                        >
-                          Salvar
-                        </Button>
-                      )}
-                    </Box>
-                  </Grid>
-                </Grid>
+                <WorkFormFooter 
+                  formStatus={formStatus}
+                  changeFormStatus={setFormStatus}
+                  isDeleting={isDeleting}
+                  isSubmitting={isSubmitting}
+                  onSecondaryButtonClick={handleDelete}
+                  buttonLabels={{
+                    primary: 'Salvar',
+                    secondary: 'Deletar'
+                  }}
+                />
               </Grid>
             </Form>
           )}

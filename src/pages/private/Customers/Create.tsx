@@ -5,12 +5,12 @@ import { IAddress, IContact, PersonType } from 'interfaces'
 import { createCustomer } from 'store/customer/customer.actions'
 import { useDispatch } from 'react-redux'
 import { Formik, Form } from 'formik'
-import Button from 'components/Button'
-import { Box, Grid, Typography } from '@material-ui/core'
+import { Grid, Typography } from '@material-ui/core'
 import { CustomerCoreForm } from './FormCore'
 import usePrivateApi from 'hooks/usePrivateApi'
 import { removeMask } from 'utils/formatters'
 import { FormContainer } from 'components/layout/FormContainer'
+import { CustomerFormFooter } from './FormFooter'
 
 interface CustomerFields {
   person_type: PersonType
@@ -107,15 +107,15 @@ const Create: React.FC = () => {
 
               <CustomerCoreForm />
 
-              <Grid container spacing={3} justifyContent='flex-end' >
-                <Grid item lg={4} md={4} sm={4} xs={12} >
-                  <Box mb='2rem' >
-                    <Button loading={isSubmitting} color='primary' type='submit' >
-                      Criar
-                    </Button>
-                  </Box>
-                </Grid>
-              </Grid>
+              <CustomerFormFooter 
+                formStatus='isFilling'
+                isSubmitting={isSubmitting}
+                onSecondaryButtonClick={goBack}
+                buttonLabels={{
+                  primary: 'Criar',
+                  secondary: 'Cancelar'
+                }}
+              />
             </Grid>
           </Form>
         )}

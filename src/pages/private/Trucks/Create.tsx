@@ -3,7 +3,6 @@ import { useHistory } from 'react-router'
 import { useSnackbar } from 'notistack'
 import { useDispatch } from 'react-redux'
 import { Grid, Typography, } from '@material-ui/core'
-import Button from 'components/Button'
 import { createTruck } from 'store/truck/truck.actions'
 import { Formik, Form } from 'formik'
 import Loading from 'components/Loading'
@@ -11,6 +10,7 @@ import usePrivateApi from 'hooks/usePrivateApi'
 import { trucksSchema } from 'validations/trucksSchema'
 import { TruckFormCore } from './FormCore'
 import { FormContainer } from 'components/layout/FormContainer'
+import { TruckFormFooter } from './FormFooter'
 
 const Create: React.FC = () => {
   const api = usePrivateApi()
@@ -69,7 +69,7 @@ const Create: React.FC = () => {
           model_year: '',
         }}
       >
-        {({ isValid }) => (
+        {({ isSubmitting }) => (
           <Form>
             {loading && <Loading />}
 
@@ -82,16 +82,15 @@ const Create: React.FC = () => {
 
               <TruckFormCore />
 
-              <Grid item lg={4} md={4} sm={6} xs={12} >
-                <Button 
-                  loading={loading} 
-                  disabled={!isValid}
-                  color='primary' 
-                  type='submit' 
-                >
-                  Criar
-                </Button>
-              </Grid>
+              <TruckFormFooter
+                formStatus='isFilling'
+                isSubmitting={isSubmitting}
+                onSecondaryButtonClick={goBack}
+                buttonLabels={{
+                  primary: 'Criar',
+                  secondary: 'Cancelar'
+                }}
+              />
             </Grid>
           </Form>
         )}

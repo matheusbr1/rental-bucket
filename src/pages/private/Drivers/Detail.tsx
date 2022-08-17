@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useSnackbar } from 'notistack'
 import { useHistory } from 'react-router'
-import { Box, Grid, Typography } from '@material-ui/core'
+import { Grid, Typography } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux'
-import Button from 'components/Button'
 import { FormStatus, IContact, IDefaultRootState, IDriver } from 'interfaces'
 import { Formik, Form } from 'formik'
 import Loading from 'components/Loading'
@@ -13,6 +12,7 @@ import { deleteDriver, updateDriver } from 'store/driver/driver.actions'
 import { removeMask } from 'utils/formatters'
 import usePrivateApi from 'hooks/usePrivateApi'
 import { FormContainer } from 'components/layout/FormContainer'
+import { DriverFormFooter } from './FormFooter'
 
 interface IDetailParams {
   id: string
@@ -147,67 +147,42 @@ const Detail: React.FC = () => {
 
   return (
     <FormContainer>
-      <Formik
-        onSubmit={handleEdit}
-        enableReinitialize
-        validateOnChange
-        initialValues={currentDriver}
-      >
-        {({ values, isSubmitting }) => (
-          <Form>
-            {loading && <Loading />}
-
-            <Grid container spacing={3} justifyContent='flex-end' >
-              <Grid item lg={12} md={12} sm={12} style={{ width: '100%' }} >
-                <Typography variant='h1' >
-                  Motorista: {values.name}
-                </Typography>
-              </Grid>
-
-              <DriverFormCore formStatus={formStatus} />
+      {currentDriver && (
+        <Formik
+          onSubmit={handleEdit}
+          enableReinitialize
+          validateOnChange
+          initialValues={currentDriver}
+        >
+          {({ values, isSubmitting }) => (
+            <Form>
+              {loading && <Loading />}
 
               <Grid container spacing={3} justifyContent='flex-end' >
-                <Grid item lg={4} md={4} sm={4} xs={12} >
-                  <Box 
-                    mb='2rem'
-                    display='flex'
-                    justifyContent='space-between'
-                    gridGap={5}
-                  >
-                    <Button 
-                      loading={isDeleting} 
-                      color='secondary'
-                      onClick={handleDelete} 
-                    >
-                      Deletar
-                    </Button>
-
-                    {formStatus === 'isViewing' && (
-                      <Button 
-                        color='primary'
-                        type='button'
-                        onClick={() => setFormStatus('isFilling')}
-                      >
-                        Editar
-                      </Button>
-                    )}
-
-                    {formStatus === 'isFilling' && (
-                      <Button 
-                        loading={isSubmitting} 
-                        color='primary'
-                        type='submit'
-                      >
-                        Salvar
-                      </Button>
-                    )}
-                  </Box>
+                <Grid item lg={12} md={12} sm={12} style={{ width: '100%' }} >
+                  <Typography variant='h1' >
+                    Motorista: {values.name}
+                  </Typography>
                 </Grid>
+
+                <DriverFormCore formStatus={formStatus} />
+
+                <DriverFormFooter 
+                  formStatus={formStatus}
+                  changeFormStatus={setFormStatus}
+                  isDeleting={isDeleting}
+                  isSubmitting={isSubmitting}
+                  onSecondaryButtonClick={handleDelete}
+                  buttonLabels={{
+                    primary: 'Salvar',
+                    secondary: 'Deletar'
+                  }}
+                />
               </Grid>
-            </Grid>
-          </Form>
-        )}
-      </Formik>
+            </Form>
+          )}
+        </Formik>
+      )}
     </FormContainer>
   )
 }

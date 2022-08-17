@@ -2,17 +2,17 @@ import React, { useCallback, useState } from 'react'
 import { useHistory } from 'react-router'
 import { useSnackbar } from 'notistack'
 import { useDispatch } from 'react-redux'
-import Button from 'components/Button'
 import { IContact, IDriver } from 'interfaces'
 import { createDriver } from 'store/driver/driver.actions'
 import { Formik, Form } from 'formik'
 import Loading from 'components/Loading'
-import { Box, Grid, Typography } from '@material-ui/core'
+import { Grid, Typography } from '@material-ui/core'
 import { driverSchema } from 'validations/driverSchema'
 import { removeMask } from 'utils/formatters'
 import DriverFormCore from './FormCore'
 import usePrivateApi from 'hooks/usePrivateApi'
 import { FormContainer } from 'components/layout/FormContainer'
+import { DriverFormFooter } from './FormFooter'
 
 const Create: React.FC = () => {
   const api = usePrivateApi()
@@ -101,7 +101,7 @@ const Create: React.FC = () => {
           contacts: []
         }}
       >
-        {({ isValid }) => (
+        {({ isSubmitting }) => (
           <Form>
             {loading && <Loading />}
 
@@ -114,18 +114,15 @@ const Create: React.FC = () => {
 
               <DriverFormCore />
 
-              <Grid item lg={4} md={4} sm={4} xs={12} >
-                <Box mb='2rem' >
-                  <Button 
-                    loading={loading} 
-                    color='primary' 
-                    type='submit'
-                    disabled={!isValid}
-                  >
-                    Criar
-                  </Button>
-                </Box>
-              </Grid>
+              <DriverFormFooter 
+                formStatus='isFilling'
+                isSubmitting={isSubmitting}
+                onSecondaryButtonClick={goBack}
+                buttonLabels={{
+                  primary: 'Criar',
+                  secondary: 'Cancelar'
+                }}
+              />
             </Grid>
           </Form>
         )}
