@@ -10,11 +10,11 @@ import usePrivateApi from 'hooks/usePrivateApi'
 import { getBrands } from 'fetchs/getBrands'
 import { getModels } from 'fetchs/getModels'
 
-interface ICustomerCoreFormProps {
+interface IFormCoreProps {
   formStatus?: FormStatus
 }
 
-const TruckFormCore: React.FC<ICustomerCoreFormProps> = ({ formStatus }) => {
+const TruckFormCore: React.FC<IFormCoreProps> = ({ formStatus }) => {
   const api = usePrivateApi()
 
   const { errors, touched, values, isSubmitting } = useFormikContext<ITruck>()

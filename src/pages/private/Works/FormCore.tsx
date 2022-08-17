@@ -10,6 +10,7 @@ import { setDrivers } from 'store/driver/driver.actions'
 import { setCustomers } from 'store/customer/customer.actions'
 import { setTrucks } from 'store/truck/truck.actions'
 import { 
+  FormStatus,
   IAddress, 
   ICustomer, 
   IDefaultRootState, 
@@ -18,15 +19,21 @@ import {
   IWork 
 } from 'interfaces'
 
-const WorkFormCore: React.FC = () => {
-  const api = usePrivateApi()
+interface IFormCoreProps {
+  formStatus?: FormStatus
+}
 
-  const { errors, touched, values } = useFormikContext<IWork>()
+const WorkFormCore: React.FC<IFormCoreProps> = ({ formStatus = 'isFilling' }) => {
+  const api = usePrivateApi()
+  
+  const { errors, touched, values, isSubmitting } = useFormikContext<IWork>()
+
+  const disabled = formStatus === 'isViewing' || isSubmitting
 
   const dispatch  = useDispatch()
 
-  const [workTypes, setWorkTypes] = useState()
-  const [equipments, setEquipments] = useState()
+  const [workTypes, setWorkTypes] = useState([])
+  const [equipments, setEquipments] = useState([])
 
   useEffect(() => {
     api.get('/work/types').then(response => setWorkTypes(response.data))
@@ -61,6 +68,7 @@ const WorkFormCore: React.FC = () => {
           error={errors.customer as string}
           touched={!!touched.customer}
           label='Cliente'
+          disabled={!!disabled}
           getOptionLabel={
             (customer: ICustomer) => (
               customer.person_type === 'F'
@@ -74,8 +82,8 @@ const WorkFormCore: React.FC = () => {
       <Grid item lg={8} md={8} sm={8} xs={12} >
         <FormikAutoComplete 
           name="address"
-          disabled={!values.customer}
-          options={(values.customer as null | ICustomer)?.adresses}
+          disabled={!values.customer || disabled}
+          options={(values.customer as null | ICustomer)?.adresses || []}
           error={errors.address as string}
           touched={!!touched.address}
           label='Endereço'
@@ -88,7 +96,8 @@ const WorkFormCore: React.FC = () => {
       <Grid item lg={4} md={4} sm={6} xs={12} >
         <FormikAutoComplete 
           name="driver"
-          options={drivers}
+          options={drivers || []}
+          disabled={!!disabled}
           error={errors.driver as string}
           touched={!!touched.driver}
           label='Motorista'
@@ -99,9 +108,10 @@ const WorkFormCore: React.FC = () => {
       <Grid item lg={4} md={4} sm={6} xs={12} >
         <FormikAutoComplete 
           name="truck"
-          options={trucks}
+          options={trucks || []}
           error={errors.truck as string}
           touched={!!touched.truck}
+          disabled={!!disabled}
           label='Caminhão'
           getOptionLabel={(option: ITruck) => option.plate}
         />
@@ -110,8 +120,9 @@ const WorkFormCore: React.FC = () => {
       <Grid item lg={4} md={4} sm={6} xs={12} >
         <FormikAutoComplete 
           name="equipment"
-          options={equipments}
+          options={equipments || []}
           error={errors.equipment as string}
+          disabled={!!disabled}
           touched={!!touched.equipment}
           getOptionLabel={(option: { name: string }) => option.name}
           label='Equipamento'
@@ -121,8 +132,9 @@ const WorkFormCore: React.FC = () => {
       <Grid item lg={4} md={4} sm={6} xs={12} >
         <FormikAutoComplete 
           name="work_type"
-          options={workTypes}
+          options={workTypes || []}
           error={errors.work_type as string}
+          disabled={!!disabled}
           touched={!!touched.work_type}
           label='Serviço'
           getOptionLabel={(option: { name: string }) => option.name}
@@ -135,6 +147,7 @@ const WorkFormCore: React.FC = () => {
           label='Quantidade'
           id='quantity'
           name='quantity'
+          disabled={!!disabled}
           type='number'
           inputProps={{ min: 1, max: 100 }}
         />
@@ -144,6 +157,7 @@ const WorkFormCore: React.FC = () => {
         <FormikDateInput 
           label="Data da retirada" 
           name="end_date" 
+          disabled={!!disabled}
         />
       </Grid>
 

@@ -5,6 +5,7 @@ export enum WorkActions {
   CREATE_WORK = 'CREATE_WORK',
   SET_CURRENT_WORK = 'SET_CURRENT_WORK',
   DELETE_WORK = 'DELETE_WORK',
+  UPDATE_WORK = 'UPDATE_WORK',
 }
 
 export function setWorks(works: IWork[]) {
@@ -21,4 +22,11 @@ export function setCurrentWork(work: IWork) {
 
 export function deleteWork(id: string) {
   return { type: WorkActions.DELETE_WORK, payload: id }
+}
+
+export function updateWork(id: string, updatedWork: IWork) {
+  return { type: WorkActions.UPDATE_WORK, payload: {
+    id,
+    updatedWork
+  }}
 }

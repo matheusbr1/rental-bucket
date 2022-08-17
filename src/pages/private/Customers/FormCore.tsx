@@ -8,11 +8,11 @@ import { Divider, Grid } from '@material-ui/core'
 import { Contacts } from 'components/Contacts'
 import { Adresses } from 'components/Adresses'
 
-interface ICustomerCoreFormProps {
+interface IFormCoreProps {
   formStatus?: FormStatus
 }
 
-const CustomerCoreForm: React.FC<ICustomerCoreFormProps> = ({ formStatus = 'isFilling'  }) => {
+const CustomerCoreForm: React.FC<IFormCoreProps> = ({ formStatus = 'isFilling'  }) => {
   const { setFieldValue, values, isSubmitting } = useFormikContext<ICustomer>()
 
   const renderFieldsByPerson = (person: PersonType, isSubmitting: boolean) => {

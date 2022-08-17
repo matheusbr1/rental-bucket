@@ -19,11 +19,11 @@ interface AddressProps {
   bairro: string 
 }
 
-interface ICustomerCoreFormProps {
+interface IFormCoreProps {
   formStatus?: FormStatus
 }
 
-const DriverFormCore: React.FC<ICustomerCoreFormProps> = ({ formStatus = 'isFilling' }) => {
+const DriverFormCore: React.FC<IFormCoreProps> = ({ formStatus = 'isFilling' }) => {
   const { setFieldValue, values, errors, touched } = useFormikContext<IDriver>()
 
   const { enqueueSnackbar: snackbar } = useSnackbar()

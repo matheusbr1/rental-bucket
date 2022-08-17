@@ -66,7 +66,7 @@ const Detail: React.FC = () => {
     }
   }, [api, dispatch, id, push, snackbar])
 
-  const handleDelete = useCallback(async () => {  
+  const handleDelete = useCallback(async () => {
     try {
       setIsDeleting(true)
 

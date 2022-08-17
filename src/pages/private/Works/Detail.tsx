@@ -1,59 +1,169 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useEffect } from 'react'
 import { useSnackbar } from 'notistack'
 import { AppBar } from 'components/AppBar'
 import { useHistory } from 'react-router'
-import { Container } from '@material-ui/core'
+import { Box, Container, Grid, Typography } from '@material-ui/core'
+import { useDispatch, useSelector } from 'react-redux'
+import { FormStatus, IDefaultRootState, IWork } from 'interfaces'
+import { useParams } from 'react-router-dom'
+import { deleteWork, updateWork } from 'store/work/work.actions'
+import usePrivateApi from 'hooks/usePrivateApi'
+import { Form, Formik } from 'formik'
+import { worksSchema } from 'validations/worksSchema'
+import { WorkFormCore } from './FormCore'
+import Button from 'components/Button'
+import Loading from 'components/Loading'
+import Moment from 'moment'
+
+interface IDetailParams {
+  id: string
+}
 
 const Detail: React.FC = () => {
-  const { goBack } = useHistory()
+  const api = usePrivateApi()
 
-  const { enqueueSnackbar } = useSnackbar()
+  const { push } = useHistory()
+
+  const dispatch = useDispatch()
+
+  const [isDeleting, setIsDeleting] = useState(false)
+
+  const [formStatus, setFormStatus] = useState<FormStatus>('isViewing')
+
+  const { id } = useParams<IDetailParams>()
+
+  const currentWork = useSelector((state: IDefaultRootState) => state.works.current as IWork)
+  
+  const { enqueueSnackbar: snackbar } = useSnackbar()
 
   const [loading, setLoading] = useState(false)
-
+  
   const handleEdit = useCallback(async (fields) => {
-
-    setLoading(true)
-
     try {
-      // Requisição
+      setLoading(true)
 
-      enqueueSnackbar('Serviço editado com sucesso', {
+      const { data: updatedWork } = await api.put(`/works/${id}`, {
+        start_date: fields.start_date,
+        end_date: fields.end_date,
+        quantity: fields.quantity,
+        customer_id: fields.customer.id,
+        address_id: fields.address.id,
+        truck_id: fields.truck.id,
+        driver_id: fields.driver.id,
+        work_type_id: fields.work_type.id,
+        equipment_id: fields.equipment.id,
+      })
+
+      dispatch(updateWork(id, updatedWork))
+
+      push('/works')
+
+      snackbar('Serviço editado com sucesso', {
         variant: 'success'
       })
     } catch (error) {
-      enqueueSnackbar('Erro ao editar serviço, tente novamente!', {
+      snackbar('Erro ao editar o serviço, tente novamente!', {
         variant: 'error'
       })
     } finally {
       setLoading(false)
     }
-  }, [enqueueSnackbar])
+  }, [api, dispatch, id, push, snackbar])
 
   const handleDelete = useCallback(async () => {
-    setLoading(true)
-
     try {
-      // requisição
+      setIsDeleting(true)
 
-      enqueueSnackbar('Serviço deletado com sucesso!', {
+      await api.delete(`works/${id}`)
+
+      dispatch(deleteWork(id))
+
+      snackbar('Serviço deletado com sucesso!', {
         variant: 'success'
       })
 
-      goBack()
+      push('/works')
     } catch (error) {
-      enqueueSnackbar('Erro ao deletar serviço, tente novamente!', {
+      snackbar('Erro ao deletar serviço, tente novamente!', {
         variant: 'error'
       })
-    } finally {
-      setLoading(false)
     }
-  }, [enqueueSnackbar, goBack])
+  }, [api, id, dispatch, snackbar, push])
+
+  useEffect(() => {
+    if (!currentWork) {
+      push('/works')
+    }
+  }, [currentWork, push])
 
   return (
-    <Container style={{ marginTop: 64 }}>
+    <Container maxWidth="md" style={{ marginTop: 100 }} >
       <AppBar />
+
+      {currentWork && (
+        <Formik
+          onSubmit={handleEdit}
+          validationSchema={worksSchema}
+          enableReinitialize
+          validateOnChange
+          initialValues={currentWork}
+          >
+          {({ values, isSubmitting }) => (
+            <Form>
+              {loading && <Loading />}
+
+              <Grid container spacing={3} justifyContent='flex-end' >
+                <Grid item lg={12} md={12} sm={12} style={{ width: '100%' }}>
+                  <Typography variant='h1' >
+                    Serviço: {values.customer.name} | {Moment(values.end_date).format('DD.MM.YYYY')}
+                  </Typography>
+                </Grid>
+
+                <WorkFormCore formStatus={formStatus} />
+
+                <Grid container spacing={3} justifyContent='flex-end' >
+                  <Grid item lg={4} md={4} sm={4} xs={12} >
+                    <Box 
+                      mb='2rem'
+                      display='flex'
+                      justifyContent='space-between'
+                      gridGap={5}
+                    >
+                      <Button 
+                        loading={isDeleting} 
+                        color='secondary'
+                        onClick={handleDelete} 
+                      >
+                        Deletar
+                      </Button>
+
+                      {formStatus === 'isViewing' && (
+                        <Button 
+                          color='primary'
+                          type='button'
+                          onClick={() => setFormStatus('isFilling')}
+                        >
+                          Editar
+                        </Button>
+                      )}
+
+                      {formStatus === 'isFilling' && (
+                        <Button 
+                          loading={isSubmitting} 
+                          color='primary'
+                          type='submit'
+                        >
+                          Salvar
+                        </Button>
+                      )}
+                    </Box>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Form>
+          )}
+        </Formik>
+      )}
     </Container>
   )
 }

@@ -3,7 +3,7 @@ import { WorkActions } from './work.actions'
 
 const INITIAL_STATE = {
   all: [] as IWork[],
-  current: null
+  current: null as null | IWork
 }
 
 export type IWorkInitialState = typeof INITIAL_STATE
