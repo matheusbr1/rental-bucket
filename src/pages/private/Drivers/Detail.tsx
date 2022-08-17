@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useSnackbar } from 'notistack'
-import { AppBar } from 'components/AppBar'
 import { useHistory } from 'react-router'
-import { Box, Container, Grid, Typography } from '@material-ui/core'
+import { Box, Grid, Typography } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux'
 import Button from 'components/Button'
 import { FormStatus, IContact, IDefaultRootState, IDriver } from 'interfaces'
@@ -13,6 +12,7 @@ import { useParams } from 'react-router-dom'
 import { deleteDriver, updateDriver } from 'store/driver/driver.actions'
 import { removeMask } from 'utils/formatters'
 import usePrivateApi from 'hooks/usePrivateApi'
+import { FormContainer } from 'components/layout/FormContainer'
 
 interface IDetailParams {
   id: string
@@ -146,9 +146,7 @@ const Detail: React.FC = () => {
   }, [currentDriver, push])
 
   return (
-    <Container maxWidth='md' style={{ marginTop: 100 }} >
-      <AppBar />
-
+    <FormContainer>
       <Formik
         onSubmit={handleEdit}
         enableReinitialize
@@ -210,7 +208,7 @@ const Detail: React.FC = () => {
           </Form>
         )}
       </Formik>
-    </Container>
+    </FormContainer>
   )
 }
 

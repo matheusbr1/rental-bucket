@@ -1,18 +1,13 @@
 import React, { useEffect } from 'react'
-import { AppBar } from 'components/AppBar'
 import Table from 'components/Table/Drivers'
-import FloatingButton from 'components/FloatingButton'
-import { useHistory } from 'react-router'
 import { useSelector, useDispatch } from 'react-redux'
-import { Box, Container } from '@material-ui/core'
 import { IDefaultRootState, IDriver } from 'interfaces'
 import { setDrivers } from 'store/driver/driver.actions'
 import usePrivateApi from 'hooks/usePrivateApi'
+import { TableContainer } from 'components/layout/TableContainer'
 
 const List: React.FC = () => {
   const api = usePrivateApi()
-
-  const history = useHistory()
 
   const dispatch = useDispatch()
 
@@ -23,22 +18,9 @@ const List: React.FC = () => {
   const drivers = useSelector<IDefaultRootState, IDriver[]>(state => state.drivers.all)
 
   return (
-    <Container style={{ marginTop: 64 }} >
-      <AppBar />
-      
-      <Box 
-        width='100%' 
-        m='20px 0' 
-        minHeight='calc(100vh - 84px)' 
-        display='flex' 
-        justifyContent='center' 
-        alignItems='center'
-      >
-        <Table  title='Motoristas' drivers={drivers} />
-        
-        <FloatingButton onClick={() => history.push('drivers/create')} />
-      </Box>
-    </Container>
+    <TableContainer floatingButtonRoute='drivers/create' >
+      <Table  title='Motoristas' drivers={drivers} />
+    </TableContainer>
   )
 }
 

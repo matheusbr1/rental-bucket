@@ -1,15 +1,15 @@
 import React, { useCallback, useState, useEffect } from 'react'
-import { AppBar } from 'components/AppBar'
 import { useSnackbar } from 'notistack'
 import { useHistory, useParams } from 'react-router'
 import { IAddress, IContact, ICustomer, IDefaultRootState, PersonType, FormStatus } from 'interfaces'
 import { useDispatch, useSelector } from 'react-redux'
 import { Formik, Form } from 'formik'
 import Button from 'components/Button'
-import { Box, Container, Grid, Typography } from '@material-ui/core'
+import { Box, Grid, Typography } from '@material-ui/core'
 import { deleteCustomer, updateCustomer } from 'store/customer/customer.actions'
 import { CustomerCoreForm } from './FormCore'
 import usePrivateApi from 'hooks/usePrivateApi'
+import { FormContainer } from 'components/layout/FormContainer'
 
 interface CustomerFields {
   person_type: PersonType
@@ -144,9 +144,7 @@ const Detail: React.FC = () => {
   }, [currentCustomer, push])
 
   return (
-    <Container maxWidth='md' style={{ marginTop: 100 }} >
-      <AppBar />
-
+    <FormContainer>
       {currentCustomer && (
         <Formik
           onSubmit={handleEdit}
@@ -208,7 +206,7 @@ const Detail: React.FC = () => {
           )}
         </Formik>
       )}
-    </Container>
+    </FormContainer>
   )
 }
 

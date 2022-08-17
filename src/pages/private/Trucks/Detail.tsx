@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useSnackbar } from 'notistack'
 import { useHistory, useParams } from 'react-router'
-import { AppBar } from 'components/AppBar'
-import { Box, Container, Grid, Typography } from '@material-ui/core'
+import { Box, Grid, Typography } from '@material-ui/core'
 import { TruckFormCore } from './FormCore'
 import usePrivateApi from 'hooks/usePrivateApi'
 import { useDispatch, useSelector } from 'react-redux'
@@ -12,6 +11,7 @@ import Button from 'components/Button'
 import { Formik, Form } from 'formik'
 import Loading from 'components/Loading'
 import { trucksSchema } from 'validations/trucksSchema'
+import { FormContainer } from 'components/layout/FormContainer'
 
 interface IDetailParams {
   id: string
@@ -93,9 +93,7 @@ const Detail: React.FC = () => {
   }, [currentTruck, push])
 
   return (
-    <Container maxWidth="md" style={{ marginTop: 100 }} >
-      <AppBar />
-
+    <FormContainer>
       <Formik
         onSubmit={handleEdit}
         enableReinitialize
@@ -158,7 +156,7 @@ const Detail: React.FC = () => {
           </Form>
         )}
       </Formik>
-    </Container>
+    </FormContainer>
   )
 }
 

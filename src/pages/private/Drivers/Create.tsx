@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react'
 import { useHistory } from 'react-router'
-import { AppBar } from 'components/AppBar'
 import { useSnackbar } from 'notistack'
 import { useDispatch } from 'react-redux'
 import Button from 'components/Button'
@@ -8,11 +7,12 @@ import { IContact, IDriver } from 'interfaces'
 import { createDriver } from 'store/driver/driver.actions'
 import { Formik, Form } from 'formik'
 import Loading from 'components/Loading'
-import { Box, Container, Grid, Typography } from '@material-ui/core'
+import { Box, Grid, Typography } from '@material-ui/core'
 import { driverSchema } from 'validations/driverSchema'
 import { removeMask } from 'utils/formatters'
 import DriverFormCore from './FormCore'
 import usePrivateApi from 'hooks/usePrivateApi'
+import { FormContainer } from 'components/layout/FormContainer'
 
 const Create: React.FC = () => {
   const api = usePrivateApi()
@@ -77,9 +77,7 @@ const Create: React.FC = () => {
   }, [api, dispatch, snackbar, goBack])
 
   return (
-    <Container maxWidth='md' style={{ marginTop: 100 }} >
-      <AppBar />
-
+    <FormContainer>
       <Formik
         onSubmit={handleCreate}
         enableReinitialize
@@ -132,7 +130,7 @@ const Create: React.FC = () => {
           </Form>
         )}
       </Formik>
-    </Container>
+    </FormContainer>
   )
 }
 

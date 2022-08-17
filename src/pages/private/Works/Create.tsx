@@ -1,16 +1,16 @@
 import React, { useCallback, useState } from 'react'
 import { useHistory } from 'react-router'
-import { AppBar } from 'components/AppBar'
 import { useSnackbar } from 'notistack'
 import { useDispatch } from 'react-redux'
 import Moment from 'moment'
-import { Container, Grid, Typography, } from '@material-ui/core'
+import { Grid, Typography, } from '@material-ui/core'
 import Button from 'components/Button'
 import { Formik, Form } from 'formik'
 import usePrivateApi from 'hooks/usePrivateApi'
 import { createWork } from 'store/work/work.actions'
 import { WorkFormCore } from './FormCore'
 import { worksSchema } from 'validations/worksSchema'
+import { FormContainer } from 'components/layout/FormContainer'
 
 const Create: React.FC = () => {
   const api = usePrivateApi()
@@ -61,48 +61,44 @@ const Create: React.FC = () => {
   }, [api, dispatch, enqueueSnackbar, goBack])
 
   return (
-    <>
-      <AppBar />
-
-      <Container maxWidth='md' style={{ marginTop: 100 }} >
-        <Formik
-          onSubmit={handleCreate}
-          validationSchema={worksSchema}
-          enableReinitialize
-          validateOnChange
-          initialValues={{
-            customer: null,
-            address: null,
-            driver: null,
-            truck: null,
-            equipment: null,
-            work_type: null,
-            quantity: null,
-            end_date: Moment(new Date()).add(7, 'days').toDate()
-          }}
-        >
-          {() => (
-            <Form>
-              <Grid container spacing={3} justifyContent='flex-end' >
-                <Grid item lg={12} md={12} sm={12} style={{ width: '100%' }}>
-                  <Typography variant='h1' >
-                    Novo serviço
-                  </Typography>
-                </Grid>
-
-                <WorkFormCore />
-
-                <Grid item lg={4} md={4} sm={6} xs={12} >
-                  <Button loading={loading} color='primary' type='submit' >
-                    Criar
-                  </Button>
-                </Grid>
+    <FormContainer>
+      <Formik
+        onSubmit={handleCreate}
+        validationSchema={worksSchema}
+        enableReinitialize
+        validateOnChange
+        initialValues={{
+          customer: null,
+          address: null,
+          driver: null,
+          truck: null,
+          equipment: null,
+          work_type: null,
+          quantity: null,
+          end_date: Moment(new Date()).add(7, 'days').toDate()
+        }}
+      >
+        {() => (
+          <Form>
+            <Grid container spacing={3} justifyContent='flex-end' >
+              <Grid item lg={12} md={12} sm={12} style={{ width: '100%' }}>
+                <Typography variant='h1' >
+                  Novo serviço
+                </Typography>
               </Grid>
-            </Form>
-          )}
-        </Formik>
-      </Container>
-    </>
+
+              <WorkFormCore />
+
+              <Grid item lg={4} md={4} sm={6} xs={12} >
+                <Button loading={loading} color='primary' type='submit' >
+                  Criar
+                </Button>
+              </Grid>
+            </Grid>
+          </Form>
+        )}
+      </Formik>
+    </FormContainer>
   )
 }
 

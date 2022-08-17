@@ -1,16 +1,16 @@
 import React, { useCallback } from 'react'
 import { useHistory } from 'react-router'
-import { AppBar } from 'components/AppBar'
 import { useSnackbar } from 'notistack'
 import { IAddress, IContact, PersonType } from 'interfaces'
 import { createCustomer } from 'store/customer/customer.actions'
 import { useDispatch } from 'react-redux'
 import { Formik, Form } from 'formik'
 import Button from 'components/Button'
-import { Box, Container, Grid, Typography } from '@material-ui/core'
+import { Box, Grid, Typography } from '@material-ui/core'
 import { CustomerCoreForm } from './FormCore'
 import usePrivateApi from 'hooks/usePrivateApi'
 import { removeMask } from 'utils/formatters'
+import { FormContainer } from 'components/layout/FormContainer'
 
 interface CustomerFields {
   person_type: PersonType
@@ -81,9 +81,7 @@ const Create: React.FC = () => {
   }, [api, dispatch, snackbar, goBack])
 
   return (
-    <Container maxWidth='md' style={{ marginTop: 100 }} >
-      <AppBar />
-
+    <FormContainer>
       <Formik
         onSubmit={handleCreate}
         enableReinitialize
@@ -98,31 +96,31 @@ const Create: React.FC = () => {
           contacts: []
         }}
       >
-          {({ isSubmitting }) => (
-            <Form>
-              <Grid container spacing={3} >
-                <Grid item lg={12} md={12} sm={12} style={{ width: '100%' }}>
-                  <Typography variant='h1' >
-                    Novo Cliente
-                  </Typography>
-                </Grid>
+        {({ isSubmitting }) => (
+          <Form>
+            <Grid container spacing={3} >
+              <Grid item lg={12} md={12} sm={12} style={{ width: '100%' }}>
+                <Typography variant='h1' >
+                  Novo Cliente
+                </Typography>
+              </Grid>
 
-                <CustomerCoreForm />
+              <CustomerCoreForm />
 
-                <Grid container spacing={3} justifyContent='flex-end' >
-                  <Grid item lg={4} md={4} sm={4} xs={12} >
-                    <Box mb='2rem' >
-                      <Button loading={isSubmitting} color='primary' type='submit' >
-                        Criar
-                      </Button>
-                    </Box>
-                  </Grid>
+              <Grid container spacing={3} justifyContent='flex-end' >
+                <Grid item lg={4} md={4} sm={4} xs={12} >
+                  <Box mb='2rem' >
+                    <Button loading={isSubmitting} color='primary' type='submit' >
+                      Criar
+                    </Button>
+                  </Box>
                 </Grid>
               </Grid>
-            </Form>
-          )}
-        </Formik>
-    </Container>
+            </Grid>
+          </Form>
+        )}
+      </Formik>
+    </FormContainer>
   )
 }
 

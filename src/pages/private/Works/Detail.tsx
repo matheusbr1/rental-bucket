@@ -1,8 +1,7 @@
 import React, { useCallback, useState, useEffect } from 'react'
 import { useSnackbar } from 'notistack'
-import { AppBar } from 'components/AppBar'
 import { useHistory } from 'react-router'
-import { Box, Container, Grid, Typography } from '@material-ui/core'
+import { Box, Grid, Typography } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux'
 import { FormStatus, IDefaultRootState, IWork } from 'interfaces'
 import { useParams } from 'react-router-dom'
@@ -14,6 +13,7 @@ import { WorkFormCore } from './FormCore'
 import Button from 'components/Button'
 import Loading from 'components/Loading'
 import Moment from 'moment'
+import { FormContainer } from 'components/layout/FormContainer'
 
 interface IDetailParams {
   id: string
@@ -97,9 +97,7 @@ const Detail: React.FC = () => {
   }, [currentWork, push])
 
   return (
-    <Container maxWidth="md" style={{ marginTop: 100 }} >
-      <AppBar />
-
+    <FormContainer>
       {currentWork && (
         <Formik
           onSubmit={handleEdit}
@@ -164,7 +162,7 @@ const Detail: React.FC = () => {
           )}
         </Formik>
       )}
-    </Container>
+    </FormContainer>
   )
 }
 
