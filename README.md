@@ -53,5 +53,3 @@ $ yarn start
 <ul>
   <li><a href="https://reactjs.org/">React</a></li>
 <ul>
-
-
