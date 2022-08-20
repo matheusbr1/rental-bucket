@@ -4,7 +4,7 @@ import { AppBar } from 'components/AppBar'
 
 const FormContainer: React.FC = ({ children }) => {
   return (
-    <Container maxWidth='md' style={{ marginTop: 100 }} >
+    <Container maxWidth='md' style={{ marginTop: 120 }} >
       <AppBar />
       
       {children}

@@ -116,7 +116,7 @@ const CustomerCoreForm: React.FC<IFormCoreProps> = ({ formStatus = 'isFilling'  
       {renderFieldsByPerson(values.person_type, isSubmitting)}
 
       <Grid item lg={12} md={12} sm={12} xs={12} >
-        <Divider style={{ margin: '2rem 0' }} />
+        <Divider style={{ margin: '1rem 0' }} />
       </Grid>
 
       <Grid item lg={12} md={12} sm={12} xs={12} >
@@ -128,7 +128,7 @@ const CustomerCoreForm: React.FC<IFormCoreProps> = ({ formStatus = 'isFilling'  
       </Grid>
 
       <Grid item lg={12} md={12} sm={12} xs={12} >
-        <Divider style={{ margin: '2rem 0' }} />
+        <Divider style={{ margin: '1rem 0' }} />
       </Grid>
       
       <Grid item lg={12} md={12} sm={12} xs={12} >
@@ -140,7 +140,7 @@ const CustomerCoreForm: React.FC<IFormCoreProps> = ({ formStatus = 'isFilling'  
       </Grid>
 
       <Grid item lg={12} md={12} sm={12} xs={12} >
-        <Divider style={{ margin: '2rem 0' }} />
+        <Divider style={{ margin: '1rem 0' }} />
       </Grid>
     </>
   )

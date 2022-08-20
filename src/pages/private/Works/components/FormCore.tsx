@@ -61,7 +61,7 @@ const WorkFormCore: React.FC<IFormCoreProps> = ({ formStatus = 'isFilling' }) =>
 
   return (
     <>
-      <Grid item lg={4} md={4} sm={6} xs={12} >
+      <Grid item lg={4} md={6} sm={6} xs={12} >
         <FormikAutoComplete 
           name="customer"
           options={customers}
@@ -79,7 +79,7 @@ const WorkFormCore: React.FC<IFormCoreProps> = ({ formStatus = 'isFilling' }) =>
         />
       </Grid>
 
-      <Grid item lg={8} md={8} sm={8} xs={12} >
+      <Grid item lg={8} md={6} sm={6} xs={12} >
         <FormikAutoComplete 
           name="address"
           disabled={!values.customer || disabled}

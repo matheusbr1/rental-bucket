@@ -30,9 +30,11 @@ const WorkFormFooter: React.FC<FormFooterProps> = ({
   onSecondaryButtonClick, 
   changeFormStatus
 }) => {
+  const grid = isDetailPage ? 6 : 4
+
   return (
     <Grid container spacing={3} justifyContent='flex-end' >
-      <Grid item lg={4} md={4} sm={4} xs={12} >
+      <Grid item lg={grid} md={grid} sm={grid} xs={12} >
         <Box 
           mb='2rem'
           display='flex'
@@ -57,16 +59,6 @@ const WorkFormFooter: React.FC<FormFooterProps> = ({
               Editar
             </Button>
           )}
-        
-          {!isDone && isDetailPage && (
-            <Button 
-              loading={isDeleting} 
-              onClick={onMarkAsDone} 
-              style={{ background: green[600] }}
-            >
-              Concluír
-            </Button>
-          )}
           
           {formStatus === 'isFilling' && (
             <Button 
@@ -75,6 +67,16 @@ const WorkFormFooter: React.FC<FormFooterProps> = ({
               type='submit'
             >
               {buttonLabels.primary}
+            </Button>
+          )}
+
+        {!isDone && isDetailPage && (
+            <Button 
+              loading={isDeleting} 
+              onClick={onMarkAsDone} 
+              style={{ background: green[600] }}
+            >
+              Concluír
             </Button>
           )}
         </Box>
