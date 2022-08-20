@@ -9,6 +9,8 @@ import { Grid } from '@material-ui/core'
 import usePrivateApi from 'hooks/usePrivateApi'
 import { getBrands } from 'fetchs/getBrands'
 import { getModels } from 'fetchs/getModels'
+import { useDispatch } from 'react-redux'
+import { setTruckBrand, setTruckModel } from 'store/truck/truck.actions'
 
 interface IFormCoreProps {
   formStatus?: FormStatus
@@ -16,6 +18,8 @@ interface IFormCoreProps {
 
 const TruckFormCore: React.FC<IFormCoreProps> = ({ formStatus }) => {
   const api = usePrivateApi()
+
+  const dispatch = useDispatch()
 
   const { errors, touched, values, isSubmitting } = useFormikContext<ITruck>()
 
@@ -36,7 +40,9 @@ const TruckFormCore: React.FC<IFormCoreProps> = ({ formStatus }) => {
   // Getting truck types
   useEffect(() => {
     api.get('/truck/types')
-      .then(response => setTruckTypes(response.data))
+      .then(response => {
+        setTruckTypes(response.data)
+      })
   }, [api])
 
   // Getting brands
@@ -45,11 +51,23 @@ const TruckFormCore: React.FC<IFormCoreProps> = ({ formStatus }) => {
       try {
         const brands = await getBrands()
         setBrands(brands)
+
+        // updating truck brand
+        const brand = brands.find(brand => brand.id === values.brand?.id) as IBrand
+         dispatch(setTruckBrand(brand))
+
+        const models = await getModels(brand.id)
+        setModels(models)
+
+        // updating truck model
+        const model = models.find(model => model.id === values.model?.id) as IModel
+        dispatch(setTruckModel(model))
        } catch (error) {
         snackbar('Não foi possível obter as marcas!', { variant: 'error' })
        }
     })()
-  }, [snackbar])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, snackbar])
 
   return (
     <>

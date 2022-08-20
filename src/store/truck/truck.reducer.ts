@@ -40,6 +40,24 @@ export function truckReducer (
         current: action.payload
       }
 
+      case TruckActions.SET_TRUCK_BRAND:
+        return {
+          ...state,
+          current: {
+            ...state.current,
+            brand: action.payload
+          } as ITruck
+        }
+
+      case TruckActions.SET_TRUCK_MODEL:
+        return {
+          ...state,
+          current: {
+            ...state.current,
+            model: action.payload
+          } as ITruck
+        }
+
     default:
       return state
   }

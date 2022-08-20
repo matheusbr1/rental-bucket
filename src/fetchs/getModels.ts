@@ -11,7 +11,7 @@ export async function getModels(brandId: number): Promise<IModel[]> {
     .get(`https://parallelum.com.br/fipe/api/v1/caminhoes/marcas/${brandId}/modelos`)
 
   const models: IModel[] = data.modelos.map(({ codigo, nome }: IModelAPI) => ({
-    id: Number(codigo),
+    id: String(codigo),
     name: nome
   }))
 
