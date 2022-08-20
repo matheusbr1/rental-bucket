@@ -133,7 +133,7 @@ const Detail: React.FC = () => {
               <Grid container spacing={3} justifyContent='flex-end' >
                 <Grid item lg={12} md={12} sm={12} style={{ width: '100%' }}>
                   <Typography variant='h1' >
-                    Serviço: {values.customer.name} | {Moment(values.end_date).format('DD.MM.YYYY')}
+                    Serviço: {values.customer.name} - {values.is_done ? 'Concluído': 'Pendente'}
                   </Typography>
                 </Grid>
 
