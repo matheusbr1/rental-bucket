@@ -99,6 +99,12 @@ export interface IModel {
   name: string
 }
 
+export interface ITruckType {
+  id?: string
+  name: string
+  description: string
+}
+
 export interface ITruck {
   id: string
   brand: IBrand | null
@@ -108,9 +114,5 @@ export interface ITruck {
   renavam: string
   manufacture_year: number
   model_year: number
-  type?: {
-    id?: string
-    name: string
-    description: string
-  }
+  type?: ITruckType | null
 }

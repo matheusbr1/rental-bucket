@@ -1,3 +1,4 @@
+import { formatCustomers, formatCustomer } from "helpers/formatCustomers"
 import { ICustomer } from "interfaces"
 
 export enum CustomerActions {
@@ -13,11 +14,11 @@ export function createCustomer(customer: ICustomer) {
 }
 
 export function setCustomers(customers: ICustomer[]) {
-  return { type: CustomerActions.SET_CUSTOMERS, payload: customers }
+  return { type: CustomerActions.SET_CUSTOMERS, payload: formatCustomers(customers) }
 }
 
 export function setCurrentCustomer(customer: ICustomer) {
-  return { type: CustomerActions.SET_CURRENT_CUSTOMER, payload: customer }
+  return { type: CustomerActions.SET_CURRENT_CUSTOMER, payload: formatCustomer(customer) }
 }
 
 export function deleteCustomer(id: string) {
@@ -27,6 +28,6 @@ export function deleteCustomer(id: string) {
 export function updateCustomer(id: string, updatedCustomer: ICustomer) {
   return { type: CustomerActions.UPDATE_CUSTOMER, payload: {
     id,
-    updatedCustomer
+    updatedCustomer: formatCustomer(updatedCustomer)
   }}
 }

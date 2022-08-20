@@ -27,6 +27,6 @@ export function deleteTruck(id: string) {
 export function updateTruck(id: string, updatedTruck: ITruck) {
   return { type: TruckActions.UPDATE_TRUCK, payload: {
     id,
-    updatedTruck
+    updatedTruck: updatedTruck
   }}
 }

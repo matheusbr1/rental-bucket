@@ -139,19 +139,22 @@ const Contacts: React.FC<ContactsProps> = ({ contacts, setContacts, disabled = f
                     >
                       <MenuItem 
                         onClick={()=> setFieldValue('contact', '')} 
-                        value='phone'>
+                        value='phone'
+                      >
                           Telefone
                         </MenuItem>
                       
                       <MenuItem 
                         onClick={()=> setFieldValue('contact', '')} 
-                        value='cellphone'>
+                        value='cellphone'
+                      >
                           Celular
                         </MenuItem>
                       
                       <MenuItem 
                         onClick={()=> setFieldValue('contact', '')} 
-                        value='email'>
+                        value='email'
+                      >
                           Email
                         </MenuItem>
                     </Field>

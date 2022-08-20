@@ -1,3 +1,4 @@
+import { formatDriver, formatDrivers } from "helpers/formatDrivers"
 import { IDriver } from "interfaces"
 
 export enum DriverActions {
@@ -9,15 +10,15 @@ export enum DriverActions {
 }
 
 export function setDrivers (drivers: IDriver[]) {
-  return { type: DriverActions.SET_DRIVERS, payload: drivers }
+  return { type: DriverActions.SET_DRIVERS, payload: formatDrivers(drivers) }
 }
 
 export function createDriver(driver: IDriver) {
-  return { type: DriverActions.CREATE_DRIVER, payload: driver }
+  return { type: DriverActions.CREATE_DRIVER, payload: formatDriver(driver) }
 }
 
 export function setCurrentDriver(driver: IDriver) {
-  return { type: DriverActions.SET_CURRENT_DRIVER, payload: driver }
+  return { type: DriverActions.SET_CURRENT_DRIVER, payload: formatDriver(driver) }
 }
 
 export function deleteDriver(id: string) {
@@ -27,6 +28,6 @@ export function deleteDriver(id: string) {
 export function updateDriver(id: string, updatedDriver: IDriver) {
   return { type: DriverActions.UPDATE_DRIVER, payload: {
     id,
-    updatedDriver
+    updatedDriver: formatDriver(updatedDriver)
   }}
 }
