@@ -10,6 +10,7 @@ import { CustomerCoreForm } from './FormCore'
 import usePrivateApi from 'hooks/usePrivateApi'
 import { FormContainer } from 'components/layout/FormContainer'
 import { CustomerFormFooter } from './FormFooter'
+import { removeMask } from 'utils/formatters'
 
 interface CustomerFields {
   person_type: PersonType
@@ -47,7 +48,10 @@ const Detail: React.FC = () => {
 
       // Updating customer
 
-      const response = await api.put(`/customers/${id}`, fields)
+      const response = await api.put(`/customers/${id}`, {
+        ...fields,
+        CPF_CNPJ: removeMask(fields.CPF_CNPJ)
+      })
 
       // Updating or creating infos
 
