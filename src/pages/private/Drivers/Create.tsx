@@ -9,10 +9,10 @@ import Loading from 'components/Loading'
 import { Grid, Typography } from '@material-ui/core'
 import { driverSchema } from 'validations/driverSchema'
 import { removeMask } from 'utils/formatters'
-import DriverFormCore from './FormCore'
 import usePrivateApi from 'hooks/usePrivateApi'
 import { FormContainer } from 'components/layout/FormContainer'
-import { DriverFormFooter } from './FormFooter'
+import DriverFormCore from './components/FormCore'
+import { DriverFormFooter } from './components/FormFooter'
 
 const Create: React.FC = () => {
   const api = usePrivateApi()

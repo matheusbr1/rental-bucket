@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useSnackbar } from 'notistack'
 import { useHistory, useParams } from 'react-router'
 import { Grid, Typography } from '@material-ui/core'
-import { TruckFormCore } from './FormCore'
 import usePrivateApi from 'hooks/usePrivateApi'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteTruck, updateTruck } from 'store/truck/truck.actions'
@@ -11,7 +10,8 @@ import { Formik, Form } from 'formik'
 import Loading from 'components/Loading'
 import { trucksSchema } from 'validations/trucksSchema'
 import { FormContainer } from 'components/layout/FormContainer'
-import { TruckFormFooter } from './FormFooter'
+import { TruckFormCore } from './components/FormCore'
+import { TruckFormFooter } from './components/FormFooter'
 
 interface IDetailParams {
   id: string

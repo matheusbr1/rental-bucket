@@ -6,10 +6,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Formik, Form } from 'formik'
 import { Grid, Typography } from '@material-ui/core'
 import { deleteCustomer, updateCustomer } from 'store/customer/customer.actions'
-import { CustomerCoreForm } from './FormCore'
 import usePrivateApi from 'hooks/usePrivateApi'
 import { FormContainer } from 'components/layout/FormContainer'
-import { CustomerFormFooter } from './FormFooter'
+import { CustomerCoreForm } from './components/FormCore'
+import { CustomerFormFooter } from './components/FormFooter'
 import { removeMask } from 'utils/formatters'
 
 interface CustomerFields {

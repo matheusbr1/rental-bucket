@@ -9,11 +9,11 @@ import { deleteWork, updateWork } from 'store/work/work.actions'
 import usePrivateApi from 'hooks/usePrivateApi'
 import { Form, Formik } from 'formik'
 import { worksSchema } from 'validations/worksSchema'
-import { WorkFormCore } from './FormCore'
 import Loading from 'components/Loading'
 import Moment from 'moment'
 import { FormContainer } from 'components/layout/FormContainer'
-import { WorkFormFooter } from './FormFooter'
+import { WorkFormCore } from './components/FormCore'
+import { WorkFormFooter } from './components/FormFooter'
 
 interface IDetailParams {
   id: string

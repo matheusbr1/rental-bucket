@@ -6,13 +6,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { FormStatus, IContact, IDefaultRootState, IDriver } from 'interfaces'
 import { Formik, Form } from 'formik'
 import Loading from 'components/Loading'
-import DriverFormCore from './FormCore'
 import { useParams } from 'react-router-dom'
 import { deleteDriver, updateDriver } from 'store/driver/driver.actions'
 import { removeMask } from 'utils/formatters'
 import usePrivateApi from 'hooks/usePrivateApi'
 import { FormContainer } from 'components/layout/FormContainer'
-import { DriverFormFooter } from './FormFooter'
+import DriverFormCore from './components/FormCore'
+import { DriverFormFooter } from './components/FormFooter'
 
 interface IDetailParams {
   id: string

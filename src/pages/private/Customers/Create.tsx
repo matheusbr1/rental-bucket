@@ -6,11 +6,11 @@ import { createCustomer } from 'store/customer/customer.actions'
 import { useDispatch } from 'react-redux'
 import { Formik, Form } from 'formik'
 import { Grid, Typography } from '@material-ui/core'
-import { CustomerCoreForm } from './FormCore'
 import usePrivateApi from 'hooks/usePrivateApi'
 import { removeMask } from 'utils/formatters'
 import { FormContainer } from 'components/layout/FormContainer'
-import { CustomerFormFooter } from './FormFooter'
+import { CustomerCoreForm } from './components/FormCore'
+import { CustomerFormFooter } from './components/FormFooter'
 
 interface CustomerFields {
   person_type: PersonType

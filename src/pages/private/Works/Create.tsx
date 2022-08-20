@@ -7,10 +7,10 @@ import { Grid, Typography, } from '@material-ui/core'
 import { Formik, Form } from 'formik'
 import usePrivateApi from 'hooks/usePrivateApi'
 import { createWork } from 'store/work/work.actions'
-import { WorkFormCore } from './FormCore'
 import { worksSchema } from 'validations/worksSchema'
 import { FormContainer } from 'components/layout/FormContainer'
-import { WorkFormFooter } from './FormFooter'
+import { WorkFormCore } from './components/FormCore'
+import { WorkFormFooter } from './components/FormFooter'
 import Loading from 'components/Loading'
 
 const Create: React.FC = () => {

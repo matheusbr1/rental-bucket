@@ -8,9 +8,9 @@ import { Formik, Form } from 'formik'
 import Loading from 'components/Loading'
 import usePrivateApi from 'hooks/usePrivateApi'
 import { trucksSchema } from 'validations/trucksSchema'
-import { TruckFormCore } from './FormCore'
 import { FormContainer } from 'components/layout/FormContainer'
-import { TruckFormFooter } from './FormFooter'
+import { TruckFormCore } from './components/FormCore'
+import { TruckFormFooter } from './components/FormFooter'
 
 const Create: React.FC = () => {
   const api = usePrivateApi()
