@@ -87,6 +87,7 @@ export interface IWork {
   work_type: IWorkType
   truck: ITruck
   address: IWork
+  is_done: boolean
 }
 
 export interface IBrand {

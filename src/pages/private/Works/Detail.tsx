@@ -90,6 +90,26 @@ const Detail: React.FC = () => {
     }
   }, [api, id, dispatch, snackbar, push])
 
+  const handleMarkAsDone = useCallback(async () => {
+    try {
+      setLoading(true)
+
+      await api.patch(`/works/complete/${id}`)
+
+      push('/works')
+
+      snackbar('Serviço concluído com sucesso', {
+        variant: 'success'
+      })
+    } catch (error) {
+      snackbar('Erro ao concluir o serviço, tente novamente!', {
+        variant: 'error'
+      })
+    } finally {
+      setLoading(false)
+    }
+  }, [api, id, push, snackbar])
+
   useEffect(() => {
     if (!currentWork) {
       push('/works')
@@ -119,7 +139,10 @@ const Detail: React.FC = () => {
 
                 <WorkFormCore formStatus={formStatus} />
 
-                <WorkFormFooter 
+                <WorkFormFooter
+                  isDetailPage
+                  onMarkAsDone={handleMarkAsDone}
+                  isDone={values.is_done}
                   formStatus={formStatus}
                   changeFormStatus={setFormStatus}
                   isDeleting={isDeleting}

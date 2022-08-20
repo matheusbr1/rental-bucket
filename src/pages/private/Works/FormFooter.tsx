@@ -2,6 +2,7 @@ import React from 'react';
 import Button from 'components/Button'
 import { Box, Grid } from '@material-ui/core'
 import { FormStatus } from 'interfaces';
+import green from '@material-ui/core/colors/green'
 
 interface FormFooterProps {
   formStatus: FormStatus
@@ -11,6 +12,9 @@ interface FormFooterProps {
     primary: string
     secondary: string
   }
+  isDone?: boolean
+  isDetailPage?: boolean
+  onMarkAsDone?: () => Promise<void>
   onSecondaryButtonClick?: () => void
   changeFormStatus?:  (formStatus: FormStatus) => void
 }
@@ -20,6 +24,9 @@ const WorkFormFooter: React.FC<FormFooterProps> = ({
   isDeleting, 
   isSubmitting,
   buttonLabels,
+  isDone = false,
+  isDetailPage = false,
+  onMarkAsDone,
   onSecondaryButtonClick, 
   changeFormStatus
 }) => {
@@ -44,12 +51,23 @@ const WorkFormFooter: React.FC<FormFooterProps> = ({
             <Button 
               color='primary'
               type='button'
+              disabled={isDone}
               onClick={() => changeFormStatus && changeFormStatus('isFilling')}
             >
               Editar
             </Button>
           )}
-
+        
+          {!isDone && isDetailPage && (
+            <Button 
+              loading={isDeleting} 
+              onClick={onMarkAsDone} 
+              style={{ background: green[600] }}
+            >
+              Concluír
+            </Button>
+          )}
+          
           {formStatus === 'isFilling' && (
             <Button 
               loading={isSubmitting} 

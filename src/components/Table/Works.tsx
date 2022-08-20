@@ -8,6 +8,9 @@ import { EnhancedTableToolbar } from './shared/TableToolBar'
 import { EnhancedTableHead } from './shared/TableHead'
 import { useDispatch } from 'react-redux'
 import { deleteWork, setCurrentWork } from 'store/work/work.actions'
+import { EmptyMessage } from './shared/EmptyMessage'
+import DoneIcon from '@material-ui/icons/Done';
+import WaitingIcon from '@material-ui/icons/AccessTime';
 
 import { 
   Table as MuiTable,
@@ -18,13 +21,14 @@ import {
   Paper,
   Checkbox,
   Box,
+  Chip,
 } from '@material-ui/core'
-import { EmptyMessage } from './shared/EmptyMessage'
-
 
 interface TableProps {
   works: IWork[]
 }
+
+type Status = 'Pendente' | 'Concluído'
 
 interface Data {
   id: string
@@ -33,7 +37,7 @@ interface Data {
   quantity: number
   customer: string
   deadline: string
-  status: string
+  status: Status
 }
 
 const headCells: HeadCell[] = [
@@ -67,7 +71,7 @@ const Table: React.FC<TableProps> = ({ works }) => {
     quantity: number,
     equipment: string,
     deadline: string,   
-    status: string,
+    status: Status,
   ): Data {
     return { id, customer, type, quantity, equipment, deadline, status }
   }
@@ -77,7 +81,10 @@ const Table: React.FC<TableProps> = ({ works }) => {
       ? work.customer.name
       : work.customer.fantasy_name
 
-      const endDate = new Date(work.end_date)
+    const endDate = new Date(work.end_date)
+
+    // I can create a new status "Em Atraso" based on the date
+    const status = work.is_done ? 'Concluído' : 'Pendente'
 
     return createData(
       work.id,
@@ -86,7 +93,7 @@ const Table: React.FC<TableProps> = ({ works }) => {
       work.quantity,
       work.equipment.name,
       endDate.toDateString(),
-      'Pendente'
+      status
     )
   })
 
@@ -130,6 +137,38 @@ const Table: React.FC<TableProps> = ({ works }) => {
   const isSelected = (id: string) => selected.indexOf(id) !== -1
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage)
+
+  function renderStatus (status: Status) {
+    switch (status) {
+      case 'Pendente':
+        return (
+          <Chip
+            variant="outlined"
+            icon={<WaitingIcon />}
+            color='secondary'
+            label={status}
+          />
+        )
+      case 'Concluído':
+        return  (
+          <Chip
+            variant="outlined"
+            icon={<DoneIcon />}
+            color='primary'
+            label={status}
+          />
+        )
+      default:
+        return (
+          <Chip
+            variant="outlined"
+            icon={<WaitingIcon />}
+            color='secondary'
+            label={status}
+          />
+        ) 
+    }
+  }
 
   return (
     <Box className={classes.root}>
@@ -188,7 +227,7 @@ const Table: React.FC<TableProps> = ({ works }) => {
                       <TableCell align="left">{row.quantity}</TableCell>
                       <TableCell align="left">{row.equipment}</TableCell>
                       <TableCell align="left">{row.deadline}</TableCell>
-                      <TableCell align="left">{row.status}</TableCell>
+                      <TableCell align="left">{renderStatus(row.status)}</TableCell>
                     </TableRow>
                   );
                 })}
