@@ -22,14 +22,14 @@ const Create: React.FC = () => {
   const { enqueueSnackbar: snackbar } = useSnackbar()
 
   const [loading, setLoading] = useState(false)
-  
+
   const handleCreate = useCallback(async (fields) => {
     try {
       setLoading(true)
 
       const { data: truck } = await api.post('trucks', {
         plate: fields.plate,
-        renavam: fields.renavam, 
+        renavam: fields.renavam,
         manufacture_year: fields.manufacture_year,
         model_year: fields.model_year,
         brand_id: fields.brand?.id,

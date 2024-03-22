@@ -7,7 +7,7 @@ import { IWorkInitialState } from "store/work/work.reducer"
 export type PersonType = 'F' | 'J'
 export type FormStatus = 'isFilling' | 'isViewing'
 
-export interface IDefaultRootState  {
+export interface IDefaultRootState {
   works: IWorkInitialState
   trucks: ITruckInitialState
   drivers: IDriverInitialState
@@ -24,7 +24,7 @@ export interface ReducerAction {
   type: string
   payload?: any
 }
-export interface IAddress { 
+export interface IAddress {
   id?: string
   CEP: string
   street: string
@@ -86,7 +86,7 @@ export interface IWork {
   quantity: number
   work_type: IWorkType
   truck: ITruck
-  address: IWork
+  address: IAddress
   is_done: boolean
 }
 

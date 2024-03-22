@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { IWork } from 'interfaces'
+import { IDefaultRootState, IDriver, IWork } from 'interfaces'
 import { Pagination } from './shared/Pagination'
 import { getComparator, stableSort } from './shared/helpers'
 import { useStyles } from './shared/styles'
@@ -11,8 +11,10 @@ import { deleteWork, setCurrentWork } from 'store/work/work.actions'
 import { EmptyMessage } from './shared/EmptyMessage'
 import DoneIcon from '@material-ui/icons/Done';
 import WaitingIcon from '@material-ui/icons/AccessTime';
+import WhatsAppIcon from '@material-ui/icons/WhatsApp';
+import { useSelector } from 'react-redux'
 
-import { 
+import {
   Table as MuiTable,
   TableBody,
   TableCell,
@@ -22,7 +24,12 @@ import {
   Checkbox,
   Box,
   Chip,
+  IconButton,
 } from '@material-ui/core'
+import usePrivateApi from 'hooks/usePrivateApi'
+import { removeMask } from 'utils/formatters'
+import { sendWhatsapp } from './utils/sendWhatsapp'
+import { useSnackbar } from 'notistack'
 
 interface TableProps {
   works: IWork[]
@@ -47,9 +54,11 @@ const headCells: HeadCell[] = [
   { id: 'equipment', numeric: false, disablePadding: false, label: 'Equipamento' },
   { id: 'deadline', numeric: false, disablePadding: false, label: 'Retirada' },
   { id: 'status', numeric: false, disablePadding: false, label: 'Situação' },
+  { id: 'whatsapp', numeric: false, disablePadding: false, label: 'Enviar' },
 ]
 
 const Table: React.FC<TableProps> = ({ works }) => {
+  const { enqueueSnackbar: snackbar } = useSnackbar()
   const classes = useStyles()
   const [order, setOrder] = React.useState<Order>('asc')
   const [orderBy, setOrderBy] = React.useState<keyof Data>('type')
@@ -57,9 +66,10 @@ const Table: React.FC<TableProps> = ({ works }) => {
   const [page, setPage] = React.useState(0)
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
   const [currentSelected, setCurrentSelected] = useState<string>('')
+  const drivers = useSelector<IDefaultRootState, IDriver[]>(s => s.drivers.all)
 
   const dispatch = useDispatch()
-  
+
   if (!works.length) {
     return <EmptyMessage tableName='serviços' />
   }
@@ -70,12 +80,12 @@ const Table: React.FC<TableProps> = ({ works }) => {
     type: string,
     quantity: number,
     equipment: string,
-    deadline: string,   
+    deadline: string,
     status: Status,
   ): Data {
     return { id, customer, type, quantity, equipment, deadline, status }
   }
-  
+
   const rows = works.map(work => {
     const customerName = work.customer.person_type === 'F'
       ? work.customer.name
@@ -88,7 +98,7 @@ const Table: React.FC<TableProps> = ({ works }) => {
 
     return createData(
       work.id,
-      customerName as string, 
+      customerName as string,
       work.work_type.name,
       work.quantity,
       work.equipment.name,
@@ -138,7 +148,7 @@ const Table: React.FC<TableProps> = ({ works }) => {
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage)
 
-  function renderStatus (status: Status) {
+  function renderStatus(status: Status) {
     switch (status) {
       case 'Pendente':
         return (
@@ -150,7 +160,7 @@ const Table: React.FC<TableProps> = ({ works }) => {
           />
         )
       case 'Concluído':
-        return  (
+        return (
           <Chip
             variant="outlined"
             icon={<DoneIcon />}
@@ -166,14 +176,33 @@ const Table: React.FC<TableProps> = ({ works }) => {
             color='secondary'
             label={status}
           />
-        ) 
+        )
+    }
+  }
+
+  const handleSendMessage = async (id: string) => {
+    if (!works) return
+
+    const work = works.find(w => w.id === id)!
+    const driver = drivers.find(d => d.id === work.driver.id)
+    const contact = driver?.contacts.find(c => c.contact_type === 'cellphone')
+
+    if (contact) {
+      sendWhatsapp({
+        phoneNumber: removeMask(contact.contact),
+        work
+      })
+    } else {
+      snackbar('O motorista não tem um celular cadastrado!', {
+        variant: 'error'
+      })
     }
   }
 
   return (
     <Box className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar 
+        <EnhancedTableToolbar
           path='works'
           title='Serviços'
           numSelected={selected.length}
@@ -210,7 +239,7 @@ const Table: React.FC<TableProps> = ({ works }) => {
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.id)}
+                      // onClick={(event) => handleClick(event, row.id)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -218,7 +247,10 @@ const Table: React.FC<TableProps> = ({ works }) => {
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
-                        <Checkbox checked={isItemSelected} />
+                        <Checkbox
+                          checked={isItemSelected}
+                          onClick={(e) => handleClick(e, row.id)}
+                        />
                       </TableCell>
                       <TableCell component="th" scope="row" padding="none">
                         {row.customer}
@@ -228,6 +260,14 @@ const Table: React.FC<TableProps> = ({ works }) => {
                       <TableCell align="left">{row.equipment}</TableCell>
                       <TableCell align="left">{row.deadline}</TableCell>
                       <TableCell align="left">{renderStatus(row.status)}</TableCell>
+                      <TableCell align="left">
+                        <IconButton
+                          onClick={() => handleSendMessage(row.id)}
+                          style={{ padding: 0, color: "#25D366" }}
+                        >
+                          <WhatsAppIcon />
+                        </IconButton>
+                      </TableCell>
                     </TableRow>
                   );
                 })}
@@ -239,8 +279,8 @@ const Table: React.FC<TableProps> = ({ works }) => {
             </TableBody>
           </MuiTable>
         </TableContainer>
-        
-        <Pagination 
+
+        <Pagination
           page={page}
           rows={rows}
           rowsPerPage={rowsPerPage}
