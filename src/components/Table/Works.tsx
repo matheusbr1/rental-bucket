@@ -26,7 +26,6 @@ import {
   Chip,
   IconButton,
 } from '@material-ui/core'
-import usePrivateApi from 'hooks/usePrivateApi'
 import { removeMask } from 'utils/formatters'
 import { sendWhatsapp } from './utils/sendWhatsapp'
 import { useSnackbar } from 'notistack'
