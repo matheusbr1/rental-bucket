@@ -19,6 +19,7 @@ import TruckDetail from './pages/private/Trucks/Detail'
 import SignUp from 'pages/public/SignUp'
 import ForgotPassword from 'pages/public/ForgotPassword'
 import ResetPassword from 'pages/public/ResetPassword'
+import Map from 'pages/private/Map'
 
 interface PrivateRouteProps {
   component: React.FC<any>
@@ -48,22 +49,24 @@ const Routes: React.FC = () => (
     <Switch>
       <Route path='/' exact component={SignIn} />
       <Route path='/signup' exact component={SignUp} />
-      
+
       <Route path='/forgotPassword' exact component={ForgotPassword} />
       <Route path='/resetPassword' exact component={ResetPassword} />
-      
-      <PrivateRoute path='/works' exact component={Works}  />
+
+      <PrivateRoute path='/works/map' exact component={Map} />
+
+      <PrivateRoute path='/works' exact component={Works} />
       <PrivateRoute path='/work/:id' component={WorkDetail} />
-      <PrivateRoute path='/works/create' component={CreateWork}  />
-      <PrivateRoute path='/customers' exact component={Customers}  />
+      <PrivateRoute path='/works/create' component={CreateWork} />
+      <PrivateRoute path='/customers' exact component={Customers} />
       <PrivateRoute path='/customer/:id' component={CostumerDetail} />
-      <PrivateRoute path='/customers/create' component={CreateCostumer}  />
-      <PrivateRoute path='/drivers' exact component={Drivers}  />
+      <PrivateRoute path='/customers/create' component={CreateCostumer} />
+      <PrivateRoute path='/drivers' exact component={Drivers} />
       <PrivateRoute path='/driver/:id' component={DriverDetail} />
-      <PrivateRoute path='/drivers/create' component={CreateDriver}  />
-      <PrivateRoute path='/trucks' exact component={Trucks}  />
+      <PrivateRoute path='/drivers/create' component={CreateDriver} />
+      <PrivateRoute path='/trucks' exact component={Trucks} />
       <PrivateRoute path='/truck/:id' component={TruckDetail} />
-      <PrivateRoute path='/trucks/create' component={CreateTruck}  />
+      <PrivateRoute path='/trucks/create' component={CreateTruck} />
     </Switch>
   </Router>
 )

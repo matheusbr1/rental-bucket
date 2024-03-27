@@ -1,4 +1,4 @@
-import React, { useCallback, useState }  from 'react'
+import React, { useCallback, useState } from 'react'
 import MuiAppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import Toolbar from '@mui/material/Toolbar'
@@ -17,16 +17,19 @@ import { signOut } from 'store/user/user.actions'
 import { IDefaultRootState } from 'interfaces'
 import { PerfilDrawer } from './PerfilDrawer'
 import usePersistedState from 'hooks/usePersistedState'
+import { FaTruck } from "react-icons/fa";
+
 interface IConfig {
   label: string
   destiny: string
 }
 
 const pages: IConfig[] = [
+  { label: 'Mapa', destiny: '/works/map' },
   { label: 'Serviços', destiny: '/works' },
   { label: 'Clientes', destiny: '/customers' },
   { label: 'Motoristas', destiny: '/drivers' },
-  { label: 'Caminhões', destiny: '/trucks' }
+  { label: 'Caminhões', destiny: '/trucks' },
 ]
 
 const settings: string[] = ['Perfil', 'Sair']
@@ -79,7 +82,7 @@ const AppBar = () => {
               component="div"
               sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
             >
-              LOGO
+              <FaTruck />
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -110,8 +113,8 @@ const AppBar = () => {
                 }}
               >
                 {pages.map(({ label, destiny }) => (
-                  <MenuItem 
-                    key={label} 
+                  <MenuItem
+                    key={label}
                     onClick={() => {
                       setAnchorElNav(null)
                       history.push(destiny)
@@ -129,7 +132,7 @@ const AppBar = () => {
               component="div"
               sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
             >
-              LOGO
+              <FaTruck />
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
@@ -149,8 +152,8 @@ const AppBar = () => {
 
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Abrir configurações">
-                <IconButton 
-                  onClick={e => setAnchorElUser(e.currentTarget)} 
+                <IconButton
+                  onClick={e => setAnchorElUser(e.currentTarget)}
                   sx={{ p: 0 }}
                 >
                   <Avatar alt={user.name} src={user.avatar} />
