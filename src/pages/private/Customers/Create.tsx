@@ -53,8 +53,9 @@ const Create: React.FC = () => {
       }
 
       for await (const address of fields.adresses) {
-        const { data: newAddress } = await api.post('customers/address', { 
+        const { data: newAddress } = await api.post('customers/address', {
           ...address,
+          CEP: removeMask(address.CEP),
           customer_id: customer.id
         })
 
@@ -62,7 +63,7 @@ const Create: React.FC = () => {
       }
 
       dispatch(createCustomer({
-        ...fields, 
+        ...fields,
         id: customer.id,
         contacts,
         adresses
@@ -107,7 +108,7 @@ const Create: React.FC = () => {
 
               <CustomerCoreForm />
 
-              <CustomerFormFooter 
+              <CustomerFormFooter
                 formStatus='isFilling'
                 isSubmitting={isSubmitting}
                 onSecondaryButtonClick={goBack}

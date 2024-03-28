@@ -33,6 +33,8 @@ export interface IAddress {
   state: string | null
   city: string | null
   complement?: string
+  lat?: number
+  lng?: number
 }
 
 export type ContactType = 'phone' | 'cellphone' | 'email'

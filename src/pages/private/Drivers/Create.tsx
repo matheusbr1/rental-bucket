@@ -16,7 +16,7 @@ import { DriverFormFooter } from './components/FormFooter'
 
 const Create: React.FC = () => {
   const api = usePrivateApi()
-  
+
   const { goBack } = useHistory()
 
   const dispatch = useDispatch()
@@ -49,18 +49,19 @@ const Create: React.FC = () => {
 
         contacts.push(newContact)
       }
-      
-      const { data: newAddress } = await api.post('/drivers/address', { 
+
+      const { data: newAddress } = await api.post('/drivers/address', {
         ...fields.address,
+        CEP: removeMask(fields.address.CEP),
         driver_id: driver?.id
       })
 
-      dispatch(createDriver({ 
-        ...fields, 
+      dispatch(createDriver({
+        ...fields,
         id: driver.id,
         contacts,
         address: newAddress
-       } as IDriver))
+      } as IDriver))
 
       snackbar('Motorista criado com sucesso!', {
         variant: 'success'
@@ -114,7 +115,7 @@ const Create: React.FC = () => {
 
               <DriverFormCore />
 
-              <DriverFormFooter 
+              <DriverFormFooter
                 formStatus='isFilling'
                 isSubmitting={isSubmitting}
                 onSecondaryButtonClick={goBack}
