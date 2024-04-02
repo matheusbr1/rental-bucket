@@ -28,7 +28,7 @@ const WorkFormCore: React.FC<IFormCoreProps> = ({ formStatus = 'isFilling' }) =>
   const api = usePrivateApi()
   const { company } = useData()
 
-  const { errors, touched, values, isSubmitting } = useFormikContext<IWork>()
+  const { errors, touched, values, isSubmitting, setFieldValue } = useFormikContext<IWork>()
 
   const disabled = formStatus === 'isViewing' || isSubmitting
 
@@ -38,36 +38,62 @@ const WorkFormCore: React.FC<IFormCoreProps> = ({ formStatus = 'isFilling' }) =>
   const [equipments, setEquipments] = useState([])
 
   useEffect(() => {
-    api.get('/work/types').then(response => setWorkTypes(response.data))
+    api.get('/work/types').then(response => {
+      setWorkTypes(response.data)
+    })
   }, [api])
 
   useEffect(() => {
-    api.get('/truck/types/equipments').then(response => setEquipments(response.data))
-  }, [api])
+    api.get('/truck/types/equipments').then(response => {
+      const equipments = response.data
+      setEquipments(equipments)
+      if (equipments.length === 1) {
+        setFieldValue('equipment', equipments[0])
+      }
+    })
+  }, [api, setFieldValue])
 
   useEffect(() => {
     api.get('/drivers', {
       params: {
         company_id: company.id
       }
-    }).then(response => dispatch(setDrivers(response.data)))
-  }, [api, company.id, dispatch])
+    }).then(response => {
+      const drivers = response.data
+      dispatch(setDrivers(drivers))
+      if (drivers.length === 1) {
+        setFieldValue('driver', drivers[0])
+      }
+    })
+  }, [api, company.id, dispatch, setFieldValue])
 
   useEffect(() => {
     api.get('trucks', {
       params: {
         company_id: company.id
       }
-    }).then(response => dispatch(setTrucks(response.data)))
-  }, [api, company.id, dispatch])
+    }).then(response => {
+      const trucks = response.data
+      dispatch(setTrucks(trucks))
+      if (trucks.length === 1) {
+        setFieldValue('truck', trucks[0])
+      }
+    })
+  }, [api, company.id, dispatch, setFieldValue])
 
   useEffect(() => {
     api.get('customers', {
       params: {
         company_id: company.id
       }
-    }).then(response => dispatch(setCustomers(response.data)))
-  }, [api, company.id, dispatch])
+    }).then(response => {
+      const customers = response.data
+      dispatch(setCustomers(customers))
+      if (customers.length === 1) {
+        setFieldValue('customer', customers[0])
+      }
+    })
+  }, [api, company.id, dispatch, setFieldValue])
 
   const drivers = useSelector<IDefaultRootState, IDriver[]>(state => state.drivers.all)
   const trucks = useSelector<IDefaultRootState, ITruck[]>(state => state.trucks.all)

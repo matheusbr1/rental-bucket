@@ -79,7 +79,7 @@ const Create: React.FC = () => {
           truck: null,
           equipment: null,
           work_type: null,
-          quantity: null,
+          quantity: 1,
           end_date: Moment(new Date()).add(7, 'days').toDate()
         }}
       >
