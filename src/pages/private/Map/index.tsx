@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import { IDefaultRootState, IWork } from 'interfaces';
 import { getTolltipContent } from './getTolltipContent';
+import { useData } from 'hooks/useData';
 
 const containerStyle = {
   width: '100%',
@@ -13,6 +14,8 @@ const containerStyle = {
 
 const Map: React.FC = () => {
   const works = useSelector<IDefaultRootState, IWork[]>(state => state.works.all)
+
+  const { company } = useData()
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
@@ -31,10 +34,10 @@ const Map: React.FC = () => {
       {isLoaded && (
         <GoogleMap
           mapContainerStyle={containerStyle}
-          zoom={13}
+          zoom={11}
           center={{
-            lat: -23.55777688954754,
-            lng: -46.792403583963974
+            lat: Number(company.address.lat),
+            lng: Number(company.address.lng)
           }}
         >
           {works

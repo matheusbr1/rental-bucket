@@ -1,7 +1,7 @@
 import { IWork } from "interfaces"
 
 export function getTolltipContent(w: IWork) {
-  const client = `Cliente: ${w.customer.name}\n`
+  const client = `Cliente: ${w.customer.name ?? w.customer.fantasy_name}\n`
   const CEP = `CEP: ${w.address.CEP}\n`
   const street = `Rua: ${w.address.street}\n`
   const neighborhood = `Bairro: ${w.address.neighborhood}\n`

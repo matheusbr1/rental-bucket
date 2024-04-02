@@ -16,7 +16,10 @@ const DataProvider: React.FC = ({ children }) => {
   const [company, setCompany] = useState<ICompany>({
     id: 'eb7fffc0-fabe-4401-be95-32e07c46a699',
     name: '',
-    address: {} as IAddress,
+    address: {
+      lat: -23.55777688954754,
+      lng: -46.792403583963974
+    } as IAddress,
   })
 
   const api = usePrivateApi()
