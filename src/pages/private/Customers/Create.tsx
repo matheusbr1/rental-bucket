@@ -11,6 +11,7 @@ import { removeMask } from 'utils/formatters'
 import { FormContainer } from 'components/layout/FormContainer'
 import { CustomerCoreForm } from './components/FormCore'
 import { CustomerFormFooter } from './components/FormFooter'
+import { useData } from 'hooks/useData'
 
 interface CustomerFields {
   person_type: PersonType
@@ -24,6 +25,7 @@ interface CustomerFields {
 
 const Create: React.FC = () => {
   const api = usePrivateApi()
+  const { company } = useData()
 
   const { goBack } = useHistory()
 
@@ -35,7 +37,8 @@ const Create: React.FC = () => {
     try {
       const { data: customer } = await api.post('customers', {
         ...fields,
-        CPF_CNPJ: removeMask(fields.CPF_CNPJ)
+        CPF_CNPJ: removeMask(fields.CPF_CNPJ),
+        company_id: company.id
       })
 
       const contacts = [] as IContact[]
@@ -79,7 +82,7 @@ const Create: React.FC = () => {
         variant: 'error'
       })
     }
-  }, [api, dispatch, snackbar, goBack])
+  }, [api, company.id, dispatch, snackbar, goBack])
 
   return (
     <FormContainer>

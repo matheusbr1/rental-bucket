@@ -27,7 +27,7 @@ const TruckFormCore: React.FC<IFormCoreProps> = ({ formStatus }) => {
 
   const [brands, setBrands] = useState<IBrand[]>([])
   const [models, setModels] = useState<IModel[]>([])
-  
+
   const [truckTypes, setTruckTypes] = useState([])
 
   const handleBrandBlur = useCallback(async (brand: IBrand | null) => {
@@ -54,7 +54,7 @@ const TruckFormCore: React.FC<IFormCoreProps> = ({ formStatus }) => {
 
         // updating truck brand
         const brand = brands.find(brand => brand.id === values.brand?.id) as IBrand
-         dispatch(setTruckBrand(brand))
+        dispatch(setTruckBrand(brand))
 
         const models = await getModels(brand.id)
         setModels(models)
@@ -62,17 +62,17 @@ const TruckFormCore: React.FC<IFormCoreProps> = ({ formStatus }) => {
         // updating truck model
         const model = models.find(model => model.id === values.model?.id) as IModel
         dispatch(setTruckModel(model))
-       } catch (error) {
+      } catch (error) {
         snackbar('Não foi possível obter as marcas!', { variant: 'error' })
-       }
+      }
     })()
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, snackbar])
 
   return (
     <>
       <Grid item lg={4} md={4} sm={6} xs={12} >
-        <FormikAutoComplete 
+        <FormikAutoComplete
           name="brand"
           options={brands}
           error={errors.brand}
@@ -81,11 +81,11 @@ const TruckFormCore: React.FC<IFormCoreProps> = ({ formStatus }) => {
           label='Marca'
           getOptionLabel={(option: IBrand) => option.name}
           onBlur={() => handleBrandBlur(values.brand)}
-        /> 
+        />
       </Grid>
 
       <Grid item lg={4} md={4} sm={6} xs={12} >
-        <FormikAutoComplete 
+        <FormikAutoComplete
           name="model"
           options={models}
           error={errors.model}
@@ -97,17 +97,17 @@ const TruckFormCore: React.FC<IFormCoreProps> = ({ formStatus }) => {
       </Grid>
 
       <Grid item lg={4} md={4} sm={6} xs={12} >
-        <Field 
-          component={FormikTextField} 
-          label='Placa' 
+        <Field
+          component={FormikTextField}
+          label='Placa'
           name='plate'
           mask='plate'
-          disabled={formStatus === 'isViewing'} 
+          disabled={formStatus === 'isViewing'}
         />
       </Grid>
 
       <Grid item lg={2} md={2} sm={6} xs={12} >
-        <FormikAutoComplete 
+        <FormikAutoComplete
           name="manufacture_year"
           options={years}
           error={errors?.manufacture_year}
@@ -116,9 +116,9 @@ const TruckFormCore: React.FC<IFormCoreProps> = ({ formStatus }) => {
           disabled={formStatus === 'isViewing'}
         />
       </Grid>
-    
+
       <Grid item lg={2} md={2} sm={6} xs={12} >
-        <FormikAutoComplete 
+        <FormikAutoComplete
           name="model_year"
           options={years}
           error={errors?.model_year}
@@ -129,7 +129,7 @@ const TruckFormCore: React.FC<IFormCoreProps> = ({ formStatus }) => {
       </Grid>
 
       <Grid item lg={4} md={4} sm={6} xs={12} >
-        <FormikAutoComplete 
+        <FormikAutoComplete
           name="type"
           options={truckTypes}
           error={errors?.type}
@@ -141,17 +141,17 @@ const TruckFormCore: React.FC<IFormCoreProps> = ({ formStatus }) => {
       </Grid>
 
       <Grid item lg={4} md={4} sm={6} xs={12} >
-        <Field 
-          component={FormikTextField} 
-          label='Renavan' 
-          name='renavam' 
-          mask='renavam' 
+        <Field
+          component={FormikTextField}
+          label='Renavan'
+          name='renavam'
+          mask='renavam'
           disabled={formStatus === 'isViewing'}
         />
       </Grid>
 
       <Grid item lg={4} md={4} sm={6} xs={12} />
-      
+
       <Grid item lg={4} md={4} sm={6} xs={12} />
     </>
   )

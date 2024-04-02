@@ -9,15 +9,16 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setDrivers } from 'store/driver/driver.actions'
 import { setCustomers } from 'store/customer/customer.actions'
 import { setTrucks } from 'store/truck/truck.actions'
-import { 
+import {
   FormStatus,
-  IAddress, 
-  ICustomer, 
-  IDefaultRootState, 
-  IDriver, 
-  ITruck, 
-  IWork 
+  IAddress,
+  ICustomer,
+  IDefaultRootState,
+  IDriver,
+  ITruck,
+  IWork
 } from 'interfaces'
+import { useData } from 'hooks/useData'
 
 interface IFormCoreProps {
   formStatus?: FormStatus
@@ -25,12 +26,13 @@ interface IFormCoreProps {
 
 const WorkFormCore: React.FC<IFormCoreProps> = ({ formStatus = 'isFilling' }) => {
   const api = usePrivateApi()
-  
+  const { company } = useData()
+
   const { errors, touched, values, isSubmitting } = useFormikContext<IWork>()
 
   const disabled = formStatus === 'isViewing' || isSubmitting
 
-  const dispatch  = useDispatch()
+  const dispatch = useDispatch()
 
   const [workTypes, setWorkTypes] = useState([])
   const [equipments, setEquipments] = useState([])
@@ -42,18 +44,30 @@ const WorkFormCore: React.FC<IFormCoreProps> = ({ formStatus = 'isFilling' }) =>
   useEffect(() => {
     api.get('/truck/types/equipments').then(response => setEquipments(response.data))
   }, [api])
-  
-  useEffect(() => {
-    api.get('/drivers').then(response => dispatch(setDrivers(response.data)))
-  }, [api, dispatch])
 
   useEffect(() => {
-    api.get('trucks').then(response => dispatch(setTrucks(response.data)))
-  }, [api, dispatch])
+    api.get('/drivers', {
+      params: {
+        company_id: company.id
+      }
+    }).then(response => dispatch(setDrivers(response.data)))
+  }, [api, company.id, dispatch])
 
   useEffect(() => {
-    api.get('customers').then(response => dispatch(setCustomers(response.data)))
-  }, [api, dispatch])
+    api.get('trucks', {
+      params: {
+        company_id: company.id
+      }
+    }).then(response => dispatch(setTrucks(response.data)))
+  }, [api, company.id, dispatch])
+
+  useEffect(() => {
+    api.get('customers', {
+      params: {
+        company_id: company.id
+      }
+    }).then(response => dispatch(setCustomers(response.data)))
+  }, [api, company.id, dispatch])
 
   const drivers = useSelector<IDefaultRootState, IDriver[]>(state => state.drivers.all)
   const trucks = useSelector<IDefaultRootState, ITruck[]>(state => state.trucks.all)
@@ -62,7 +76,7 @@ const WorkFormCore: React.FC<IFormCoreProps> = ({ formStatus = 'isFilling' }) =>
   return (
     <>
       <Grid item lg={4} md={6} sm={6} xs={12} >
-        <FormikAutoComplete 
+        <FormikAutoComplete
           name="customer"
           options={customers}
           error={errors.customer as string}
@@ -72,15 +86,15 @@ const WorkFormCore: React.FC<IFormCoreProps> = ({ formStatus = 'isFilling' }) =>
           getOptionLabel={
             (customer: ICustomer) => (
               customer.person_type === 'F'
-              ? customer.name
-              : customer.fantasy_name
+                ? customer.name
+                : customer.fantasy_name
             ) as string
           }
         />
       </Grid>
 
       <Grid item lg={8} md={6} sm={6} xs={12} >
-        <FormikAutoComplete 
+        <FormikAutoComplete
           name="address"
           disabled={!values.customer || disabled}
           options={(values.customer as null | ICustomer)?.adresses || []}
@@ -94,7 +108,7 @@ const WorkFormCore: React.FC<IFormCoreProps> = ({ formStatus = 'isFilling' }) =>
       </Grid>
 
       <Grid item lg={4} md={4} sm={6} xs={12} >
-        <FormikAutoComplete 
+        <FormikAutoComplete
           name="driver"
           options={drivers || []}
           disabled={!!disabled}
@@ -106,7 +120,7 @@ const WorkFormCore: React.FC<IFormCoreProps> = ({ formStatus = 'isFilling' }) =>
       </Grid>
 
       <Grid item lg={4} md={4} sm={6} xs={12} >
-        <FormikAutoComplete 
+        <FormikAutoComplete
           name="truck"
           options={trucks || []}
           error={errors.truck as string}
@@ -118,7 +132,7 @@ const WorkFormCore: React.FC<IFormCoreProps> = ({ formStatus = 'isFilling' }) =>
       </Grid>
 
       <Grid item lg={4} md={4} sm={6} xs={12} >
-        <FormikAutoComplete 
+        <FormikAutoComplete
           name="equipment"
           options={equipments || []}
           error={errors.equipment as string}
@@ -130,7 +144,7 @@ const WorkFormCore: React.FC<IFormCoreProps> = ({ formStatus = 'isFilling' }) =>
       </Grid>
 
       <Grid item lg={4} md={4} sm={6} xs={12} >
-        <FormikAutoComplete 
+        <FormikAutoComplete
           name="work_type"
           options={workTypes || []}
           error={errors.work_type as string}
@@ -154,9 +168,9 @@ const WorkFormCore: React.FC<IFormCoreProps> = ({ formStatus = 'isFilling' }) =>
       </Grid>
 
       <Grid item lg={4} md={4} sm={6} xs={12} >
-        <FormikDateInput 
-          label="Data da retirada" 
-          name="end_date" 
+        <FormikDateInput
+          label="Data da retirada"
+          name="end_date"
           disabled={!!disabled}
         />
       </Grid>

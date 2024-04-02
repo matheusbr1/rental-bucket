@@ -6,15 +6,26 @@ import { setWorks } from 'store/work/work.actions'
 import usePrivateApi from 'hooks/usePrivateApi'
 import { TableContainer } from 'components/layout/TableContainer'
 import { setDrivers } from 'store/driver/driver.actions'
+import { useData } from 'hooks/useData'
 
 const List: React.FC = () => {
   const api = usePrivateApi()
   const dispatch = useDispatch()
+  const { company } = useData()
 
   useEffect(() => {
-    api.get('works').then(response => dispatch(setWorks(response.data)))
-    api.get('/drivers').then(response => dispatch(setDrivers(response.data)))
-  }, [api, dispatch])
+    api.get('works', {
+      params: {
+        company_id: company.id
+      }
+    }).then(response => dispatch(setWorks(response.data)))
+
+    api.get('/drivers', {
+      params: {
+        company_id: company.id
+      }
+    }).then(response => dispatch(setDrivers(response.data)))
+  }, [api, company.id, dispatch])
 
   const works = useSelector<IDefaultRootState, IWork[]>(state => state.works.all)
 

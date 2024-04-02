@@ -13,9 +13,12 @@ import usePrivateApi from 'hooks/usePrivateApi'
 import { FormContainer } from 'components/layout/FormContainer'
 import DriverFormCore from './components/FormCore'
 import { DriverFormFooter } from './components/FormFooter'
+import { useData } from 'hooks/useData'
 
 const Create: React.FC = () => {
   const api = usePrivateApi()
+
+  const { company } = useData()
 
   const { goBack } = useHistory()
 
@@ -34,7 +37,8 @@ const Create: React.FC = () => {
         CPF: removeMask(fields.CPF),
         RG: removeMask(fields.RG),
         CNH: removeMask(fields.CNH),
-        birthday: fields.birthday
+        birthday: fields.birthday,
+        company_id: company.id
       })
 
       const contacts = [] as IContact[]
@@ -75,7 +79,7 @@ const Create: React.FC = () => {
     } finally {
       setLoading(false)
     }
-  }, [api, dispatch, snackbar, goBack])
+  }, [api, company.id, dispatch, snackbar, goBack])
 
   return (
     <FormContainer>

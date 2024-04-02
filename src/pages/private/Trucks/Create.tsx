@@ -11,9 +11,12 @@ import { trucksSchema } from 'validations/trucksSchema'
 import { FormContainer } from 'components/layout/FormContainer'
 import { TruckFormCore } from './components/FormCore'
 import { TruckFormFooter } from './components/FormFooter'
+import { useData } from 'hooks/useData'
 
 const Create: React.FC = () => {
   const api = usePrivateApi()
+
+  const { company } = useData()
 
   const { goBack } = useHistory()
 
@@ -35,6 +38,7 @@ const Create: React.FC = () => {
         brand_id: fields.brand?.id,
         model_id: fields.model?.id,
         truck_type_id: fields.type.id,
+        company_id: company.id
       })
 
       dispatch(createTruck({
@@ -50,7 +54,7 @@ const Create: React.FC = () => {
     } finally {
       setLoading(false)
     }
-  }, [api, dispatch, snackbar, goBack])
+  }, [api, company.id, dispatch, snackbar, goBack])
 
   return (
     <FormContainer>

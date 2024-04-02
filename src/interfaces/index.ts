@@ -24,6 +24,7 @@ export interface ReducerAction {
   type: string
   payload?: any
 }
+
 export interface IAddress {
   id?: string
   CEP: string
@@ -43,6 +44,12 @@ export interface IContact {
   id?: string
   contact: string
   contact_type: ContactType
+}
+
+export interface ICompany {
+  id: string
+  name: string
+  address: IAddress
 }
 
 export interface ICustomer {

@@ -5,18 +5,24 @@ import { ICustomer, IDefaultRootState } from 'interfaces'
 import { setCustomers } from 'store/customer/customer.actions'
 import usePrivateApi from 'hooks/usePrivateApi'
 import { TableContainer } from 'components/layout/TableContainer'
+import { useData } from 'hooks/useData'
 
 const List: React.FC = () => {
   const api = usePrivateApi()
-  
-  const dispatch  = useDispatch()
+  const { company } = useData()
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
-    api.get('customers')
+    api.get('customers', {
+      params: {
+        company_id: company.id
+      }
+    })
       .then(response => {
         dispatch(setCustomers(response.data))
       })
-  }, [api, dispatch])
+  }, [api, company.id, dispatch])
 
   const customers = useSelector<IDefaultRootState, ICustomer[]>(state => state.customers.all)
 

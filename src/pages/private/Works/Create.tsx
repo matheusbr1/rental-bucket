@@ -12,22 +12,25 @@ import { FormContainer } from 'components/layout/FormContainer'
 import { WorkFormCore } from './components/FormCore'
 import { WorkFormFooter } from './components/FormFooter'
 import Loading from 'components/Loading'
+import { useData } from 'hooks/useData'
 
 const Create: React.FC = () => {
   const api = usePrivateApi()
+
+  const { company } = useData()
 
   const { goBack } = useHistory()
 
   const { enqueueSnackbar } = useSnackbar()
 
-  const dispatch  = useDispatch()
+  const dispatch = useDispatch()
 
   const [loading, setLoading] = useState(false)
 
   const handleCreate = useCallback(async (fields) => {
     setLoading(true)
 
-    try { 
+    try {
       const { data: work } = await api.post('works', {
         start_date: new Date(),
         end_date: fields.end_date,
@@ -38,6 +41,7 @@ const Create: React.FC = () => {
         driver_id: fields.driver.id,
         work_type_id: fields.work_type.id,
         equipment_id: fields.equipment.id,
+        company_id: company.id
       })
 
       dispatch(createWork({
@@ -59,7 +63,7 @@ const Create: React.FC = () => {
     } finally {
       setLoading(false)
     }
-  }, [api, dispatch, enqueueSnackbar, goBack])
+  }, [api, company.id, dispatch, enqueueSnackbar, goBack])
 
   return (
     <FormContainer>
