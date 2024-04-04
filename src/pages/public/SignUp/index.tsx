@@ -7,20 +7,20 @@ import { useSnackbar } from 'notistack'
 import { Field, Form, Formik } from 'formik'
 import FormikTextField from 'components/FormikTextField'
 import { signInSchema } from 'validations/signInSchema'
-import { Link } from 'react-router-dom'
-import { 
-  Container, 
-  Typography, 
-  Card, 
-  Box, 
+import { Link, useLocation } from 'react-router-dom'
+import {
+  Container,
+  Typography,
+  Card,
+  Box,
   makeStyles,
-  Grid, 
+  Grid,
 } from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => createStyles({
   content: {
     display: 'flex',
-    width:  '100%',
+    width: '100%',
     minHeight: '100vh',
     justifyContent: 'center',
     alignItems: 'center',
@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => createStyles({
     },
     '& > div': {
       marginBottom: theme.spacing(2),
-    } 
+    }
   }
 }))
 
@@ -49,6 +49,10 @@ export interface ISignUpFields {
 const SignIn: React.FC = () => {
   const api = usePrivateApi()
 
+  const { search } = useLocation()
+  const queryParams = new URLSearchParams(search)
+  const companyId = queryParams.get('company_id')
+
   const history = useHistory()
 
   const { enqueueSnackbar: snackbar } = useSnackbar()
@@ -57,26 +61,31 @@ const SignIn: React.FC = () => {
 
   const handleSignUp = useCallback(async ({ name, email, password }: ISignUpFields) => {
     try {
-      await api.post('/users', { name, email, password })
-      
+      await api.post('/users', {
+        name,
+        email,
+        password,
+        company_id: companyId
+      })
+
       snackbar('Novo usuário criado, faça login!', { variant: 'success' })
-      
+
       history.push('/')
     } catch (error) {
       snackbar('Erro ao criar o usuário, tente novamente!', { variant: 'error' })
     }
-  }, [api, history, snackbar])
+  }, [api, history, snackbar, companyId])
 
   return (
     <Container>
       <Box className={classes.content} >
         <Card className={classes.card} elevation={4} >
           <Typography variant='h1' >
-            Nova conta
+            Novo usuário
           </Typography>
 
           <Typography variant='h3' >
-            Crie uma conta para acessar a plataforma
+            Crie o primeiro usuário para sua empresa
           </Typography>
 
           <Formik
@@ -126,12 +135,12 @@ const SignIn: React.FC = () => {
                       Voltar para o login
                     </Link>
                   </Grid>
-                  
+
                   <Grid item xs={12} md={12} xl={12} >
-                    <Button 
-                      color='primary' 
+                    <Button
+                      color='primary'
                       type='submit'
-                      loading={isSubmitting} 
+                      loading={isSubmitting}
                     >
                       Criar
                     </Button>

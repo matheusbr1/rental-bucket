@@ -14,13 +14,13 @@ import Visibility from '@material-ui/icons/Visibility'
 import VisibilityOff from '@material-ui/icons/VisibilityOff'
 import { sessionApi } from 'services/api'
 import usePersistedState from 'hooks/usePersistedState'
-import { 
-  Container, 
-  Typography, 
-  Card, 
-  Box, 
+import {
+  Container,
+  Typography,
+  Card,
+  Box,
   makeStyles,
-  Grid, 
+  Grid,
   IconButton,
   InputAdornment,
 } from '@material-ui/core'
@@ -28,7 +28,7 @@ import {
 const useStyles = makeStyles((theme) => createStyles({
   content: {
     display: 'flex',
-    width:  '100%',
+    width: '100%',
     minHeight: '100vh',
     justifyContent: 'center',
     alignItems: 'center',
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => createStyles({
     },
     '& > div': {
       marginBottom: theme.spacing(2),
-    } 
+    }
   }
 }))
 
@@ -137,8 +137,8 @@ const SignIn: React.FC = () => {
                   </Grid>
 
                   <Grid item xs={6} md={6} xl={6}>
-                    <Link to='/signup' >
-                      Criar um usuário
+                    <Link to='/create-company' >
+                      Criar uma empresa
                     </Link>
                   </Grid>
 
@@ -149,12 +149,12 @@ const SignIn: React.FC = () => {
                       </Link>
                     </Box>
                   </Grid>
-                  
+
                   <Grid item xs={12} md={12} xl={12} >
-                    <Button 
-                      color='primary' 
+                    <Button
+                      color='primary'
                       type='submit'
-                      loading={isSubmitting} 
+                      loading={isSubmitting}
                     >
                       Entrar
                     </Button>
