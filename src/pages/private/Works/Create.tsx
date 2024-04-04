@@ -41,7 +41,7 @@ const Create: React.FC = () => {
         driver_id: fields.driver.id,
         work_type_id: fields.work_type.id,
         equipment_id: fields.equipment.id,
-        company_id: company.id
+        company_id: company?.id
       })
 
       dispatch(createWork({
@@ -63,7 +63,7 @@ const Create: React.FC = () => {
     } finally {
       setLoading(false)
     }
-  }, [api, company.id, dispatch, enqueueSnackbar, goBack])
+  }, [api, company?.id, dispatch, enqueueSnackbar, goBack])
 
   return (
     <FormContainer>

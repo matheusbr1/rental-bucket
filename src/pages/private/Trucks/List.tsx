@@ -17,10 +17,10 @@ const List: React.FC = () => {
   useEffect(() => {
     api.get('trucks', {
       params: {
-        company_id: company.id
+        company_id: company?.id
       }
     }).then(response => dispatch(setTrucks(response.data)))
-  }, [api, company.id, dispatch])
+  }, [api, company?.id, dispatch])
 
   const trucks = useSelector<IDefaultRootState, ITruck[]>(state => state.trucks.all)
 

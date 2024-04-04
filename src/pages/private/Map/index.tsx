@@ -36,8 +36,8 @@ const Map: React.FC = () => {
           mapContainerStyle={containerStyle}
           zoom={11}
           center={{
-            lat: Number(company.address.lat),
-            lng: Number(company.address.lng)
+            lat: Number(company?.address.lat),
+            lng: Number(company?.address.lng)
           }}
         >
           {works

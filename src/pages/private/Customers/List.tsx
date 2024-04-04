@@ -16,13 +16,13 @@ const List: React.FC = () => {
   useEffect(() => {
     api.get('customers', {
       params: {
-        company_id: company.id
+        company_id: company?.id
       }
     })
       .then(response => {
         dispatch(setCustomers(response.data))
       })
-  }, [api, company.id, dispatch])
+  }, [api, company?.id, dispatch])
 
   const customers = useSelector<IDefaultRootState, ICustomer[]>(state => state.customers.all)
 

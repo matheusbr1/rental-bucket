@@ -18,6 +18,7 @@ import { IDefaultRootState } from 'interfaces'
 import { PerfilDrawer } from './PerfilDrawer'
 import usePersistedState from 'hooks/usePersistedState'
 import { FaTruck } from "react-icons/fa";
+import { useData } from 'hooks/useData'
 
 interface IConfig {
   label: string
@@ -36,6 +37,8 @@ const settings: string[] = ['Perfil', 'Sair']
 
 const AppBar = () => {
   const [, setTokens] = usePersistedState('@rentalbucket:tokens', null)
+
+  const { company } = useData()
 
   const user = useSelector((state: IDefaultRootState) => state.user.data)
 
@@ -82,7 +85,7 @@ const AppBar = () => {
               component="div"
               sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
             >
-              <FaTruck />
+              {company ? company.name.toUpperCase() : <FaTruck />}
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -132,7 +135,7 @@ const AppBar = () => {
               component="div"
               sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
             >
-              <FaTruck />
+              {company ? company.name.toUpperCase() : <FaTruck />}
             </Typography>
 
             <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>

@@ -38,7 +38,7 @@ const Create: React.FC = () => {
         brand_id: fields.brand?.id,
         model_id: fields.model?.id,
         truck_type_id: fields.type.id,
-        company_id: company.id
+        company_id: company?.id
       })
 
       dispatch(createTruck({
@@ -54,7 +54,7 @@ const Create: React.FC = () => {
     } finally {
       setLoading(false)
     }
-  }, [api, company.id, dispatch, snackbar, goBack])
+  }, [api, company?.id, dispatch, snackbar, goBack])
 
   return (
     <FormContainer>

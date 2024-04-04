@@ -38,7 +38,7 @@ const Create: React.FC = () => {
       const { data: customer } = await api.post('customers', {
         ...fields,
         CPF_CNPJ: removeMask(fields.CPF_CNPJ),
-        company_id: company.id
+        company_id: company?.id
       })
 
       const contacts = [] as IContact[]
@@ -82,7 +82,7 @@ const Create: React.FC = () => {
         variant: 'error'
       })
     }
-  }, [api, company.id, dispatch, snackbar, goBack])
+  }, [api, company?.id, dispatch, snackbar, goBack])
 
   return (
     <FormContainer>

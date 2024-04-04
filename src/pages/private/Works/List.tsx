@@ -16,16 +16,16 @@ const List: React.FC = () => {
   useEffect(() => {
     api.get('works', {
       params: {
-        company_id: company.id
+        company_id: company?.id
       }
     }).then(response => dispatch(setWorks(response.data)))
 
     api.get('/drivers', {
       params: {
-        company_id: company.id
+        company_id: company?.id
       }
     }).then(response => dispatch(setDrivers(response.data)))
-  }, [api, company.id, dispatch])
+  }, [api, company?.id, dispatch])
 
   const works = useSelector<IDefaultRootState, IWork[]>(state => state.works.all)
 

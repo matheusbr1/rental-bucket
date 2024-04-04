@@ -17,10 +17,10 @@ const List: React.FC = () => {
   useEffect(() => {
     api.get('/drivers', {
       params: {
-        company_id: company.id
+        company_id: company?.id
       }
     }).then(response => dispatch(setDrivers(response.data)))
-  }, [api, company.id, dispatch])
+  }, [api, company?.id, dispatch])
 
   const drivers = useSelector<IDefaultRootState, IDriver[]>(state => state.drivers.all)
 

@@ -8,21 +8,22 @@ const initialState = {
   data: {
     name: '',
     email: '',
-    avatar: ''
+    avatar: '',
+    company_id: ''
   },
   isAuthenticated: false
 }
 
-const initialUserState = persistedState 
-  ? JSON.parse(persistedState) 
+const initialUserState = persistedState
+  ? JSON.parse(persistedState)
   : initialState
 
 export type IUserInitialState = typeof initialState
 
 const getAvatarURL = (avatar: string) => `${privateApi.defaults.baseURL}/avatar/${avatar}`
 
-export function userReducer (
-  state: IUserInitialState = initialUserState, 
+export function userReducer(
+  state: IUserInitialState = initialUserState,
   action: ReducerAction
 ): IUserInitialState {
   switch (action.type) {
@@ -32,14 +33,14 @@ export function userReducer (
         data: {
           ...action.payload,
           avatar: getAvatarURL(action.payload.avatar)
-        } 
+        }
       }
 
       sessionStorage.setItem('@rentalbucket:user', JSON.stringify(updatedState))
 
       return updatedState
 
-    case UserActions.SIGN_OUT: 
+    case UserActions.SIGN_OUT:
       sessionStorage.removeItem('@rentalbucket:user')
       return initialState
 
@@ -51,7 +52,7 @@ export function userReducer (
           avatar: getAvatarURL(action.payload)
         }
       }
-   
+
     default:
       return state
   }

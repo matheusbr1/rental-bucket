@@ -1,41 +1,30 @@
-import { IAddress, ICompany, IDefaultRootState } from 'interfaces'
+import { ICompany, IDefaultRootState } from 'interfaces'
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import usePrivateApi from './usePrivateApi'
 import { useSelector } from 'react-redux'
 import { IUserInitialState } from 'store/user/user.reducer'
 
 interface IDataContext {
-  company: ICompany
+  company: ICompany | null
 }
 
 const DataContext = createContext<IDataContext>({} as IDataContext)
 
 const DataProvider: React.FC = ({ children }) => {
-  const { isAuthenticated } = useSelector<IDefaultRootState, IUserInitialState>(s => s.user)
+  const { isAuthenticated, data } = useSelector<IDefaultRootState, IUserInitialState>(s => s.user)
 
-  const [company, setCompany] = useState<ICompany>({
-    id: 'eb7fffc0-fabe-4401-be95-32e07c46a699',
-    name: '',
-    address: {
-      lat: -23.55777688954754,
-      lng: -46.792403583963974
-    } as IAddress,
-  })
+  const [company, setCompany] = useState<ICompany | null>(null)
 
   const api = usePrivateApi()
 
   useEffect(() => {
-    async function getCompanies() {
-      const response = await api.get('companies')
-      setCompany(response.data[0])
-    }
-
     if (isAuthenticated) {
       (async () => {
-        await getCompanies()
+        const response = await api.get(`companies/${data.company_id}`)
+        setCompany(response.data)
       })()
     }
-  }, [api, isAuthenticated])
+  }, [api, isAuthenticated, data.company_id])
 
   return (
     <DataContext.Provider value={{ company }}>

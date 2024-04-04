@@ -56,7 +56,7 @@ const WorkFormCore: React.FC<IFormCoreProps> = ({ formStatus = 'isFilling' }) =>
   useEffect(() => {
     api.get('/drivers', {
       params: {
-        company_id: company.id
+        company_id: company?.id
       }
     }).then(response => {
       const drivers = response.data
@@ -65,12 +65,12 @@ const WorkFormCore: React.FC<IFormCoreProps> = ({ formStatus = 'isFilling' }) =>
         setFieldValue('driver', drivers[0])
       }
     })
-  }, [api, company.id, dispatch, setFieldValue])
+  }, [api, company?.id, dispatch, setFieldValue])
 
   useEffect(() => {
     api.get('trucks', {
       params: {
-        company_id: company.id
+        company_id: company?.id
       }
     }).then(response => {
       const trucks = response.data
@@ -79,12 +79,12 @@ const WorkFormCore: React.FC<IFormCoreProps> = ({ formStatus = 'isFilling' }) =>
         setFieldValue('truck', trucks[0])
       }
     })
-  }, [api, company.id, dispatch, setFieldValue])
+  }, [api, company?.id, dispatch, setFieldValue])
 
   useEffect(() => {
     api.get('customers', {
       params: {
-        company_id: company.id
+        company_id: company?.id
       }
     }).then(response => {
       const customers = response.data
@@ -93,7 +93,7 @@ const WorkFormCore: React.FC<IFormCoreProps> = ({ formStatus = 'isFilling' }) =>
         setFieldValue('customer', customers[0])
       }
     })
-  }, [api, company.id, dispatch, setFieldValue])
+  }, [api, company?.id, dispatch, setFieldValue])
 
   const drivers = useSelector<IDefaultRootState, IDriver[]>(state => state.drivers.all)
   const trucks = useSelector<IDefaultRootState, ITruck[]>(state => state.trucks.all)

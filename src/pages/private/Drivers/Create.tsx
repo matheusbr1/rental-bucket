@@ -38,7 +38,7 @@ const Create: React.FC = () => {
         RG: removeMask(fields.RG),
         CNH: removeMask(fields.CNH),
         birthday: fields.birthday,
-        company_id: company.id
+        company_id: company?.id
       })
 
       const contacts = [] as IContact[]
@@ -79,7 +79,7 @@ const Create: React.FC = () => {
     } finally {
       setLoading(false)
     }
-  }, [api, company.id, dispatch, snackbar, goBack])
+  }, [api, company?.id, dispatch, snackbar, goBack])
 
   return (
     <FormContainer>
