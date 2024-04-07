@@ -70,7 +70,7 @@ const SignIn: React.FC = () => {
 
       snackbar('Novo usuário criado, faça login!', { variant: 'success' })
 
-      history.push('/')
+      history.push(`/?email=${email}`)
     } catch (error) {
       snackbar('Erro ao criar o usuário, tente novamente!', { variant: 'error' })
     }

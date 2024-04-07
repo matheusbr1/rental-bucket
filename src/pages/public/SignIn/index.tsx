@@ -8,7 +8,7 @@ import { Field, Form, Formik } from 'formik'
 import FormikTextField from 'components/FormikTextField'
 import { signInSchema } from 'validations/signInSchema'
 import { signIn } from 'store/user/user.actions'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { ISignInFields } from 'interfaces'
 import Visibility from '@material-ui/icons/Visibility'
 import VisibilityOff from '@material-ui/icons/VisibilityOff'
@@ -50,6 +50,10 @@ const useStyles = makeStyles((theme) => createStyles({
 
 const SignIn: React.FC = () => {
   const [, setTokens] = usePersistedState('@rentalbucket:tokens', null)
+
+  const { search } = useLocation()
+  const queryParams = new URLSearchParams(search)
+  const email = queryParams.get('email') ?? ''
 
   const history = useHistory()
 
@@ -97,7 +101,7 @@ const SignIn: React.FC = () => {
             validateOnChange
             validationSchema={signInSchema}
             initialValues={{
-              email: '',
+              email,
               password: '',
             }}
           >

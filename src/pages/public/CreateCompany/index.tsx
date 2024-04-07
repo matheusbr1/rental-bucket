@@ -81,8 +81,6 @@ const CreateCompany: React.FC = () => {
 
   const handleCreateCompany = async (fields: ICreateCompanyFields) => {
     try {
-      setLoading(true)
-
       console.log(fields)
 
       const { data: company } = await api.post('/companies', {
@@ -104,8 +102,6 @@ const CreateCompany: React.FC = () => {
       snackbar('Erro ao criar empresa, tente novamente!', {
         variant: 'error'
       })
-    } finally {
-      setLoading(false)
     }
   }
 
