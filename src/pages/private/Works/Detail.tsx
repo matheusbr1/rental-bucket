@@ -16,7 +16,7 @@ import { WorkFormFooter } from './components/FormFooter'
 import green from '@material-ui/core/colors/green'
 import grey from '@material-ui/core/colors/grey'
 import Button from 'components/Button'
-import { useData } from 'hooks/useData'
+import { useCompany } from 'hooks/useCompany'
 
 const style = {
   position: 'absolute',
@@ -49,7 +49,7 @@ const Detail: React.FC = () => {
 
   const { id } = useParams<IDetailParams>()
 
-  const { company } = useData()
+  const { company } = useCompany()
 
   const currentWork = useSelector((state: IDefaultRootState) => state.works.current as IWork)
 

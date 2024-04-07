@@ -12,12 +12,12 @@ import { FormContainer } from 'components/layout/FormContainer'
 import { WorkFormCore } from './components/FormCore'
 import { WorkFormFooter } from './components/FormFooter'
 import Loading from 'components/Loading'
-import { useData } from 'hooks/useData'
+import { useCompany } from 'hooks/useCompany'
 
 const Create: React.FC = () => {
   const api = usePrivateApi()
 
-  const { company } = useData()
+  const { company } = useCompany()
 
   const { goBack } = useHistory()
 

@@ -5,11 +5,11 @@ import { ICustomer, IDefaultRootState } from 'interfaces'
 import { setCustomers } from 'store/customer/customer.actions'
 import usePrivateApi from 'hooks/usePrivateApi'
 import { TableContainer } from 'components/layout/TableContainer'
-import { useData } from 'hooks/useData'
+import { useCompany } from 'hooks/useCompany'
 
 const List: React.FC = () => {
   const api = usePrivateApi()
-  const { company } = useData()
+  const { company } = useCompany()
 
   const dispatch = useDispatch()
 

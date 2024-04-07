@@ -11,7 +11,7 @@ import { removeMask } from 'utils/formatters'
 import { FormContainer } from 'components/layout/FormContainer'
 import { CustomerCoreForm } from './components/FormCore'
 import { CustomerFormFooter } from './components/FormFooter'
-import { useData } from 'hooks/useData'
+import { useCompany } from 'hooks/useCompany'
 
 interface CustomerFields {
   person_type: PersonType
@@ -25,7 +25,7 @@ interface CustomerFields {
 
 const Create: React.FC = () => {
   const api = usePrivateApi()
-  const { company } = useData()
+  const { company } = useCompany()
 
   const { goBack } = useHistory()
 

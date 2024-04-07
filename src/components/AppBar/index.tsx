@@ -15,12 +15,11 @@ import { useHistory } from 'react-router'
 import { useDispatch, useSelector } from 'react-redux'
 import { signOut } from 'store/user/user.actions'
 import { IDefaultRootState } from 'interfaces'
-import { PerfilDrawer } from './PerfilDrawer'
+import { ProfileDrawer } from './ProfileDrawer'
+import { CompanyDrawer } from './CompanyDrawer'
 import usePersistedState from 'hooks/usePersistedState'
 import { FaTruck } from "react-icons/fa";
-import { useData } from 'hooks/useData'
-import Loading from 'components/Loading'
-import usePrivateApi from 'hooks/usePrivateApi'
+import { useCompany } from 'hooks/useCompany'
 
 interface IConfig {
   label: string
@@ -35,23 +34,20 @@ const pages: IConfig[] = [
   { label: 'Caminhões', destiny: '/trucks' },
 ]
 
-const settings: string[] = ['Perfil', 'Sair']
+const settings: string[] = ['Perfil', 'Empresa', 'Sair']
 
 const AppBar = () => {
   const [, setTokens] = usePersistedState('@rentalbucket:tokens', null)
 
-  const { company } = useData()
-
-  const api = usePrivateApi()
+  const { company } = useCompany()
 
   const user = useSelector((state: IDefaultRootState) => state.user.data)
 
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-
-  const [isLoading, setIsLoading] = useState(false)
+  const [isProfileDrawerOpen, setIsProfileDrawerOpen] = useState(false)
+  const [isCompanyDrawerOpen, setIsCompanyDrawerOpen] = useState(false)
 
   const history = useHistory()
 
@@ -65,20 +61,6 @@ const AppBar = () => {
     history.push('/')
   }, [dispatch, history, setTokens])
 
-  const handleCheckout = useCallback(async () => {
-    try {
-      setIsLoading(true)
-
-      const response = await api.post(`/checkout/${user.id}`)
-
-      window.location.href = response.data.url
-    } catch (error) {
-      console.error(error)
-    } finally {
-      setIsLoading(false)
-    }
-  }, [api, user.id])
-
   return (
     <Box
       sx={{
@@ -91,9 +73,14 @@ const AppBar = () => {
         right: 0,
       }}
     >
-      <PerfilDrawer
-        isOpen={isDrawerOpen}
-        setIsOpen={setIsDrawerOpen}
+      <ProfileDrawer
+        isOpen={isProfileDrawerOpen}
+        setIsOpen={setIsProfileDrawerOpen}
+      />
+
+      <CompanyDrawer
+        isOpen={isCompanyDrawerOpen}
+        setIsOpen={setIsCompanyDrawerOpen}
       />
 
       <MuiAppBar position="static" enableColorOnDark={false} >
@@ -174,15 +161,6 @@ const AppBar = () => {
             </Box>
 
             <Box sx={{ flexGrow: 0 }}>
-              {isLoading && <Loading />}
-              <Button
-                variant='outlined'
-                sx={{ my: 2, mr: 2, color: 'white', }}
-                onClick={handleCheckout}
-              >
-                Assine o PRO
-              </Button>
-
               <Tooltip title="Abrir configurações">
                 <IconButton
                   onClick={e => setAnchorElUser(e.currentTarget)}
@@ -216,7 +194,10 @@ const AppBar = () => {
                         handleSignOut()
                         break;
                       case 'Perfil':
-                        setIsDrawerOpen(true)
+                        setIsProfileDrawerOpen(true)
+                        break;
+                      case 'Empresa':
+                        setIsCompanyDrawerOpen(true)
                         break;
                       default:
                         break;
@@ -230,7 +211,7 @@ const AppBar = () => {
           </Toolbar>
         </Container>
       </MuiAppBar>
-    </Box>
+    </Box >
   );
 };
 

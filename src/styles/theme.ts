@@ -1,6 +1,11 @@
 import { createTheme } from '@material-ui/core'
 
 const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#1976D2'
+    }
+  },
   typography: {
     fontFamily: 'Roboto',
     h1: {
@@ -55,12 +60,12 @@ const theme = createTheme({
         "&::-webkit-scrollbar-track": {
           backgroundColor: '#F4F4F4'
         },
-      
+
         "::-webkit-scrollbar": {
           width: '6px',
           background: '#F4F4F4'
         },
-      
+
         "::-webkit-scrollbar-thumb": {
           background: '#dad7d7'
         }

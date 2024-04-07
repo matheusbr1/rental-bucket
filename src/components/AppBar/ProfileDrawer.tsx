@@ -1,11 +1,9 @@
-import React, { useState }  from 'react'
+import React, { useState } from 'react'
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Avatar from '@mui/material/Avatar'
-import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
-import Divider from '@mui/material/Divider'
 import { useDispatch, useSelector } from 'react-redux'
 import { IDefaultRootState } from 'interfaces'
 import CameraAltIcon from '@mui/icons-material/CameraAlt'
@@ -17,7 +15,7 @@ import { useSnackbar } from 'notistack'
 import { updateUserAvatar } from 'store/user/user.actions'
 import usePrivateApi from 'hooks/usePrivateApi'
 
-interface PerfilDrawerProps {
+interface ProfileDrawerProps {
   isOpen: boolean
   setIsOpen: (isOpen: boolean) => void
 }
@@ -34,7 +32,7 @@ const Input = styled('input')({
   display: 'none',
 })
 
-const PerfilDrawer: React.FC<PerfilDrawerProps> = ({ isOpen, setIsOpen }) =>  {
+const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, setIsOpen }) => {
   const api = usePrivateApi()
 
   const { enqueueSnackbar: snackbar } = useSnackbar()
@@ -46,50 +44,50 @@ const PerfilDrawer: React.FC<PerfilDrawerProps> = ({ isOpen, setIsOpen }) =>  {
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false)
 
   const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-      if (
-        event.type === 'keydown' &&
-        ((event as React.KeyboardEvent).key === 'Tab' ||
-          (event as React.KeyboardEvent).key === 'Shift')
-      ) {
-        return;
-      }
-
-      setIsOpen(open)
+    if (
+      event.type === 'keydown' &&
+      ((event as React.KeyboardEvent).key === 'Tab' ||
+        (event as React.KeyboardEvent).key === 'Shift')
+    ) {
+      return;
     }
 
-    const handleAvatarChange = async () => {
-      const fileInput = document.getElementById('icon-button-file') as any
-    
-      fileInput.onchange = async () => {
-        const selectedFiles = [...fileInput.files]
+    setIsOpen(open)
+  }
 
-        if (selectedFiles.length) {
-          const file = selectedFiles[0]
+  const handleAvatarChange = async () => {
+    const fileInput = document.getElementById('icon-button-file') as any
 
-          var formData = new FormData()
-          
-          formData.append("avatar", file)
+    fileInput.onchange = async () => {
+      const selectedFiles = [...fileInput.files]
 
-          try {
-            setIsUploadingAvatar(true)
-            
-            const { data: avatarURL } = await api.patch('/users/avatar', formData, {
-              headers: {
-                'Content-Type': 'multipart/form-data'
-              }
-            })
+      if (selectedFiles.length) {
+        const file = selectedFiles[0]
 
-            dispatch(updateUserAvatar(avatarURL))
+        var formData = new FormData()
 
-            snackbar('Avatar alterado com sucesso!', { variant: 'success' })
-          } catch (error) {
-            snackbar('Não foi possível alterar o avatar, tente novamente!', { variant: 'error' })
-          } finally {
-            setIsUploadingAvatar(false)
-          }
+        formData.append("avatar", file)
+
+        try {
+          setIsUploadingAvatar(true)
+
+          const { data: avatarURL } = await api.patch('/users/avatar', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          })
+
+          dispatch(updateUserAvatar(avatarURL))
+
+          snackbar('Avatar alterado com sucesso!', { variant: 'success' })
+        } catch (error) {
+          snackbar('Não foi possível alterar o avatar, tente novamente!', { variant: 'error' })
+        } finally {
+          setIsUploadingAvatar(false)
         }
       }
     }
+  }
 
   const content = () => (
     <Box
@@ -111,17 +109,17 @@ const PerfilDrawer: React.FC<PerfilDrawerProps> = ({ isOpen, setIsOpen }) =>  {
               anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
               badgeContent={
                 <label htmlFor="icon-button-file">
-                  <Input 
-                    accept="image/*" 
-                    id="icon-button-file" 
+                  <Input
+                    accept="image/*"
+                    id="icon-button-file"
                     type="file"
                     disabled={isUploadingAvatar}
                   />
 
-                  <IconButton 
+                  <IconButton
                     sx={{ p: 0 }}
                     onClick={handleAvatarChange}
-                    aria-label="upload picture" 
+                    aria-label="upload picture"
                     component="span"
                     disabled={isUploadingAvatar}
                   >
@@ -130,13 +128,13 @@ const PerfilDrawer: React.FC<PerfilDrawerProps> = ({ isOpen, setIsOpen }) =>  {
                 </label>
               }
             >
-              {isUploadingAvatar 
+              {isUploadingAvatar
                 ? <Skeleton variant='circular' sx={{ width: 100, height: 100 }} />
-                : <Avatar 
-                    alt={user.name} 
-                    src={user.avatar}
-                    sx={{ width: 100, height: 100 }}
-                  />
+                : <Avatar
+                  alt={user.name}
+                  src={user.avatar}
+                  sx={{ width: 100, height: 100 }}
+                />
               }
             </Badge>
           </Stack>
@@ -144,22 +142,10 @@ const PerfilDrawer: React.FC<PerfilDrawerProps> = ({ isOpen, setIsOpen }) =>  {
           <Typography variant='h6' >
             {user.name}
           </Typography>
-          
+
           <Typography variant='body2' >
             {user.email}
           </Typography>
-        </Box>
-
-        <Divider />
-
-        <Box
-          display='flex'
-          justifyContent='space-around'
-          p={2}
-        >
-          <Button onClick={toggleDrawer(false)} >
-            Fechar
-          </Button>
         </Box>
       </Box>
     </Box>
@@ -178,4 +164,4 @@ const PerfilDrawer: React.FC<PerfilDrawerProps> = ({ isOpen, setIsOpen }) =>  {
   )
 }
 
-export { PerfilDrawer }
+export { ProfileDrawer }

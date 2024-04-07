@@ -4,13 +4,13 @@ import usePrivateApi from './usePrivateApi'
 import { useSelector } from 'react-redux'
 import { IUserInitialState } from 'store/user/user.reducer'
 
-interface IDataContext {
+interface ICompanyContext {
   company: ICompany | null
 }
 
-const DataContext = createContext<IDataContext>({} as IDataContext)
+const CompanyContext = createContext<ICompanyContext>({} as ICompanyContext)
 
-const DataProvider: React.FC = ({ children }) => {
+const CompanyProvider: React.FC = ({ children }) => {
   const { isAuthenticated, data } = useSelector<IDefaultRootState, IUserInitialState>(s => s.user)
 
   const [company, setCompany] = useState<ICompany | null>(null)
@@ -27,20 +27,20 @@ const DataProvider: React.FC = ({ children }) => {
   }, [api, isAuthenticated, data.company_id])
 
   return (
-    <DataContext.Provider value={{ company }}>
+    <CompanyContext.Provider value={{ company }}>
       {children}
-    </DataContext.Provider>
+    </CompanyContext.Provider>
   )
 }
 
-function useData(): IDataContext {
-  const context = useContext(DataContext)
+function useCompany(): ICompanyContext {
+  const context = useContext(CompanyContext)
 
   if (!context) {
-    throw new Error('useData must be used within an DataProvider')
+    throw new Error('useCompany must be used within an CompanyProvider')
   }
 
   return context
 }
 
-export { useData, DataProvider }
+export { useCompany, CompanyProvider }

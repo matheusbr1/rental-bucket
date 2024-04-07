@@ -1,11 +1,14 @@
 import React from 'react'
 
-import { DataProvider } from './useData'
+import { CompanyProvider } from './useCompany'
+import { CheckoutProvider } from './useCheckout'
 
 const AppProvider: React.FC = ({ children }) => (
-    <DataProvider>
+  <CheckoutProvider>
+    <CompanyProvider>
       {children}
-    </DataProvider>
+    </CompanyProvider>
+  </CheckoutProvider>
 )
 
 export default AppProvider

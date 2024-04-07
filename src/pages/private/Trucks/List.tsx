@@ -5,12 +5,12 @@ import { IDefaultRootState, ITruck } from 'interfaces'
 import usePrivateApi from 'hooks/usePrivateApi'
 import { setTrucks } from 'store/truck/truck.actions'
 import { TableContainer } from 'components/layout/TableContainer'
-import { useData } from 'hooks/useData'
+import { useCompany } from 'hooks/useCompany'
 
 const List: React.FC = () => {
   const api = usePrivateApi()
 
-  const { company } = useData()
+  const { company } = useCompany()
 
   const dispatch = useDispatch()
 

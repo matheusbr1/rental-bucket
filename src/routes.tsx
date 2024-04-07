@@ -21,6 +21,7 @@ import ForgotPassword from 'pages/public/ForgotPassword'
 import ResetPassword from 'pages/public/ResetPassword'
 import Map from 'pages/private/Map'
 
+import CompanyDetail from './pages/private/Company/Detail'
 import CreateCompany from 'pages/public/CreateCompany'
 
 interface PrivateRouteProps {
@@ -53,6 +54,7 @@ const Routes: React.FC = () => (
       <Route path='/signup' exact component={SignUp} />
 
       <Route path='/create-company' exact component={CreateCompany} />
+      <Route path='/company/:id' exact component={CompanyDetail} />
 
       <Route path='/forgotPassword' exact component={ForgotPassword} />
       <Route path='/resetPassword' exact component={ResetPassword} />

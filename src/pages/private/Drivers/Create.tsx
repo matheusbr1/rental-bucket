@@ -13,12 +13,12 @@ import usePrivateApi from 'hooks/usePrivateApi'
 import { FormContainer } from 'components/layout/FormContainer'
 import DriverFormCore from './components/FormCore'
 import { DriverFormFooter } from './components/FormFooter'
-import { useData } from 'hooks/useData'
+import { useCompany } from 'hooks/useCompany'
 
 const Create: React.FC = () => {
   const api = usePrivateApi()
 
-  const { company } = useData()
+  const { company } = useCompany()
 
   const { goBack } = useHistory()
 

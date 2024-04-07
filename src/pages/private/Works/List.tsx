@@ -6,12 +6,12 @@ import { setWorks } from 'store/work/work.actions'
 import usePrivateApi from 'hooks/usePrivateApi'
 import { TableContainer } from 'components/layout/TableContainer'
 import { setDrivers } from 'store/driver/driver.actions'
-import { useData } from 'hooks/useData'
+import { useCompany } from 'hooks/useCompany'
 
 const List: React.FC = () => {
   const api = usePrivateApi()
   const dispatch = useDispatch()
-  const { company } = useData()
+  const { company } = useCompany()
 
   useEffect(() => {
     api.get('works', {

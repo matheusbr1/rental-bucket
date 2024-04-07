@@ -20,7 +20,7 @@ import {
   IWorkType
 } from 'interfaces'
 
-import { useData } from 'hooks/useData'
+import { useCompany } from 'hooks/useCompany'
 
 interface IFormCoreProps {
   formStatus?: FormStatus
@@ -28,7 +28,7 @@ interface IFormCoreProps {
 
 const WorkFormCore: React.FC<IFormCoreProps> = ({ formStatus = 'isFilling' }) => {
   const api = usePrivateApi()
-  const { company } = useData()
+  const { company } = useCompany()
 
   const { errors, touched, values, isSubmitting, setFieldValue } = useFormikContext<IWork>()
 
