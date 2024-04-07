@@ -6,6 +6,7 @@ const persistedState = sessionStorage.getItem('@rentalbucket:user')
 
 const initialState = {
   data: {
+    id: '',
     name: '',
     email: '',
     avatar: '',

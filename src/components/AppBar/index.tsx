@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import { useCallback, useState } from 'react'
 import MuiAppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import Toolbar from '@mui/material/Toolbar'
@@ -19,6 +19,8 @@ import { PerfilDrawer } from './PerfilDrawer'
 import usePersistedState from 'hooks/usePersistedState'
 import { FaTruck } from "react-icons/fa";
 import { useData } from 'hooks/useData'
+import Loading from 'components/Loading'
+import usePrivateApi from 'hooks/usePrivateApi'
 
 interface IConfig {
   label: string
@@ -40,12 +42,16 @@ const AppBar = () => {
 
   const { company } = useData()
 
+  const api = usePrivateApi()
+
   const user = useSelector((state: IDefaultRootState) => state.user.data)
 
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+
+  const [isLoading, setIsLoading] = useState(false)
 
   const history = useHistory()
 
@@ -58,6 +64,20 @@ const AppBar = () => {
 
     history.push('/')
   }, [dispatch, history, setTokens])
+
+  const handleCheckout = useCallback(async () => {
+    try {
+      setIsLoading(true)
+
+      const response = await api.post(`/checkout/${user.id}`)
+
+      window.location.href = response.data.url
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [api, user.id])
 
   return (
     <Box
@@ -154,6 +174,15 @@ const AppBar = () => {
             </Box>
 
             <Box sx={{ flexGrow: 0 }}>
+              {isLoading && <Loading />}
+              <Button
+                variant='outlined'
+                sx={{ my: 2, mr: 2, color: 'white', }}
+                onClick={handleCheckout}
+              >
+                Assine o PRO
+              </Button>
+
               <Tooltip title="Abrir configurações">
                 <IconButton
                   onClick={e => setAnchorElUser(e.currentTarget)}
