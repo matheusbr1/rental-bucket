@@ -8,7 +8,7 @@ import TextField from '@mui/material/TextField';
 
 const FormikDateInput: React.FC<Partial<DatePickerProps> & any> = (props) => {
   return (
-    <LocalizationProvider  dateAdapter={AdapterDateFns} locale={ptBRLocale} >
+    <LocalizationProvider dateAdapter={AdapterDateFns} locale={ptBRLocale} >
       <Field
         component={DatePicker}
         fullwidth
@@ -19,7 +19,7 @@ const FormikDateInput: React.FC<Partial<DatePickerProps> & any> = (props) => {
         invalidDateMessage="Formato inválido"
         getOptionLabel={(option: string) => option}
         renderInput={(params: any) => (
-          <TextField style={{ width: '100%' }} {...params} />
+          <TextField style={{ width: '100%' }} {...params} label={props.label} />
         )}
         {...props}
       />

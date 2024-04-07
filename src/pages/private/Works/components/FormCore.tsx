@@ -16,8 +16,10 @@ import {
   IDefaultRootState,
   IDriver,
   ITruck,
-  IWork
+  IWork,
+  IWorkType
 } from 'interfaces'
+
 import { useData } from 'hooks/useData'
 
 interface IFormCoreProps {
@@ -34,24 +36,33 @@ const WorkFormCore: React.FC<IFormCoreProps> = ({ formStatus = 'isFilling' }) =>
 
   const dispatch = useDispatch()
 
-  const [workTypes, setWorkTypes] = useState([])
+  const [workTypes, setWorkTypes] = useState<IWorkType[]>([])
   const [equipments, setEquipments] = useState([])
 
   useEffect(() => {
     api.get('/work/types').then(response => {
-      setWorkTypes(response.data)
+      const types: IWorkType[] = response.data
+      setWorkTypes(types)
+
+      if (values.work_type) return
+      const insertionOption = types.find(t => t.name === 'Coloca')
+      if (insertionOption) {
+        setFieldValue('work_type', insertionOption)
+      }
     })
-  }, [api])
+  }, [api, setFieldValue, values.work_type])
 
   useEffect(() => {
     api.get('/truck/types/equipments').then(response => {
       const equipments = response.data
       setEquipments(equipments)
+
+      if (values.equipment) return
       if (equipments.length === 1) {
         setFieldValue('equipment', equipments[0])
       }
     })
-  }, [api, setFieldValue])
+  }, [api, setFieldValue, values.equipment])
 
   useEffect(() => {
     api.get('/drivers', {
@@ -61,11 +72,13 @@ const WorkFormCore: React.FC<IFormCoreProps> = ({ formStatus = 'isFilling' }) =>
     }).then(response => {
       const drivers = response.data
       dispatch(setDrivers(drivers))
+
+      if (values.driver) return
       if (drivers.length === 1) {
         setFieldValue('driver', drivers[0])
       }
     })
-  }, [api, company?.id, dispatch, setFieldValue])
+  }, [api, company?.id, dispatch, setFieldValue, values.driver])
 
   useEffect(() => {
     api.get('trucks', {
@@ -75,11 +88,13 @@ const WorkFormCore: React.FC<IFormCoreProps> = ({ formStatus = 'isFilling' }) =>
     }).then(response => {
       const trucks = response.data
       dispatch(setTrucks(trucks))
+
+      if (values.truck) return
       if (trucks.length === 1) {
         setFieldValue('truck', trucks[0])
       }
     })
-  }, [api, company?.id, dispatch, setFieldValue])
+  }, [api, company?.id, dispatch, setFieldValue, values.truck])
 
   useEffect(() => {
     api.get('customers', {
@@ -89,11 +104,13 @@ const WorkFormCore: React.FC<IFormCoreProps> = ({ formStatus = 'isFilling' }) =>
     }).then(response => {
       const customers = response.data
       dispatch(setCustomers(customers))
+
+      if (values.customer) return
       if (customers.length === 1) {
         setFieldValue('customer', customers[0])
       }
     })
-  }, [api, company?.id, dispatch, setFieldValue])
+  }, [api, company?.id, dispatch, setFieldValue, values.customer])
 
   const drivers = useSelector<IDefaultRootState, IDriver[]>(state => state.drivers.all)
   const trucks = useSelector<IDefaultRootState, ITruck[]>(state => state.trucks.all)
