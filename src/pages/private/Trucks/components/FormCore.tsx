@@ -51,23 +51,43 @@ const TruckFormCore: React.FC<IFormCoreProps> = ({ formStatus }) => {
       try {
         const brands = await getBrands()
         setBrands(brands)
+      } catch (error) {
+        snackbar('Não foi possível obter as marcas!', { variant: 'error' })
+      }
+    })()
+  }, [dispatch, snackbar])
 
-        // updating truck brand
-        const brand = brands.find(brand => brand.id === values.brand?.id) as IBrand
+  useEffect(() => {
+    (async () => {
+      try {
+        if (!brands.length) return
+        if (!values.brand?.id) return
+
+        const currentBrandId = values.brand.id
+        const brand = brands.find(brand => brand.id === currentBrandId)
+
+        if (!brand) return
+
         dispatch(setTruckBrand(brand))
 
         const models = await getModels(brand.id)
         setModels(models)
 
+        if (!values.model?.id) return
+
         // updating truck model
-        const model = models.find(model => model.id === values.model?.id) as IModel
+        const currentModelId = values.model.id
+        const model = models.find(model => model.id === currentModelId)
+
+        if (!model) return
+
         dispatch(setTruckModel(model))
       } catch (error) {
-        snackbar('Não foi possível obter as marcas!', { variant: 'error' })
+        snackbar('Não foi possível preencher a marca e o modelo!', { variant: 'error' })
       }
     })()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, snackbar])
+  }, [dispatch, snackbar, brands])
 
   return (
     <>
