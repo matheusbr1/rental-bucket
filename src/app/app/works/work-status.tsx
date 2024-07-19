@@ -21,8 +21,11 @@ export function WorkStatus({ status }: WorkStatusProps) {
       {status === 'canceled' && (
         <span data-testid='badge' className="h-2 w-2 rounded bg-rose-500" />
       )}
-      {['placed', 'removed'].includes(status) && (
+      {status === 'placed' && (
         <span data-testid='badge' className="h-2 w-2 rounded bg-emerald-500" />
+      )}
+      {status === 'removed' && (
+        <span data-testid='badge' className="h-2 w-2 rounded bg-blue-500" />
       )}
       {status === 'partial-removed' && (
         <span data-testid='badge' className="h-2 w-2 rounded bg-amber-500" />
