@@ -19,7 +19,7 @@ export default function Works() {
     queryFn: async () => {
       const res = await getWorks(page)
       setTotal(res.data.total)
-      return res.data.works
+      return res.data.works.sort()
     }
   })
   const hasWorks = Boolean(isFetching || works.length)
