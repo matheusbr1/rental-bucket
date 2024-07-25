@@ -1,4 +1,3 @@
-'use client'
 import { Pagination } from "@/app/components/pagination";
 import {
   Table,
