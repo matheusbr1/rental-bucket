@@ -27,7 +27,7 @@ const signInForm = z.object({
 type SignInForm = z.infer<typeof signInForm>
 
 export default function SignIn() {
-  const searhParams = useSearchParams()
+  // const searhParams = useSearchParams()
 
   const router = useRouter()
 
@@ -38,7 +38,8 @@ export default function SignIn() {
   } = useForm<SignInForm>({
     resolver: zodResolver(signInForm),
     defaultValues: {
-      email: searhParams.get('email') ?? '',
+      // email: searhParams.get('email') ?? '',
+      email: '',
       password: ''
     }
   })
