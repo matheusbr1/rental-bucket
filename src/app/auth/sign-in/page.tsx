@@ -85,7 +85,7 @@ export default function SignIn() {
         </Link>
       </Button>
 
-      <div className="w-[400px] flex flex-col justify-center gap-6" >
+      <div className="w-[320px] sm:w-[400px] flex flex-col justify-center gap-6" >
         <form className="space-y-4" onSubmit={handleSubmit(handleSignIn)} >
           <Card>
             <CardHeader>

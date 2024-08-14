@@ -76,7 +76,7 @@ export default function SignUp() {
         </Link>
       </Button>
 
-      <Tabs defaultValue="company" value={tab} className="w-[400px]">
+      <Tabs defaultValue="company" value={tab} className="w-[320px] sm:w-[400px]">
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger
             value="company"
