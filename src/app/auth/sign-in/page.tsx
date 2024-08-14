@@ -11,6 +11,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { api } from '@/app/lib/axios';
 import { APP_NAME } from '@/app/constants/app-infos';
 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+
 export type User = {
   id: string
   name: string
@@ -76,34 +85,38 @@ export default function SignIn() {
         </Link>
       </Button>
 
-      <div className="w-[350px] flex flex-col justify-center gap-6" >
-        <div className="flex flex-col gap-2 text-center" >
-          <h1 className="text-2xl font-semibold tracking-tight" >
-            Acessar plataforma
-          </h1>
-          <p className="text-sm text-muted-foreground" >
-            Acompanhe os seus serviços pela plataforma!
-          </p>
-        </div>
-
+      <div className="w-[400px] flex flex-col justify-center gap-6" >
         <form className="space-y-4" onSubmit={handleSubmit(handleSignIn)} >
-          <div className="space-y-2" >
-            {/* <Label htmlFor="email" >E-mail</Label> */}
-            <Input id='email' type='email' placeholder='E-mail' {...register('email')} />
-          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Acessar a plataforma</CardTitle>
+              <CardDescription>
+                Acompanhe os seus serviços pela plataforma!
+              </CardDescription>
+            </CardHeader>
 
-          <div className="space-y-2" >
-            {/* <Label htmlFor="password" >Senha</Label> */}
-            <Input id='password' type='password' placeholder='Senha' {...register('password')} />
-          </div>
+            <CardContent>
+              <div className="mb-4" >
+                {/* <Label htmlFor="email" >E-mail</Label> */}
+                <Input id='email' type='email' placeholder='E-mail' {...register('email')} />
+              </div>
 
-          <Button
-            type='submit'
-            className="w-full"
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? 'Acessando...' : 'Acessar plataforma'}
-          </Button>
+              <div>
+                {/* <Label htmlFor="password" >Senha</Label> */}
+                <Input id='password' type='password' placeholder='Senha' {...register('password')} />
+              </div>
+            </CardContent>
+
+            <CardFooter>
+              <Button
+                type='submit'
+                disabled={isSubmitting}
+              >
+                {isSubmitting && 'Acessando...'}
+                {!isSubmitting && 'Acessar'}
+              </Button>
+            </CardFooter>
+          </Card>
         </form>
       </div>
     </div>
